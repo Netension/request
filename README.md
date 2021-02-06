@@ -9,5 +9,5 @@ __Description__
 # Command-Query Separation (CQS) principle
 
 The ***CQS*** principle classifies an object's methods two sharply separeted categories:
-- ***Commands:*** Change the state of the system, but do not have return value.
-- ***Queries:*** Do not change the state of the system, but it has return value (free of side effects).
+- **Commands:** Change the state of the system, but do not have return value.
+- **Queries:** Do not change the state of the system, but it has return value (free of side effects).
