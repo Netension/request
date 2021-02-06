@@ -1,6 +1,6 @@
 ﻿namespace Netension.Request.Abstraction.Requests
 {
-    public interface IQuery<TResult> : IRequest
+    public interface IQuery<TResponse> : IRequest
     {
     }
 }
