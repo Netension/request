@@ -48,5 +48,18 @@ namespace Netension.Request.Test.Requests
             // Assert
             Assert.False(new Command(Guid.NewGuid()).Equals(new Command(Guid.NewGuid())));
         }
+
+        [Fact(DisplayName = "Command - Message type")]
+        public void Command_MessageType()
+        {
+            // Arrange
+            var command = new Command();
+
+            // Act
+            var messageType = command.MessageType;
+
+            // Assert
+            Assert.Equal($"{command.GetType().FullName}, {command.GetType().Assembly.GetName().Name}", messageType);
+        }
     }
 }

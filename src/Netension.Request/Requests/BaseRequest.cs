@@ -6,6 +6,7 @@ namespace Netension.Request.Requests
     public  class BaseRequest : IRequest
     {
         public Guid RequestId { get; }
+        public string MessageType => $"{GetType().FullName}, {GetType().Assembly.GetName().Name}";
 
         protected BaseRequest(Guid? requestId)
         {

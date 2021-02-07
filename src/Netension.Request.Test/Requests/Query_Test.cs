@@ -48,5 +48,18 @@ namespace Netension.Request.Test.Requests
             // Assert
             Assert.False(new Query<object>(Guid.NewGuid()).Equals(new Query<object>(Guid.NewGuid())));
         }
+
+        [Fact(DisplayName = "Command - Message type")]
+        public void Command_MessageType()
+        {
+            // Arrange
+            var query = new Query<object>();
+
+            // Act
+            var messageType = query.MessageType;
+
+            // Assert
+            Assert.Equal($"{query.GetType().FullName}, {query.GetType().Assembly.GetName().Name}", messageType);
+        }
     }
 }
