@@ -3,15 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netension.Request.Abstraction", "Netension.Request.Abstraction\Netension.Request.Abstraction.csproj", "{9EC93F85-6122-4F56-A13C-49500941D8DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.Abstraction", "Netension.Request.Abstraction\Netension.Request.Abstraction.csproj", "{9EC93F85-6122-4F56-A13C-49500941D8DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netension.Request", "Netension.Request\Netension.Request.csproj", "{7AF29EB6-AF5C-4226-BA01-8C264389301C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request", "Netension.Request\Netension.Request.csproj", "{7AF29EB6-AF5C-4226-BA01-8C264389301C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integrations", "Integrations", "{5DD741F5-B816-4055-B4CC-D3F081FFDC0C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosting", "Hosting", "{5DD741F5-B816-4055-B4CC-D3F081FFDC0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netension.Request.NetCore.Asp", "Netension.Request.NetCore.Asp\Netension.Request.NetCore.Asp.csproj", "{2A6A2762-38EA-40D3-925B-A784A01866C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.NetCore.Asp", "Netension.Request.NetCore.Asp\Netension.Request.NetCore.Asp.csproj", "{2A6A2762-38EA-40D3-925B-A784A01866C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netension.Request.Test", "Netension.Request.Test\Netension.Request.Test.csproj", "{4B6FF610-7695-4E44-BE93-F80319161F87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.Test", "Netension.Request.Test\Netension.Request.Test.csproj", "{4B6FF610-7695-4E44-BE93-F80319161F87}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.Hosting.LightInject", "Netension.Request.Hosting.LightInject\Netension.Request.Hosting.LightInject.csproj", "{58E5AF53-2236-4442-BD82-913DF701B43B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{C64E8F62-887C-45E8-B9BB-229F02247725}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netension.Request.Sample", "Netension.Request.Sample\Netension.Request.Sample.csproj", "{EA99BA26-C323-4C12-B405-D98AEC7C91AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,12 +41,21 @@ Global
 		{4B6FF610-7695-4E44-BE93-F80319161F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B6FF610-7695-4E44-BE93-F80319161F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B6FF610-7695-4E44-BE93-F80319161F87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58E5AF53-2236-4442-BD82-913DF701B43B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58E5AF53-2236-4442-BD82-913DF701B43B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58E5AF53-2236-4442-BD82-913DF701B43B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58E5AF53-2236-4442-BD82-913DF701B43B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA99BA26-C323-4C12-B405-D98AEC7C91AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA99BA26-C323-4C12-B405-D98AEC7C91AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA99BA26-C323-4C12-B405-D98AEC7C91AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA99BA26-C323-4C12-B405-D98AEC7C91AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{2A6A2762-38EA-40D3-925B-A784A01866C2} = {5DD741F5-B816-4055-B4CC-D3F081FFDC0C}
+		{58E5AF53-2236-4442-BD82-913DF701B43B} = {5DD741F5-B816-4055-B4CC-D3F081FFDC0C}
+		{EA99BA26-C323-4C12-B405-D98AEC7C91AD} = {C64E8F62-887C-45E8-B9BB-229F02247725}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF19B456-E8FB-487A-BA1A-EB344B586C1B}

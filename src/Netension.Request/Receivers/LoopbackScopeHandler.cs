@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Receivers
 {
-    internal class LoopbackScopeHandler : ILoopbackRequestReceiver
+    public class LoopbackScopeHandler : ILoopbackRequestReceiver
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ILoopbackRequestReceiver _next;

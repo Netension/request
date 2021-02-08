@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Dispatchers
 {
-    internal class QueryDispatcher : IQueryDispatcher
+    public class QueryDispatcher : IQueryDispatcher
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<QueryDispatcher> _logger;

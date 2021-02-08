@@ -6,10 +6,9 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-[assembly:InternalsVisibleTo("Netension.Request.Test")]
 namespace Netension.Request.Wrappers
 {
-    internal class LoopbackRequestWrapper : ILoopbackRequestWrapper
+    public class LoopbackRequestWrapper : ILoopbackRequestWrapper
     {
         private readonly ILogger<LoopbackRequestWrapper> _logger;
 

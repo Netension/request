@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Wrappers
 {
-    internal class LoopbackRequestUnwrapper : ILoopbackRequestUnwrapper
+    public class LoopbackRequestUnwrapper : ILoopbackRequestUnwrapper
     {
         private readonly ILogger<LoopbackRequestUnwrapper> _logger;
 

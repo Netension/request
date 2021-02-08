@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Dispatchers
 {
-    internal class CommandDispatcher : ICommandDispatcher
+    public class CommandDispatcher : ICommandDispatcher
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<CommandDispatcher> _logger;
