@@ -31,7 +31,7 @@ namespace Netension.Request.Dispatchers
             if (handler == null)
             {
                 _logger.LogError("Handler not found for {type}", requestHandlerType);
-                throw new InvalidOperationException($"Handler not found for {requestHandlerType}")
+                throw new InvalidOperationException($"Handler not found for {requestHandlerType}");
             }
 
             try
