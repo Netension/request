@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Netension.Request.Abstraction.Dispatchers;
-using Netension.Request.Abstraction.Receivers;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Messages;
 using Netension.Request.Wrappers;
@@ -10,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Receivers
 {
-    internal class LoopbackRequestReceiver : IRequestReceiver<LoopbackMessage, object>
+    internal class LoopbackRequestReceiver : ILoopbackRequestReceiver
     {
         private readonly ICommandDispatcher _commandDispatcher;
         private readonly IQueryDispatcher _queryDispatcher;
