@@ -75,9 +75,7 @@ namespace Netension.Request.Test.Wrappers
             var requestId = Guid.NewGuid();
 
             _loopbackRequestWrapperMock.Setup(lrw => lrw.WrapAsync(It.IsAny<IRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new LoopbackMessage(new Command()));
-
-            _correlationAccessorMock.SetupGet(cs => cs.MessageId).Returns(requestId);
+                .ReturnsAsync(new LoopbackMessage(new Command(requestId)));
 
             // Act
             var message = await sut.WrapAsync(new Command(requestId), CancellationToken.None);
