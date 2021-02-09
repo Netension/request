@@ -43,8 +43,15 @@ namespace Netension.Request.Sample
                     container.ScopeManagerProvider = new PerLogicalCallContextScopeManagerProvider();
                     container.RegisterSingleton<IServiceFactory>((factory) => container);
                 })
-                .RegistrateLoopbackSender()
-                .RegistrateLoopbackReceiver()
+                .RegistrateCorrelation()
+                .RegistrateLoopbackSender((builder) =>
+                {
+                    builder.UseCorrelation();
+                })
+                .RegistrateLoopbackReceiver((builder) =>
+                {
+                    builder.UseCorrelation();
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.Configure((app) =>
@@ -72,6 +79,7 @@ namespace Netension.Request.Sample
                     });
 
                     services.AddScoped<ICommandHandler<SampleCommand>, SampleCommandHandler>();
+                    services.AddScoped<IQueryHandler<SampleQuery, string>, SampleQueryHandler>();
                 });
     }
 }
