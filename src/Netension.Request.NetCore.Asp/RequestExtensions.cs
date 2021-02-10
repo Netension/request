@@ -2,9 +2,6 @@
 {
     public static class RequestExtensions
     {
-        //public static IHostBuilder AddLoopbackRequestSender()
-        //{
-
-        //}
+        
     }
 }

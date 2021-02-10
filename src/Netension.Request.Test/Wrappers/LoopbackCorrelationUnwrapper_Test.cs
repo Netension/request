@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Netension.Extensions.Correlation;
+using Netension.Request.Extensions;
 using Netension.Request.Messages;
 using Netension.Request.Wrappers;
 using System;

@@ -6,8 +6,8 @@ namespace Netension.Request
 {
     public class Query<TResponse> : BaseRequest, IQuery<TResponse>
     {
-        public Query(Guid? requestId = null) 
-            : base(requestId)
+        public Query(Guid? requestId = null)
+            : base(requestId ?? Guid.NewGuid())
         {
         }
     }

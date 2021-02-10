@@ -2,6 +2,7 @@
 using Moq;
 using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Requests;
+using Netension.Request.Extensions;
 using Netension.Request.Messages;
 using Netension.Request.Receivers;
 using Netension.Request.Wrappers;

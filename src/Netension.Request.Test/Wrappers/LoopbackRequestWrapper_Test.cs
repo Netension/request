@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using Netension.Request.Messages;
 using Xunit.Abstractions;
 using Microsoft.Extensions.Logging;
+using Netension.Request.Extensions;
 
 namespace Netension.Request.Test.Wrappers
 {

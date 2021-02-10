@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Netension.Request.Abstraction.Defaults;
 using Netension.Request.Abstraction.Requests;
-using Netension.Request.Defaults;
+using Netension.Request.Extensions;
 using Netension.Request.Messages;
 using System.Runtime.CompilerServices;
 using System.Threading;

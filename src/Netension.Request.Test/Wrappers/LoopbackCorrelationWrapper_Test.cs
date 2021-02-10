@@ -9,6 +9,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Netension.Request.Messages;
 using Netension.Request.Abstraction.Requests;
+using Netension.Request.Extensions;
 
 namespace Netension.Request.Test.Wrappers
 {

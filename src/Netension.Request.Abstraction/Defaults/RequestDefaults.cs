@@ -1,4 +1,4 @@
-﻿namespace Netension.Request.Defaults
+﻿namespace Netension.Request.Abstraction.Defaults
 {
     public static class RequestDefaults
     {

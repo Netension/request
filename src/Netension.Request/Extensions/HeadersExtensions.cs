@@ -1,9 +1,9 @@
 ﻿using Netension.Extensions.Correlation.Defaults;
-using Netension.Request.Defaults;
+using Netension.Request.Abstraction.Defaults;
 using System;
 using System.Collections.Generic;
 
-namespace Netension.Request.Messages
+namespace Netension.Request.Extensions
 {
     public static class HeadersExtensions
     {
