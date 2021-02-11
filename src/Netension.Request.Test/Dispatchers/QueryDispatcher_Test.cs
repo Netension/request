@@ -73,5 +73,24 @@ namespace Netension.Request.Test.Dispatchers
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None));
         }
+
+        [Fact(DisplayName = "QueryDispatcher - DispatchAsnyc - Handler throws exception")]
+        public async Task QueryDispatcher_DispatchAsync_HandlerThrowsException()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            var handlerMock = new Mock<IQueryHandler<Query<object>, object>>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.IsAny<Type>()))
+                .Returns(handlerMock.Object);
+
+            handlerMock.Setup(h => h.HandleAsync(It.IsAny<Query<object>>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception());
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None));
+        }
     }
 }

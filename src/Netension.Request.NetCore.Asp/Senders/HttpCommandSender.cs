@@ -13,11 +13,11 @@ namespace Netension.Request.NetCore.Asp.Senders
     public class HttpCommandSender : ICommandSender
     {
         private readonly HttpClient _client;
-        private readonly IOptions<HttpCommandSenderOptions> _options;
+        private readonly IOptions<HttpSenderOptions> _options;
         private readonly IHttpRequestWrapper _wrapper;
         private readonly ILogger<HttpCommandSender> _logger;
 
-        public HttpCommandSender(HttpClient client, IOptions<HttpCommandSenderOptions> options, IHttpRequestWrapper wrapper, ILogger<HttpCommandSender> logger)
+        public HttpCommandSender(HttpClient client, IOptions<HttpSenderOptions> options, IHttpRequestWrapper wrapper, ILogger<HttpCommandSender> logger)
         {
             _client = client;
             _options = options;
@@ -33,7 +33,9 @@ namespace Netension.Request.NetCore.Asp.Senders
             var content = await _wrapper.WrapAsync(command, cancellationToken);
 
             _logger.LogDebug("Send {requestId} command to {url}", command.RequestId, $"{_client.BaseAddress}{options.Path}");
-            await _client.PostAsync(options.Path, content, cancellationToken);
+            var response = await _client.PostAsync(options.Path, content, cancellationToken);
+
+            response.EnsureSuccessStatusCode();
         }
     }
 }

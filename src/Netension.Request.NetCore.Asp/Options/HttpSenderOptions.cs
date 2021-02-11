@@ -2,7 +2,7 @@
 
 namespace Netension.Request.NetCore.Asp.Options
 {
-    public class HttpCommandSenderOptions
+    public class HttpSenderOptions
     {
         public PathString Path { get; set; }
     }

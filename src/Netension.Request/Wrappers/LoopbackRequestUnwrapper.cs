@@ -17,6 +17,8 @@ namespace Netension.Request.Wrappers
 
         public Task<IRequest> UnwrapAsync(LoopbackMessage envelop, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Unwrap {requestId} request", envelop.Request);
+
             return Task.FromResult(envelop.Request);
         }
     }

@@ -74,5 +74,24 @@ namespace Netension.Request.Test.Dispatchers
             // Assert
             await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync(new Command(), CancellationToken.None));
         }
+
+        [Fact(DisplayName = "CommandDispatcher - DispatchAsnyc - Handler throws exception")]
+        public async Task CommandDispatcher_DispatchAsync_HandlerThrowsException()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            var handlerMock = new Mock<ICommandHandler<Command>>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.IsAny<Type>()))
+                .Returns(handlerMock.Object);
+
+            handlerMock.Setup(h => h.HandleAsync(It.IsAny<Command>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception());
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(new Command(), CancellationToken.None));
+        }
     }
 }
