@@ -1,4 +1,5 @@
-﻿using Netension.Request.Abstraction.Defaults;
+﻿using Microsoft.AspNetCore.Http;
+using Netension.Request.Abstraction.Defaults;
 using Netension.Request.Abstraction.Requests;
 using System.Linq;
 
@@ -14,6 +15,6 @@ namespace System.Net.Http.Headers
         public static void SetMessageType(this HttpContentHeaders headers, IRequest request)
         {
             headers.Add(RequestDefaults.Header.MessageType, request.MessageType);
-        }
+        }        
     }
 }

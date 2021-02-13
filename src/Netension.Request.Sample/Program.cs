@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Netension.Request.Sample.Requests;
 using Netension.Request.Abstraction.Handlers;
+using Netension.Request.NetCore.Asp.Receivers;
 
 namespace Netension.Request.Sample
 {
@@ -67,6 +68,7 @@ namespace Netension.Request.Sample
                         app.UseEndpoints(endpoints =>
                         {
                             endpoints.MapControllers();
+                            endpoints.MapControllerRoute("generic", pattern: "/api", defaults: new { controller = "Generic", action = "Post" });
                         });
                     });
                 })

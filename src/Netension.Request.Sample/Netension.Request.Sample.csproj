@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Netension.Request.Abstraction\Netension.Request.Abstraction.csproj" />
     <ProjectReference Include="..\Netension.Request.Hosting.LightInject\Netension.Request.Hosting.LightInject.csproj" />
+    <ProjectReference Include="..\Netension.Request.NetCore.Asp\Netension.Request.NetCore.Asp.csproj" />
     <ProjectReference Include="..\Netension.Request\Netension.Request.csproj" />
   </ItemGroup>
 
