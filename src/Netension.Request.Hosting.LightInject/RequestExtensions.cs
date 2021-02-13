@@ -35,14 +35,20 @@ namespace Microsoft.Extensions.Hosting
 
                 services.RegisterScoped<ILoopbackRequestReceiver, LoopbackRequestReceiver>();
                 services.Decorate<ILoopbackRequestReceiver, LoopbackScopeHandler>();
-
-                services.RegisterScoped<ICommandDispatcher, CommandDispatcher>();
-                services.RegisterScoped<IQueryDispatcher, QueryDispatcher>();
             });
 
             build.Invoke(new LoopbackReceiverBuilder(builder));
 
             return builder;
+        }
+
+        public static IHostBuilder RegistrateRequesting(this IHostBuilder builder)
+        {
+            return builder.ConfigureContainer<IServiceContainer>((context, services) =>
+            {
+                services.RegisterScoped<ICommandDispatcher, CommandDispatcher>();
+                services.RegisterScoped<IQueryDispatcher, QueryDispatcher>();
+            });
         }
     }
 }

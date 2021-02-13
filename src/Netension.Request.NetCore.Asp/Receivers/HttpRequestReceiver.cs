@@ -31,6 +31,7 @@ namespace Netension.Request.NetCore.Asp.Receivers
 
         public async Task<IActionResult> ReceiveAsync(HttpRequest message, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Receive {id} request", message.GetHashCode());
             var request = await _unwrapper.UnwrapAsync(message, cancellationToken);
 
             if (request is ICommand command)
@@ -43,7 +44,8 @@ namespace Netension.Request.NetCore.Asp.Receivers
                 return new OkObjectResult(await _queryDispatcher.DispatchAsync((dynamic)request, cancellationToken));
             }
 
-            return new BadRequestObjectResult($"Unsupported {request.GetType().Name} request type");
+            _logger.LogError("{requestType} message is unsupported", request.GetType().Name);
+            throw new BadHttpRequestException($"{request.GetType().Name} message type is unsupported");
         }
     }
 }

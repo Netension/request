@@ -6,6 +6,7 @@ using Moq;
 using Netension.Request.Abstraction.Defaults;
 using Netension.Request.NetCore.Asp.Unwrappers;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Pipelines;
@@ -62,6 +63,20 @@ namespace Netension.Request.Test.Wrappers
 
             // Assert
             Assert.Equal(command, request);
+        }
+
+        [Fact(DisplayName = "HttpRequestUnwrapper - UnwrapAsync - Message-Type header missing")]
+        public async Task HttpRequestUnwrapper_UnwrapAsync_MessageTypeHeaderMissing()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var httpRequestMock = new Mock<HttpRequest>();
+
+            httpRequestMock.SetupGet(hr => hr.Headers).Returns(new HeaderDictionary());
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None));
         }
     }
 }

@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.NetCore.Asp.ConnectionHandlers
 {
-    public class GenericController : ControllerBase
+    public class RequestReceiverController : ControllerBase
     {
         private readonly IHttpRequestReceiver _requestReceiver;
         private readonly IHttpContextAccessor _contextAccessor;
 
-        public GenericController(IHttpRequestReceiver requestReceiver, IHttpContextAccessor contextAccessor)
+        public RequestReceiverController(IHttpRequestReceiver requestReceiver, IHttpContextAccessor contextAccessor)
         {
             _requestReceiver = requestReceiver;
             _contextAccessor = contextAccessor;

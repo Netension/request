@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{C64E8F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.Sample", "Netension.Request.Sample\Netension.Request.Sample.csproj", "{EA99BA26-C323-4C12-B405-D98AEC7C91AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netension.Request.NetCore.Asp.Hosting.LightInject", "Netension.Request.NetCore.Asp.Hosting.LightInject\Netension.Request.NetCore.Asp.Hosting.LightInject.csproj", "{AA4162F6-F645-410D-BAC9-9BECFE98B841}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{EA99BA26-C323-4C12-B405-D98AEC7C91AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA99BA26-C323-4C12-B405-D98AEC7C91AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA99BA26-C323-4C12-B405-D98AEC7C91AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA4162F6-F645-410D-BAC9-9BECFE98B841}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA4162F6-F645-410D-BAC9-9BECFE98B841}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA4162F6-F645-410D-BAC9-9BECFE98B841}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA4162F6-F645-410D-BAC9-9BECFE98B841}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,6 +62,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{58E5AF53-2236-4442-BD82-913DF701B43B} = {5DD741F5-B816-4055-B4CC-D3F081FFDC0C}
 		{EA99BA26-C323-4C12-B405-D98AEC7C91AD} = {C64E8F62-887C-45E8-B9BB-229F02247725}
+		{AA4162F6-F645-410D-BAC9-9BECFE98B841} = {5DD741F5-B816-4055-B4CC-D3F081FFDC0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF19B456-E8FB-487A-BA1A-EB344B586C1B}

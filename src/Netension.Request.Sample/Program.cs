@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Netension.Request.Sample.Requests;
 using Netension.Request.Abstraction.Handlers;
 using Netension.Request.NetCore.Asp.Receivers;
+using Microsoft.AspNetCore.Routing;
 
 namespace Netension.Request.Sample
 {
@@ -44,7 +45,12 @@ namespace Netension.Request.Sample
                     container.ScopeManagerProvider = new PerLogicalCallContextScopeManagerProvider();
                     container.RegisterSingleton<IServiceFactory>((factory) => container);
                 })
+                .ConfigureServices((services) =>
+                {
+                    services.AddHttpContextAccessor();
+                })
                 .RegistrateCorrelation()
+                .RegistrateRequesting()
                 .RegistrateLoopbackSender((builder) =>
                 {
                     builder.UseCorrelation();
@@ -53,6 +59,7 @@ namespace Netension.Request.Sample
                 {
                     builder.UseCorrelation();
                 })
+                .RegistrateHttpRequestReceiver()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.Configure((app) =>
@@ -68,7 +75,7 @@ namespace Netension.Request.Sample
                         app.UseEndpoints(endpoints =>
                         {
                             endpoints.MapControllers();
-                            endpoints.MapControllerRoute("generic", pattern: "/api", defaults: new { controller = "Generic", action = "Post" });
+                            endpoints.MapRequestReceiver();
                         });
                     });
                 })
