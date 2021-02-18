@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Http
 
         public static Guid GetCorrelationId(this IHeaderDictionary headers)
         {
-            if (!headers.ContainsKey(CorrelationDefaults.CorrelationId)) throw new InvalidOperationException($"{CorrelationDefaults.CorrelationId} header not present");
+            if (!headers.ContainsKey(CorrelationDefaults.CorrelationId)) throw new BadHttpRequestException($"{CorrelationDefaults.CorrelationId} header not present");
             return Guid.Parse(headers[CorrelationDefaults.CorrelationId].First());
         }
 

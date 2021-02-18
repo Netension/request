@@ -72,7 +72,7 @@ namespace Netension.Request.Test.Wrappers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None));
+            await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None));
         }
 
         [Fact(DisplayName = "HttpCorrelationUnwrapper - UnwrapAsync - Read Causation-Id header")]
