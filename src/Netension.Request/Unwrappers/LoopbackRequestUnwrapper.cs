@@ -4,7 +4,7 @@ using Netension.Request.Messages;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Netension.Request.Wrappers
+namespace Netension.Request.Unwrappers
 {
     public class LoopbackRequestUnwrapper : ILoopbackRequestUnwrapper
     {
