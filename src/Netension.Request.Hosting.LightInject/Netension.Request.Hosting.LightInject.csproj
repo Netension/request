@@ -6,7 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="LightInject" Version="6.4.0" />
+    <PackageReference Include="LightInject.Microsoft.AspNetCore.Hosting" Version="2.3.5" />
+    <PackageReference Include="LightInject.Microsoft.Hosting" Version="1.2.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
   </ItemGroup>
 
   <ItemGroup>

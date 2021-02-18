@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using Netension.Request.Abstraction.Requests;
@@ -10,7 +9,6 @@ using Netension.Request.NetCore.Asp.Wrappers;
 using System;
 using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -26,8 +24,7 @@ namespace Netension.Request.Test.Senders
         private readonly ILogger<HttpQuerySender> _logger;
         private Mock<IHttpRequestWrapper> _wrapperMock;
         private Mock<HttpMessageHandler> _httpMessageHandlerMock;
-        private Mock<IOptions<HttpSenderOptions>> _optionsMock;
-        private Mock<IOptions<JsonSerializerOptions>> _jsonSerializerOptionsMock;
+        private HttpSenderOptions _options;
 
         public HttpQuerySender_Test(ITestOutputHelper outputHelper)
         {
@@ -40,10 +37,7 @@ namespace Netension.Request.Test.Senders
         {
             _wrapperMock = new Mock<IHttpRequestWrapper>();
             _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            _optionsMock = new Mock<IOptions<HttpSenderOptions>>();
-            _jsonSerializerOptionsMock = new Mock<IOptions<JsonSerializerOptions>>();
-
-            _optionsMock.SetupGet(o => o.Value).Returns(new HttpSenderOptions { Path = PATH });
+            _options = new HttpSenderOptions { Path = PATH };
 
             _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage()
@@ -56,7 +50,7 @@ namespace Netension.Request.Test.Senders
                 BaseAddress = BASE_ADRESS
             };
 
-            return new HttpQuerySender(httpClient, _jsonSerializerOptionsMock.Object, _optionsMock.Object, _wrapperMock.Object, _logger);
+            return new HttpQuerySender(httpClient, _options, _wrapperMock.Object, _logger);
         }
 
         [Fact(DisplayName = "HttpQuerySender - QueryAsync - Wrap message")]

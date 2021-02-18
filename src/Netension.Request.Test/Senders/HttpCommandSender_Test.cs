@@ -25,7 +25,7 @@ namespace Netension.Request.Test.Senders
         private readonly ILogger<HttpCommandSender> _logger;
         private Mock<IHttpRequestWrapper> _wrapperMock;
         private Mock<HttpMessageHandler> _httpMessageHandlerMock;
-        private Mock<IOptions<HttpSenderOptions>> _optionsMock;
+        private HttpSenderOptions _options;
 
         public HttpCommandSender_Test(ITestOutputHelper outputHelper)
         {
@@ -38,9 +38,7 @@ namespace Netension.Request.Test.Senders
         {
             _wrapperMock = new Mock<IHttpRequestWrapper>();
             _httpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            _optionsMock = new Mock<IOptions<HttpSenderOptions>>();
-
-            _optionsMock.SetupGet(o => o.Value).Returns(new HttpSenderOptions { Path = PATH });
+            _options = new HttpSenderOptions { Path = PATH };
 
             _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                 .ReturnsAsync(new HttpResponseMessage());
@@ -49,7 +47,7 @@ namespace Netension.Request.Test.Senders
             {
                 BaseAddress = BASE_ADRESS
             };
-            return new HttpCommandSender(httpClient, _optionsMock.Object, _wrapperMock.Object, _logger);
+            return new HttpCommandSender(httpClient, _options, _wrapperMock.Object, _logger);
         }
 
         [Fact(DisplayName = "HttpCommandSender - SendAsync - Wrap message")]

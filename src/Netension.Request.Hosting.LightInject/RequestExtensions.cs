@@ -1,53 +1,36 @@
 ﻿using LightInject;
-using Netension.Extensions.Correlation;
 using Netension.Request.Abstraction.Dispatchers;
+using Netension.Request.Abstraction.Resolvers;
 using Netension.Request.Abstraction.Senders;
+using Netension.Request.Containers;
 using Netension.Request.Dispatchers;
+using Netension.Request.Hosting.LightInject;
 using Netension.Request.Hosting.LightInject.Builders;
-using Netension.Request.Receivers;
 using Netension.Request.Senders;
-using Netension.Request.Wrappers;
-using System;
 
 namespace Microsoft.Extensions.Hosting
 {
     public static class RequestExtensions
     {
-        public static IHostBuilder RegistrateLoopbackSender(this IHostBuilder builder, Action<LoopbackSenderBuilder> build)
+        public static IHostBuilder ConfigureRequesting(this IHostBuilder builder, IRequestingConfiguration configuration)
         {
-            builder.ConfigureContainer<IServiceContainer>((context, container) =>
-            {
-                container.RegisterScoped<ILoopbackRequestWrapper, LoopbackRequestWrapper>();
-                container.RegisterScoped<ICommandSender, LoopbackCommandSender>();
-                container.RegisterScoped<IQuerySender, LoopbackQuerySender>();
-            });
+            var requestSenderKeyContainer = new RequestSenderKeyContainer();
 
-            build.Invoke(new LoopbackSenderBuilder(builder));
+            var requestSenderBuilder = new RequestSenderBuilder(builder, requestSenderKeyContainer);
+            var requestReceiverBuilder = new RequestReceiverBuilder(builder);
 
-            return builder;
-        }
+            configuration.ConfigureRequestSenders(requestSenderBuilder);
+            configuration.ConfigureRequestReceivers(requestReceiverBuilder);
 
-        public static IHostBuilder RegistrateLoopbackReceiver(this IHostBuilder builder, Action<LoopbackReceiverBuilder> build)
-        {
-            builder.ConfigureContainer<IServiceContainer>((context, services) =>
-            {
-                services.RegisterScoped<ILoopbackRequestUnwrapper, LoopbackRequestUnwrapper>();
-
-                services.RegisterScoped<ILoopbackRequestReceiver, LoopbackRequestReceiver>();
-                services.Decorate<ILoopbackRequestReceiver, LoopbackScopeHandler>();
-            });
-
-            build.Invoke(new LoopbackReceiverBuilder(builder));
-
-            return builder;
-        }
-
-        public static IHostBuilder RegistrateRequesting(this IHostBuilder builder)
-        {
             return builder.ConfigureContainer<IServiceContainer>((context, services) =>
             {
                 services.RegisterScoped<ICommandDispatcher, CommandDispatcher>();
                 services.RegisterScoped<IQueryDispatcher, QueryDispatcher>();
+                services.RegisterTransient<IRequestSender, RequestSender>();
+
+                services.RegisterInstance(requestSenderKeyContainer);
+                services.RegisterSingleton<IRequestSenderKeyRegister>((factory) => factory.GetInstance<RequestSenderKeyContainer>());
+                services.RegisterSingleton<IRequestSenderKeyResolver>((factory) => factory.GetInstance<RequestSenderKeyContainer>());
             });
         }
     }
