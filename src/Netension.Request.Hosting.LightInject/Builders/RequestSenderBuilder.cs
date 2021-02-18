@@ -20,20 +20,24 @@ namespace Netension.Request.Hosting.LightInject.Builders
             Register = register;
         }
 
-        public RequestSenderBuilder RegistrateLoopbackSender(Action<LoopbackSenderBuilder> build, string key, Func<IRequest, bool> predicate)
+        public void RegistrateLoopbackSender(Action<LoopbackSenderBuilder> build, Func<IRequest, bool> predicate)
+        {
+            RegistrateLoopbackSender(RequestingDefaults.Senders.LOOPBACK, build, predicate);
+        }
+
+        public void RegistrateLoopbackSender(string key, Action<LoopbackSenderBuilder> build, Func<IRequest, bool> predicate)
         {
             Register.Registrate(key, predicate);
 
-            HostBuilder.ConfigureContainer<IServiceContainer>((context, container) =>
+            HostBuilder.ConfigureContainer<IServiceContainer>((container) =>
             {
-                container.RegisterScoped<ILoopbackRequestWrapper, LoopbackRequestWrapper>(key);
-                container.RegisterScoped<ICommandSender, LoopbackCommandSender>(key);
-                container.RegisterScoped<IQuerySender, LoopbackQuerySender>(key);
+                container.RegisterTransient<ICommandSender, LoopbackCommandSender>(key);
+                container.RegisterTransient<IQuerySender, LoopbackQuerySender>(key);
+
+                container.RegisterTransient<ILoopbackRequestWrapper, LoopbackRequestWrapper>(key);
             });
 
-            build.Invoke(new LoopbackSenderBuilder(HostBuilder, key));
-
-            return this;
+            build(new LoopbackSenderBuilder(HostBuilder, key));
         }
     }
 }

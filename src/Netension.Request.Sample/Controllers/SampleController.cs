@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Sample.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class SampleController : ControllerBase
     {
         private readonly IRequestSender _requestSender;

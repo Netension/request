@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using Netension.Request.Receivers;
 using Netension.Request.Unwrappers;
-using System;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {
@@ -10,24 +9,20 @@ namespace Netension.Request.Hosting.LightInject.Builders
     {
         public IHostBuilder HostBuilder { get; }
 
-        public RequestReceiverBuilder(IHostBuilder hostBuilder)
+        public RequestReceiverBuilder(IHostBuilder HostBuilder)
         {
-            HostBuilder = hostBuilder;
+            this.HostBuilder = HostBuilder;
         }
 
-        public RequestReceiverBuilder RegistrateLoopbackReceiver(Action<LoopbackReceiverBuilder> build)
+        public void RegistrateLoopbackRequestReceiver()
         {
-            HostBuilder.ConfigureContainer<IServiceContainer>((context, services) =>
+            HostBuilder.ConfigureContainer<IServiceContainer>(container =>
             {
-                services.RegisterScoped<ILoopbackRequestUnwrapper, LoopbackRequestUnwrapper>();
+                container.RegisterTransient<ILoopbackRequestReceiver, LoopbackRequestReceiver>();
+                container.Decorate<ILoopbackRequestReceiver, LoopbackScopeHandler>();
 
-                services.RegisterScoped<ILoopbackRequestReceiver, LoopbackRequestReceiver>();
-                services.Decorate<ILoopbackRequestReceiver, LoopbackScopeHandler>();
+                container.RegisterTransient<ILoopbackRequestUnwrapper, LoopbackRequestUnwrapper>();
             });
-
-            build.Invoke(new LoopbackReceiverBuilder(HostBuilder));
-
-            return this;
         }
     }
 }

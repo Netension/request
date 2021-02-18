@@ -1,6 +1,9 @@
+using LightInject;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Netension.Request.Hosting.LightInject;
-using Netension.Request.NetCore.Asp.Hosting.LightInject;
+using Netension.Request.Abstraction.Handlers;
+using Netension.Request.Sample.Requests;
+using Serilog;
 
 namespace Netension.Request.Sample
 {
@@ -8,7 +11,31 @@ namespace Netension.Request.Sample
     {
         public static void Main(string[] args)
         {
-            NetensionAspHostBuilder.Build<HostConfiguration>(args).Run();
+            CreateHostBuilder(args).Build().Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
+                .UseLightInject()
+                .UseRequesting(builder =>
+                {
+                    builder.HostBuilder.ConfigureContainer<IServiceContainer>(container =>
+                    {
+                        container.RegisterScoped<IQueryHandler<SampleQuery, string>, SampleQueryHandler>();
+                    });
+                    builder.RegistrateRequestSenders(builder =>
+                    {
+                        builder.RegistrateLoopbackSender(builder => { }, request => true);
+                    });
+                    builder.RegistrateRequestReceivers(builder =>
+                    {
+                        builder.RegistrateLoopbackRequestReceiver();
+                    });
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
