@@ -22,7 +22,8 @@ namespace Netension.Request.Sample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers()
-                .AddApplicationPart(typeof(RequestReceiverController).Assembly);
+                .AddRequestReceiverController();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Netension.Request.Sample", Version = "v1" });
