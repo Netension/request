@@ -7,6 +7,7 @@ using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Hosting.LightInject.Builders;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Enumerations;
 using Netension.Request.NetCore.Asp.Options;
 using Netension.Request.NetCore.Asp.Senders;
 using Netension.Request.NetCore.Asp.Wrappers;
@@ -17,7 +18,12 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
 {
     public static class RequestSenderBuilderExtensions
     {
-        public static RequestSenderBuilder RegistrateHttpSender(this RequestSenderBuilder builder, string key, Action<HttpSenderOptions, IConfiguration> configure, Action<HttpSenderBuilder> build, Func<IRequest, bool> predicate)
+        public static void RegistrateSender(this RequestSenderBuilder builder, HttpSenderEnumeration senderEnumeration)
+        {
+            builder.RegistrateHttpSender(senderEnumeration.Name, senderEnumeration.Configure, senderEnumeration.Build, senderEnumeration.Predicate);
+        }
+
+        public static void RegistrateHttpSender(this RequestSenderBuilder builder, string key, Action<HttpSenderOptions, IConfiguration> configure, Action<HttpSenderBuilder> build, Func<IRequest, bool> predicate)
         {
             builder.Register.Registrate(key, predicate);
 
@@ -35,11 +41,11 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
             {
                 container.RegisterScoped<IHttpRequestWrapper, HttpRequestWrapper>(key);
 
-                container.RegisterScoped<ICommandSender>(factory => new HttpCommandSender(factory.GetInstance<IHttpClientFactory>().CreateClient(key), factory.GetInstance<IOptionsSnapshot<HttpSenderOptions>>().Get(key), factory.GetInstance<IHttpRequestWrapper>(), factory.GetInstance<ILogger<HttpCommandSender>>()), key);
-                container.RegisterScoped<IQuerySender>(factory => new HttpQuerySender(factory.GetInstance<IHttpClientFactory>().CreateClient(key), factory.GetInstance<IOptionsSnapshot<HttpSenderOptions>>().Get(key), factory.GetInstance<IHttpRequestWrapper>(), factory.GetInstance<ILogger<HttpQuerySender>>()), key);
+                container.RegisterScoped<ICommandSender>(factory => new HttpCommandSender(factory.GetInstance<IHttpClientFactory>().CreateClient(key), factory.GetInstance<IOptionsSnapshot<HttpSenderOptions>>().Get(key), factory.GetInstance<IHttpRequestWrapper>(key), factory.GetInstance<ILogger<HttpCommandSender>>()), key);
+                container.RegisterScoped<IQuerySender>(factory => new HttpQuerySender(factory.GetInstance<IHttpClientFactory>().CreateClient(key), factory.GetInstance<IOptionsSnapshot<HttpSenderOptions>>().Get(key), factory.GetInstance<IHttpRequestWrapper>(key), factory.GetInstance<ILogger<HttpQuerySender>>()), key);
             });
 
-            return builder;
+            build(new HttpSenderBuilder(builder.HostBuilder, key));
         }
 
         private static void ConfigureClient(IServiceProvider provider, HttpClient client, string key)

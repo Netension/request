@@ -1,6 +1,7 @@
 ﻿using LightInject;
 using Microsoft.Extensions.Hosting;
 using Netension.Request.Wrappers;
+using System;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {
@@ -19,7 +20,7 @@ namespace Netension.Request.Hosting.LightInject.Builders
         {
             HostBuilder.ConfigureContainer<IServiceContainer>((context, container) =>
             {
-                container.Decorate<ILoopbackRequestWrapper, LoopbackCorrelationWrapper>();
+                container.Decorate(typeof(ILoopbackRequestWrapper), typeof(LoopbackCorrelationWrapper), registration => registration.ServiceName.Equals(Key, StringComparison.InvariantCultureIgnoreCase));
             });
 
             return this;

@@ -28,7 +28,7 @@ namespace Netension.Request.NetCore.Asp.Wrappers
             var response = await _next.WrapAsync(request, cancellationToken);
 
             _logger.LogDebug("Set {header} header to {correlationId}", CorrelationDefaults.CorrelationId, _correlationAccessor.CorrelationId);
-            response.Headers.SetCorrelationId(_correlationAccessor.CorrelationId.Value);
+            response.Headers.SetCorrelationId(_correlationAccessor.CorrelationId);
 
             _logger.LogDebug("Set {header} header to {causationId}", CorrelationDefaults.CausationId, _correlationAccessor.MessageId);
             response.Headers.SetCausationId(_correlationAccessor.MessageId);

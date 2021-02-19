@@ -52,22 +52,6 @@ namespace Netension.Request.Test.Wrappers
             Assert.Equal(correlationId, message.Headers.GetCorrelationId());
         }
 
-        [Fact(DisplayName = "LoopbackCorrelationWrapper - WrapAsync - Generate correlation id")]
-        public async Task LoopbackCorrelationWrapper_WrapAsync_GenerateCorrelationId()
-        {
-            // Arrange
-            var sut = CreateSUT();
-
-            _loopbackRequestWrapperMock.Setup(lrw => lrw.WrapAsync(It.IsAny<IRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new LoopbackMessage(new Command()));
-
-            // Act
-            var message = await sut.WrapAsync(new Command(), CancellationToken.None);
-
-            // Assert
-            Assert.NotEqual(Guid.Empty, message.Headers.GetCorrelationId());
-        }
-
         [Fact(DisplayName = "LoopbackCorrelationWrapper - WrapAsync - Set causation header")]
         public async Task LoopbackCorrelationWrapper_WrapAsync_SetCausationHeader()
         {
@@ -77,6 +61,9 @@ namespace Netension.Request.Test.Wrappers
 
             _loopbackRequestWrapperMock.Setup(lrw => lrw.WrapAsync(It.IsAny<IRequest>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new LoopbackMessage(new Command(requestId)));
+
+            _correlationAccessorMock.Setup(ca => ca.MessageId)
+                .Returns(requestId);
 
             // Act
             var message = await sut.WrapAsync(new Command(requestId), CancellationToken.None);

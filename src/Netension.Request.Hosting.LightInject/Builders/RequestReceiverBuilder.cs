@@ -24,6 +24,8 @@ namespace Netension.Request.Hosting.LightInject.Builders
 
                 container.RegisterTransient<ILoopbackRequestUnwrapper, LoopbackRequestUnwrapper>();
             });
+
+            build(new LoopbackReceiverBuilder(HostBuilder));
         }
     }
 }

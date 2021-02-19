@@ -24,14 +24,14 @@ namespace Netension.Request.Extensions
             headers.Add(CorrelationDefaults.CorrelationId, value);
         }
 
-        public static Guid? GetCorrelationId(this IDictionary<string, object> headers)
+        public static Guid GetCorrelationId(this IDictionary<string, object> headers)
         {
-            if (!headers.TryGetValue(CorrelationDefaults.CorrelationId, out object correlationId)) return null;
+            if (!headers.TryGetValue(CorrelationDefaults.CorrelationId, out object correlationId)) throw new InvalidOperationException($"{CorrelationDefaults.CorrelationId} header does not present");
 
             return (Guid)correlationId;
         }
 
-        public static void SetCausationId(this IDictionary<string, object> headers, Guid value)
+        public static void SetCausationId(this IDictionary<string, object> headers, Guid? value)
         {
             headers.Add(CorrelationDefaults.CausationId, value);
         }
@@ -40,7 +40,7 @@ namespace Netension.Request.Extensions
         {
             if (!headers.TryGetValue(CorrelationDefaults.CausationId, out object causationId)) return null;
 
-            return (Guid)causationId;
+            return causationId as Guid?;
         }
     }
 }

@@ -9,6 +9,6 @@ namespace Netension.Request.NetCore.Asp.Options
         [Required]
         public Uri BaseAddress { get; set; }
         [Required]
-        public PathString Path { get; set; }
+        public string Path { get; set; }
     }
 }

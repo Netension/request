@@ -14,8 +14,8 @@ namespace Netension.Request.Test.Wrappers
 {
     public class TestCorrelationMutator : ICorrelationMutator
     {
-        public Guid MessageId { get; set; }
-        public Guid? CorrelationId { get; set; }
+        public Guid? MessageId { get; set; }
+        public Guid CorrelationId { get; set; }
         public Guid? CausationId { get;  set; }
     }
 
@@ -46,9 +46,12 @@ namespace Netension.Request.Test.Wrappers
             // Arrange
             var sut = CreateSUT();
             var requestId = Guid.NewGuid();
+            var message = new LoopbackMessage(new Command(requestId));
+
+            message.Headers.SetCorrelationId(Guid.NewGuid());
 
             // Act
-            await sut.UnwrapAsync(new LoopbackMessage(new Command(requestId)), CancellationToken.None);
+            await sut.UnwrapAsync(message, CancellationToken.None);
 
             // Assert
             Assert.Equal(requestId, _correlationMutatorMock.MessageId);
@@ -79,6 +82,7 @@ namespace Netension.Request.Test.Wrappers
             var causationId = Guid.NewGuid();
             var message = new LoopbackMessage(new Command());
 
+            message.Headers.SetCorrelationId(Guid.NewGuid());
             message.Headers.SetCausationId(causationId);
 
             // Act
@@ -94,6 +98,8 @@ namespace Netension.Request.Test.Wrappers
             // Arrange
             var sut = CreateSUT();
             var message = new LoopbackMessage(new Command());
+
+            message.Headers.SetCorrelationId(Guid.NewGuid());
 
             // Act
             await sut.UnwrapAsync(message, CancellationToken.None);

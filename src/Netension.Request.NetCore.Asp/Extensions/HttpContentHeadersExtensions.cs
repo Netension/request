@@ -1,7 +1,6 @@
 ﻿using Netension.Extensions.Correlation.Defaults;
 using Netension.Request.Abstraction.Defaults;
 using Netension.Request.Abstraction.Requests;
-using System.Linq;
 
 namespace System.Net.Http.Headers
 {
@@ -17,7 +16,7 @@ namespace System.Net.Http.Headers
             headers.Add(CorrelationDefaults.CorrelationId, correlationId.ToString());
         }
 
-        public static void SetCausationId(this HttpContentHeaders headers, Guid causationId)
+        public static void SetCausationId(this HttpContentHeaders headers, Guid? causationId)
         {
             headers.Add(CorrelationDefaults.CausationId, causationId.ToString());
         }

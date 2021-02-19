@@ -27,13 +27,12 @@ namespace Netension.Request.Wrappers
         {
             var message = await _next.WrapAsync(request, cancellationToken);
 
-            var correlationId = _correlationAccessor.CorrelationId ?? Guid.NewGuid();
+            var correlationId = _correlationAccessor.CorrelationId;
             _logger.LogDebug("Set {header} header to {correlationId}", CorrelationDefaults.CorrelationId, correlationId);
             message.Headers.SetCorrelationId(correlationId);
 
-            var messageId = message.Request.RequestId.Value;
-            _logger.LogDebug("Set {header} header to {causationId}", CorrelationDefaults.CausationId, messageId);
-            message.Headers.SetCausationId(messageId);
+            _logger.LogDebug("Set {header} header to {causationId}", CorrelationDefaults.CausationId, _correlationAccessor.MessageId);
+            message.Headers.SetCausationId(_correlationAccessor.MessageId);
 
             return message;
         }
