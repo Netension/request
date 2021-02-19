@@ -20,17 +20,26 @@ namespace Netension.Request.Sample
                 .UseLightInject()
                 .UseRequesting(builder =>
                 {
+                    builder.RegistrateCorrelation();
+
+                    builder.RegistrateHandlers((register) =>
+                    {
+                        register.RegistrateHandlerFromAssemblyOf<Startup>();
+                    });
+
                     builder.HostBuilder.ConfigureContainer<IServiceContainer>(container =>
                     {
                         container.RegisterScoped<IQueryHandler<SampleQuery, string>, SampleQueryHandler>();
                     });
+
                     builder.RegistrateRequestSenders(builder =>
                     {
-                        builder.RegistrateLoopbackSender(builder => { }, request => true);
+                        builder.RegistrateLoopbackSender(builder => { builder.UseCorrelation(); }, request => true);
                     });
+
                     builder.RegistrateRequestReceivers(builder =>
                     {
-                        builder.RegistrateLoopbackRequestReceiver();
+                        builder.RegistrateLoopbackRequestReceiver(builder => { builder.UseCorrelation(); });
                     });
                 })
                 .ConfigureWebHostDefaults(webBuilder =>

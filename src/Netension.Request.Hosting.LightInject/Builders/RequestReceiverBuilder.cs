@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Netension.Request.Receivers;
 using Netension.Request.Unwrappers;
+using System;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {
@@ -14,7 +15,7 @@ namespace Netension.Request.Hosting.LightInject.Builders
             this.HostBuilder = HostBuilder;
         }
 
-        public void RegistrateLoopbackRequestReceiver()
+        public void RegistrateLoopbackRequestReceiver(Action<LoopbackReceiverBuilder> build)
         {
             HostBuilder.ConfigureContainer<IServiceContainer>(container =>
             {

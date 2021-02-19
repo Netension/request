@@ -1,10 +1,12 @@
 ﻿using LightInject;
 using Microsoft.Extensions.Hosting;
+using Netension.Extensions.Correlation;
 using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Resolvers;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Containers;
 using Netension.Request.Dispatchers;
+using Netension.Request.Hosting.LightInject.Registrates;
 using Netension.Request.Senders;
 using System;
 
@@ -17,6 +19,19 @@ namespace Netension.Request.Hosting.LightInject.Builders
         public RequestingBuilder(IHostBuilder hostBuilder)
         {
             HostBuilder = hostBuilder;
+        }
+
+        public void RegistrateHandlers(Action<HandlerRegister> registering)
+        {
+            registering(new HandlerRegister(HostBuilder));
+        }
+
+        public void RegistrateCorrelation()
+        {
+            HostBuilder.ConfigureServices(services =>
+            {
+                services.RegistrateCorrelation();
+            });
         }
 
         public void RegistrateRequestSenders(Action<RequestSenderBuilder> build)
