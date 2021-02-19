@@ -1,4 +1,5 @@
 ﻿using Netension.Request.Abstraction.Handlers;
+using Netension.Request.Abstraction.Senders;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,9 +12,17 @@ namespace Netension.Request.Sample.Requests
 
     public class SampleQueryHandler : IQueryHandler<SampleQuery, string>
     {
-        public Task<string> HandleAsync(SampleQuery query, CancellationToken cancellationToken)
+        private readonly IRequestSender _sender;
+
+        public SampleQueryHandler(IRequestSender sender)
         {
-            return Task.FromResult($"SampleQuery call at {DateTime.Now}");
+            _sender = sender;
+        }
+
+        public async Task<string> HandleAsync(SampleQuery query, CancellationToken cancellationToken)
+        {
+            await _sender.SendAsync(new SampleCommand(), cancellationToken);
+            return $"SampleQuery call at {DateTime.Now}";
         }
     }
 }
