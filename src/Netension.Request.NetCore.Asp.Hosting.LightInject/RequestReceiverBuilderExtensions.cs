@@ -1,13 +1,11 @@
 ﻿using LightInject;
 using Microsoft.Extensions.DependencyInjection;
-using Netension.Request.Hosting.LightInject.Builders;
-using Netension.Request.NetCore.Asp.ConnectionHandlers;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
 using Netension.Request.NetCore.Asp.Receivers;
 using Netension.Request.NetCore.Asp.Unwrappers;
 using System;
 
-namespace Netension.Request.NetCore.Asp.Hosting.LightInject
+namespace Netension.Request.Hosting.LightInject.Builders
 {
     public static class RequestReceiverBuilderExtensions
     {

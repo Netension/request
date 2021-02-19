@@ -1,11 +1,7 @@
-using LightInject;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Netension.Request.Abstraction.Handlers;
-using Netension.Request.NetCore.Asp.Hosting.LightInject;
+using Netension.Request.Hosting.LightInject.Builders;
 using Netension.Request.Sample.Enumerations;
-using Netension.Request.Sample.Requests;
 using Serilog;
 
 namespace Netension.Request.Sample

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
-using Netension.Request.Hosting.LightInject.Builders;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Enumerations;
 using Netension.Request.NetCore.Asp.Options;
@@ -13,8 +12,9 @@ using Netension.Request.NetCore.Asp.Senders;
 using Netension.Request.NetCore.Asp.Wrappers;
 using System;
 using System.Net.Http;
+using System.Reflection;
 
-namespace Netension.Request.NetCore.Asp.Hosting.LightInject
+namespace Netension.Request.Hosting.LightInject.Builders
 {
     public static class RequestSenderBuilderExtensions
     {

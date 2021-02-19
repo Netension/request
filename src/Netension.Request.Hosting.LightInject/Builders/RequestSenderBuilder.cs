@@ -1,6 +1,5 @@
 ﻿using LightInject;
 using Microsoft.Extensions.Hosting;
-using Netension.Core;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Resolvers;
 using Netension.Request.Abstraction.Senders;
@@ -8,6 +7,7 @@ using Netension.Request.Hosting.LightInject.Enumerations;
 using Netension.Request.Senders;
 using Netension.Request.Wrappers;
 using System;
+using System.Reflection;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {
