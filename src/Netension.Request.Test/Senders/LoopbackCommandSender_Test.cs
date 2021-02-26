@@ -62,7 +62,7 @@ namespace Netension.Request.Test.Senders
             await sut.SendAsync(command, CancellationToken.None);
 
             // Assert
-            _loopbackRequestReceiverMock.Verify(lrr=> lrr.ReceiveAsync(It.Is<LoopbackMessage>(lm => lm.Request.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
+            _loopbackRequestReceiverMock.Verify(lrr => lrr.ReceiveAsync(It.Is<LoopbackMessage>(lm => lm.Request.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

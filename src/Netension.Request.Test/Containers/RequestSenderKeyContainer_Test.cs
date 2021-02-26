@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
-using Netension.Request.Containers;
+﻿using Netension.Request.Containers;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Netension.Request.Test.Containers
 {

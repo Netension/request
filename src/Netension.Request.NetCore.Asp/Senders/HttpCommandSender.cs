@@ -24,7 +24,7 @@ namespace Netension.Request.NetCore.Asp.Senders
             _logger = logger;
         }
 
-        public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) 
+        public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
             where TCommand : ICommand
         {
             var content = await _wrapper.WrapAsync(command, cancellationToken);

@@ -16,7 +16,7 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Enumerations
         {
         }
 
-        public HttpSenderEnumeration(int id, string name, Action<HttpSenderOptions, IConfiguration> configure, Action<HttpSenderBuilder> build, Func<IRequest, bool> predicate) 
+        public HttpSenderEnumeration(int id, string name, Action<HttpSenderOptions, IConfiguration> configure, Action<HttpSenderBuilder> build, Func<IRequest, bool> predicate)
             : base(id, name, build, predicate)
         {
             Configure = configure;

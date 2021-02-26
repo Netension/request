@@ -1,10 +1,10 @@
-﻿using Netension.Request.Wrappers;
+﻿using Microsoft.Extensions.Logging;
+using Netension.Request.Extensions;
+using Netension.Request.Wrappers;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using Microsoft.Extensions.Logging;
-using Netension.Request.Extensions;
 
 namespace Netension.Request.Test.Wrappers
 {

@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Netension.Request.Abstraction.Handlers;
-using Netension.Request.Abstraction.Requests;
 using Netension.Request.Dispatchers;
 using System;
 using System.Threading;
@@ -43,7 +41,7 @@ namespace Netension.Request.Test.Dispatchers
             await sut.DispatchAsync(new Command(), CancellationToken.None);
 
             // Assert
-            _serviceProviderMock.Verify(sp => sp.GetService(It.Is<Type>(t =>t.Equals(typeof(ICommandHandler<Command>)))), Times.Once);
+            _serviceProviderMock.Verify(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(ICommandHandler<Command>)))), Times.Once);
         }
 
         [Fact(DisplayName = "CommandDispather - DispatchAsync - Call handler")]

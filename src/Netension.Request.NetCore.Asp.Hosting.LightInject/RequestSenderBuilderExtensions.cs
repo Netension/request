@@ -12,7 +12,6 @@ using Netension.Request.NetCore.Asp.Senders;
 using Netension.Request.NetCore.Asp.Wrappers;
 using System;
 using System.Net.Http;
-using System.Reflection;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {
@@ -33,7 +32,7 @@ namespace Netension.Request.Hosting.LightInject.Builders
                     .Configure(configure)
                     .ValidateDataAnnotations();
 
-                services.AddHttpClient<HttpCommandSender>(key, (provider, client) => ConfigureClient(provider, client, key));                
+                services.AddHttpClient<HttpCommandSender>(key, (provider, client) => ConfigureClient(provider, client, key));
                 services.AddHttpClient<HttpQuerySender>(key, (provider, client) => ConfigureClient(provider, client, key));
             });
 

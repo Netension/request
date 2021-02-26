@@ -34,7 +34,8 @@ namespace Netension.Request.Receivers
             {
                 await _commandDispatcher.DispatchAsync(command, cancellationToken);
                 return null;
-            } else if (request.GetType().GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IQuery<>)))
+            }
+            else if (request.GetType().GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IQuery<>)))
             {
                 return await _queryDispatcher.DispatchAsync((dynamic)request, cancellationToken);
             }

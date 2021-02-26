@@ -16,7 +16,7 @@ namespace Netension.Request.Test.Receivers
 {
     public class TestRequest : BaseRequest
     {
-        public TestRequest() 
+        public TestRequest()
             : base(Guid.NewGuid())
         {
         }

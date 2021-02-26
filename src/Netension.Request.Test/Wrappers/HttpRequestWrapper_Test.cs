@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Moq;
 using Netension.Request.NetCore.Asp.Wrappers;
-using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;

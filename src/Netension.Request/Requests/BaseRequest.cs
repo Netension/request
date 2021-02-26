@@ -4,7 +4,7 @@ using System;
 namespace Netension.Request.Requests
 {
     /// <inheritdoc cref="IRequest"/>
-    public  class BaseRequest : IRequest
+    public class BaseRequest : IRequest
     {
         public Guid? RequestId { get; }
         public string MessageType => $"{GetType().FullName}, {GetType().Assembly.GetName().Name}";
@@ -32,7 +32,7 @@ namespace Netension.Request.Requests
         {
             return -2107324841 + RequestId.GetHashCode();
         }
-        
+
         public override bool Equals(object obj)
         {
             return Equals(obj as IRequest);

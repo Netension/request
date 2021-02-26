@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Resolvers;
 using Netension.Request.Abstraction.Senders;

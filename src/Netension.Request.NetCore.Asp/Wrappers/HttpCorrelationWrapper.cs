@@ -2,7 +2,6 @@
 using Netension.Extensions.Correlation;
 using Netension.Extensions.Correlation.Defaults;
 using Netension.Request.Abstraction.Requests;
-using System;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading;

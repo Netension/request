@@ -7,7 +7,6 @@ using Netension.Request.Hosting.LightInject.Enumerations;
 using Netension.Request.Senders;
 using Netension.Request.Wrappers;
 using System;
-using System.Reflection;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {

@@ -1,15 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Netension.Extensions.Correlation;
+using Netension.Request.Abstraction.Requests;
+using Netension.Request.Extensions;
+using Netension.Request.Messages;
 using Netension.Request.Wrappers;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
-using Netension.Request.Messages;
-using Netension.Request.Abstraction.Requests;
-using Netension.Request.Extensions;
 
 namespace Netension.Request.Test.Wrappers
 {

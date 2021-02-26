@@ -9,7 +9,7 @@ namespace System.Net.Http.Headers
         public static void SetMessageType(this HttpContentHeaders headers, IRequest request)
         {
             headers.Add(RequestDefaults.Header.MessageType, request.MessageType);
-        }  
+        }
 
         public static void SetCorrelationId(this HttpContentHeaders headers, Guid correlationId)
         {
