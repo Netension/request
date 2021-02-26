@@ -1,12 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Netension.Request.Messages;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netension.Request.Receivers
 {
+    /// <summary>
+    /// Reponsible for create scope for the <see cref="ILoopbackRequestReceiver"/>.
+    /// </summary>
     public class LoopbackScopeHandler : ILoopbackRequestReceiver
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;

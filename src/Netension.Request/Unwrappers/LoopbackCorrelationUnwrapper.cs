@@ -8,12 +8,24 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Unwrappers
 {
+    /// <summary>
+    /// Unwrap Correlation-Id and Causation-Id from <see cref="ILoopbackRequestUnwrapper"/>.
+    /// </summary>
+    /// <remarks>
+    /// The unwrapped Correlation-Id and Causation-Id value will be accessible via <see cref="ICorrelationAccessor"/>.
+    /// </remarks>
     public class LoopbackCorrelationUnwrapper : ILoopbackRequestUnwrapper
     {
         private ICorrelationMutator _correlationMutator;
         private ILoopbackRequestUnwrapper _next;
         private ILogger<LoopbackCorrelationUnwrapper> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="LoopbackCorrelationUnwrapper"/>.
+        /// </summary>
+        /// <param name="correlationMutator"><see cref="ICorrelationMutator"/> instance.</param>
+        /// <param name="next">Next <see cref="ILoopbackRequestUnwrapper"/> instance in the pipeline.</param>
+        /// <param name="logger"><see cref="ILogger{TCategoryName}"/> instance.</param>
         public LoopbackCorrelationUnwrapper(ICorrelationMutator correlationMutator, ILoopbackRequestUnwrapper next, ILogger<LoopbackCorrelationUnwrapper> logger)
         {
             _correlationMutator = correlationMutator;
@@ -21,6 +33,8 @@ namespace Netension.Request.Unwrappers
             _logger = logger;
         }
 
+        /// <inheritdoc/>
+        /// <exception cref="System.InvalidOperationException">Throws if Correlation-Id header does not present.</exception>
         public async Task<IRequest> UnwrapAsync(LoopbackMessage envelop, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Set {property} to {requestId}", nameof(_correlationMutator.MessageId), envelop.Request.RequestId);

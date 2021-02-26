@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Dispatchers
 {
+    /// <inheritdoc/>
     public class CommandDispatcher : ICommandDispatcher
     {
         private readonly IServiceProvider _serviceProvider;

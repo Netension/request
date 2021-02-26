@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Unwrappers
 {
+    /// <inheritdoc cref="ILoopbackRequestUnwrapper"/>
     public class LoopbackRequestUnwrapper : ILoopbackRequestUnwrapper
     {
         private readonly ILogger<LoopbackRequestUnwrapper> _logger;
 
+        /// <inheritdoc/>
+        /// <param name="logger"><see cref="ILogger{TCategoryName}"/> instance.</param>
         public LoopbackRequestUnwrapper(ILogger<LoopbackRequestUnwrapper> logger)
         {
             _logger = logger;

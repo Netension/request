@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace Netension.Request.Containers
 {
+    /// <inheritdoc/>
     public class RequestSenderKeyContainer : IRequestSenderKeyResolver, IRequestSenderKeyRegister
     {
         private readonly Dictionary<string, Func<IRequest, bool>> _keys = new Dictionary<string, Func<IRequest, bool>>();

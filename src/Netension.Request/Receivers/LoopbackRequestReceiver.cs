@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Receivers
 {
+    /// <inheritdoc/>
     public class LoopbackRequestReceiver : ILoopbackRequestReceiver
     {
         private readonly ICommandDispatcher _commandDispatcher;

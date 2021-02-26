@@ -8,12 +8,19 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Senders
 {
+    /// <inheritdoc cref="IQuerySender"/>
     public class LoopbackQuerySender : IQuerySender
     {
         private readonly ILoopbackRequestWrapper _wrapper;
         private readonly ILoopbackRequestReceiver _receiver;
         private readonly ILogger<LoopbackQuerySender> _logger;
 
+        /// <summary>
+        /// Initialize new instance of <see cref="LoopbackQuerySender"/>.
+        /// </summary>
+        /// <param name="wrapper">Instance of <see cref="ILoopbackRequestWrapper"/>.</param>
+        /// <param name="receiver">Instance of <see cref="ILoopbackRequestReceiver"/>.</param>
+        /// <param name="logger">Instance of <see cref="ILogger{TCategoryName}"/>.</param>
         public LoopbackQuerySender(ILoopbackRequestWrapper wrapper, ILoopbackRequestReceiver receiver, ILogger<LoopbackQuerySender> logger)
         {
             _wrapper = wrapper;
