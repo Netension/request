@@ -40,7 +40,9 @@ namespace Netension.Request.Hosting.LightInject.Builders
 
             HostBuilder.ConfigureContainer<IServiceContainer>(container =>
             {
-                container.RegisterScoped<IRequestSender, RequestSender>();
+                container.RegisterScoped<RequestSender>();
+                container.RegisterScoped<ICommandSender>(factory => factory.GetInstance<RequestSender>());
+                container.RegisterScoped<IQuerySender>(factory => factory.GetInstance<RequestSender>());
 
                 container.RegisterInstance<IRequestSenderKeyResolver>(requestSenderKeyContainer);
             });

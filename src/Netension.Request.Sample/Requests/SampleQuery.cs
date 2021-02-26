@@ -12,16 +12,16 @@ namespace Netension.Request.Sample.Requests
 
     public class SampleQueryHandler : IQueryHandler<SampleQuery, string>
     {
-        private readonly IRequestSender _sender;
+        private readonly ICommandSender _commandSender;
 
-        public SampleQueryHandler(IRequestSender sender)
+        public SampleQueryHandler(ICommandSender commandSender)
         {
-            _sender = sender;
+            _commandSender = commandSender;
         }
 
         public async Task<string> HandleAsync(SampleQuery query, CancellationToken cancellationToken)
         {
-            await _sender.SendAsync(new SampleCommand(), cancellationToken);
+            await _commandSender.SendAsync(new SampleCommand(), cancellationToken);
             return $"SampleQuery call at {DateTime.Now}";
         }
     }

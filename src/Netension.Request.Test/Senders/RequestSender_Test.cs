@@ -2,6 +2,7 @@
 using Moq;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Resolvers;
+using Netension.Request.Abstraction.Senders;
 using Netension.Request.Senders;
 using System;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace Netension.Request.Test.Senders
         public async Task RequestSender_SendAsync_ResolveKey()
         {
             // Arrange
-            var sut = CreateSUT();
+            var sut = (ICommandSender)CreateSUT();
             var command = new Command();
 
             _requestSenderKeyResolverMock.Setup(rskr => rskr.Resolve(It.IsAny<IRequest>()))

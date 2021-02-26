@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Netension.Request.Senders
 {
-    public class RequestSender : IRequestSender
+    public class RequestSender : ICommandSender, IQuerySender
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IRequestSenderKeyResolver _resolver;
@@ -21,7 +21,7 @@ namespace Netension.Request.Senders
             _logger = logger;
         }
 
-        public async Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+        async Task<TResponse> IQuerySender.QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
             var keys = _resolver.Resolve(query);
 
@@ -36,7 +36,7 @@ namespace Netension.Request.Senders
             return default(TResponse);
         }
 
-        public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
+        async Task ICommandSender.SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) 
         {
             var keys = _resolver.Resolve(command);
 
