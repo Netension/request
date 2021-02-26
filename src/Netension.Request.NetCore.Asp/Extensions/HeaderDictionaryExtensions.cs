@@ -22,7 +22,9 @@ namespace Microsoft.AspNetCore.Http
         public static Guid? GetCausationId(this IHeaderDictionary headers)
         {
             if (!headers.ContainsKey(CorrelationDefaults.CausationId)) return null;
-            return Guid.Parse(headers[CorrelationDefaults.CausationId].First());
+            var value = headers[CorrelationDefaults.CausationId].First();
+            if (string.IsNullOrEmpty(value)) return null;
+            return Guid.Parse(value);
         }
     }
 }

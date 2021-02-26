@@ -1,5 +1,5 @@
-﻿using Netension.Request.Abstraction.Handlers;
-using Netension.Request.Abstraction.Senders;
+﻿using Microsoft.Extensions.Logging;
+using Netension.Request.Handlers;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,19 +10,16 @@ namespace Netension.Request.Sample.Requests
     {
     }
 
-    public class SampleQueryHandler : IQueryHandler<SampleQuery, string>
+    public class SampleQueryHandler : QueryHandler<SampleQuery, string>
     {
-        private readonly ICommandSender _commandSender;
-
-        public SampleQueryHandler(ICommandSender commandSender)
+        public SampleQueryHandler(ILogger<SampleQueryHandler> logger) 
+            : base(logger)
         {
-            _commandSender = commandSender;
         }
 
-        public async Task<string> HandleAsync(SampleQuery query, CancellationToken cancellationToken)
+        public override Task<string> HandleAsync(SampleQuery query, CancellationToken cancellationToken)
         {
-            await _commandSender.SendAsync(new SampleCommand(), cancellationToken);
-            return $"SampleQuery call at {DateTime.Now}";
+            return Task.FromResult($"SampleQuery call at {DateTime.Now}");
         }
     }
 }

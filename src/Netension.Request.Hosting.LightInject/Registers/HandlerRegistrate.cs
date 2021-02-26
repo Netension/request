@@ -34,7 +34,8 @@ namespace Netension.Request.Hosting.LightInject.Registrates
         {
             _hostBuilder.ConfigureContainer<IServiceContainer>(container =>
             {
-                container.RegisterAssembly(assembly, () => new PerScopeLifetime(), (serviceType, implementingType) => implementingType.IsImplementGenericInterface(typeof(ICommandHandler<>)) || implementingType.IsImplementGenericInterface(typeof(IQueryHandler<,>)));
+                container.RegisterAssembly(assembly, () => new PerScopeLifetime(), (serviceType, implementingType) => 
+                implementingType.IsImplementGenericInterface(typeof(ICommandHandler<>)) || implementingType.IsImplementGenericInterface(typeof(IQueryHandler<,>)));
             });
         }
 

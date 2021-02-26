@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Netension.Request.Abstraction.Handlers;
+using Netension.Request.Abstraction.Senders;
+using Netension.Request.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,19 +10,17 @@ namespace Netension.Request.Sample.Requests
     {
     }
 
-    public class SampleCommandHandler : ICommandHandler<SampleCommand>
+    public class SampleCommandHandler : CommandHandler<SampleCommand>
     {
-        private readonly ILogger<SampleCommandHandler> _logger;
-
-        public SampleCommandHandler(ILogger<SampleCommandHandler> logger)
+        public SampleCommandHandler(IQuerySender querySender, ILogger<SampleCommandHandler> logger)
+            : base(querySender, logger)
         {
-            _logger = logger;
         }
 
-        public Task HandleAsync(SampleCommand command, CancellationToken cancellationToken)
+        public async override Task HandleAsync(SampleCommand command, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("SampleCommand handled!");
-            return Task.CompletedTask;
+            Logger.LogInformation("SampleCommand handled!");
+            Logger.LogInformation(await QueryAsnyc(new SampleQuery(), cancellationToken));
         }
     }
 }

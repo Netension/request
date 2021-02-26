@@ -10,17 +10,17 @@ namespace Netension.Request.Sample.Controllers
     [Route("[controller]")]
     public class SampleController : ControllerBase
     {
-        private readonly IQuerySender _querySender;
+        private readonly ICommandSender _commandSender;
 
-        public SampleController(IQuerySender querySender)
+        public SampleController(ICommandSender commandSender)
         {
-            _querySender = querySender;
+            _commandSender = commandSender;
         }
 
         [HttpGet]
-        public async Task<string> Get()
+        public async Task Get()
         {
-            return await _querySender.QueryAsync(new SampleQuery(), CancellationToken.None);
+            await _commandSender.SendAsync(new SampleCommand(), CancellationToken.None);
         }
     }
 }

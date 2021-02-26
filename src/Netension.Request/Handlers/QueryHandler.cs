@@ -1,0 +1,21 @@
+﻿using Microsoft.Extensions.Logging;
+using Netension.Request.Abstraction.Handlers;
+using Netension.Request.Abstraction.Requests;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Netension.Request.Handlers
+{
+    public abstract class QueryHandler<TQuery, TResponse> : IQueryHandler<TQuery, TResponse>
+        where TQuery : IQuery<TResponse>
+    {
+        protected ILogger Logger { get; }
+
+        public QueryHandler(ILogger logger)
+        {
+            Logger = logger;
+        }
+
+        public abstract Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken);
+    }
+}
