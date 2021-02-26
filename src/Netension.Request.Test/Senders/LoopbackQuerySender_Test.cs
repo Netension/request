@@ -5,6 +5,7 @@ using Netension.Request.Messages;
 using Netension.Request.Receivers;
 using Netension.Request.Senders;
 using Netension.Request.Wrappers;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -63,6 +64,17 @@ namespace Netension.Request.Test.Senders
 
             // Assert
             _loopbackRequestReceiverMock.Verify(lrr => lrr.ReceiveAsync(It.Is<LoopbackMessage>(lm => lm.Request.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "LoopbackCommandSender - SendAsync - Request null")]
+        public async Task LoopbackCommandSender_SendAsync_RequestNull()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.QueryAsync<Query<object>>(null, CancellationToken.None));
         }
     }
 }

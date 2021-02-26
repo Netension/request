@@ -3,6 +3,7 @@ using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Receivers;
 using Netension.Request.Wrappers;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +31,8 @@ namespace Netension.Request.Senders
 
         public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
         {
+            if (command == null) throw new ArgumentNullException(nameof(command));
+
             _logger.LogDebug("Send {id} command via {type} sender", command.RequestId, "loopback");
 
             var message = await _wrapper.WrapAsync(command, cancellationToken);

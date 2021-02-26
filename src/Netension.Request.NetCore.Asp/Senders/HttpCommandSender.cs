@@ -3,6 +3,7 @@ using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.NetCore.Asp.Options;
 using Netension.Request.NetCore.Asp.Wrappers;
+using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +28,8 @@ namespace Netension.Request.NetCore.Asp.Senders
         public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
             where TCommand : ICommand
         {
+            if (command == null) throw new ArgumentNullException(nameof(command));
+
             var content = await _wrapper.WrapAsync(command, cancellationToken);
 
             _logger.LogDebug("Send {requestId} command to {url}", command.RequestId, $"{_client.BaseAddress}{_options.Path}");

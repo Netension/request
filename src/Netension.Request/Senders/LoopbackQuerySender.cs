@@ -3,6 +3,7 @@ using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Receivers;
 using Netension.Request.Wrappers;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +31,8 @@ namespace Netension.Request.Senders
 
         public async Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
+            if (query == null) throw new ArgumentNullException(nameof(query));
+
             _logger.LogDebug("Send {id} query via {sender} sender", query.RequestId, "loopback");
 
             var message = await _wrapper.WrapAsync(query, cancellationToken);

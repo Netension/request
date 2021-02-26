@@ -79,6 +79,17 @@ namespace Netension.Request.Test.Senders
             // Assert
             _httpMessageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(hrm => hrm.Verify(command)), ItExpr.IsAny<CancellationToken>());
         }
+
+        [Fact(DisplayName = "HttpCommandSender - SendAsync - Request null")]
+        public async Task HttpCommandSender_SendAsync_RequestNull()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            // Act
+            //Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SendAsync<ICommand>(null, CancellationToken.None));
+        }
     }
 
     public static class HttpCommandSenderExtensions

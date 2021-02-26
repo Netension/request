@@ -68,7 +68,7 @@ namespace Netension.Request.Test.Senders
         }
 
         [Fact(DisplayName = "HttpQuerySender - QueryAsync - Post content")]
-        public async Task HttpCommandSender_SendAsync_PostContent()
+        public async Task HttpQuerySender_SendAsync_PostContent()
         {
             // Arrange
             var sut = CreateSUT();
@@ -82,6 +82,17 @@ namespace Netension.Request.Test.Senders
 
             // Assert
             _httpMessageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(hrm => hrm.Verify(query)), ItExpr.IsAny<CancellationToken>());
+        }
+
+        [Fact(DisplayName = "HttpQuerySender - QueryAsync - Request null")]
+        public async Task HttpQuerySender_QueryAsync_RequestNull()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            // Act
+            // Assert
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.QueryAsync<IQuery<object>>(null, CancellationToken.None));
         }
     }
 
