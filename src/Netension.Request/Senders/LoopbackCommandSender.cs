@@ -29,10 +29,14 @@ namespace Netension.Request.Senders
             _logger = logger;
         }
 
-        public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
+        public Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
+            return SendInternalAsync(command, cancellationToken);
+        }
 
+        private async Task SendInternalAsync<TCommand>(TCommand command, CancellationToken cancellationToken) where TCommand : ICommand
+        {
             _logger.LogDebug("Send {id} command via {type} sender", command.RequestId, "loopback");
 
             var message = await _wrapper.WrapAsync(command, cancellationToken);

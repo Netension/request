@@ -16,9 +16,9 @@ namespace Netension.Request.Unwrappers
     /// </remarks>
     public class LoopbackCorrelationUnwrapper : ILoopbackRequestUnwrapper
     {
-        private ICorrelationMutator _correlationMutator;
-        private ILoopbackRequestUnwrapper _next;
-        private ILogger<LoopbackCorrelationUnwrapper> _logger;
+        private readonly ICorrelationMutator _correlationMutator;
+        private readonly ILoopbackRequestUnwrapper _next;
+        private readonly ILogger<LoopbackCorrelationUnwrapper> _logger;
 
         /// <summary>
         /// Initializes a new instance of <see cref="LoopbackCorrelationUnwrapper"/>.

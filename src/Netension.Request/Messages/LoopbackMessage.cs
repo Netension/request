@@ -8,10 +8,11 @@ namespace Netension.Request.Messages
     /// </summary>
     public class LoopbackMessage
     {
+        private readonly IDictionary<string, object> _headers = new Dictionary<string, object>();
         /// <summary>
         /// Headers of the message. It can bearer additional informations about the <see cref="IRequest"/>.
         /// </summary>
-        public IDictionary<string, object> Headers = new Dictionary<string, object>();
+        public IDictionary<string, object> Headers => _headers;
 
         /// <summary>
         /// <see cref="IRequest"/> instance.

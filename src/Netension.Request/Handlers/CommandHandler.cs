@@ -10,10 +10,10 @@ namespace Netension.Request.Handlers
     public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
-        private IQuerySender _querySender;
+        private readonly IQuerySender _querySender;
         protected ILogger Logger { get; }
 
-        public CommandHandler(IQuerySender querySender, ILogger logger)
+        protected CommandHandler(IQuerySender querySender, ILogger logger)
         {
             _querySender = querySender;
             Logger = logger;

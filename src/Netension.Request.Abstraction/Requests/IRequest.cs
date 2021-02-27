@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Netension.Request.Abstraction.Requests
 {
     /// <summary>
     /// Base type of the requests. Equatable by RequestId property.
     /// </summary>
-    public interface IRequest : IEquatable<IRequest>
+    public interface IRequest : IEqualityComparer<IRequest>
     {
         /// <summary>
         /// Unique id of the request.

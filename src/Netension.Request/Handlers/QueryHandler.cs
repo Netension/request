@@ -11,7 +11,7 @@ namespace Netension.Request.Handlers
     {
         protected ILogger Logger { get; }
 
-        public QueryHandler(ILogger logger)
+        protected QueryHandler(ILogger logger)
         {
             Logger = logger;
         }

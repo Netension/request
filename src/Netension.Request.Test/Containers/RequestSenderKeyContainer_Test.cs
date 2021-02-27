@@ -21,29 +21,23 @@ namespace Netension.Request.Test.Containers
             sut.Registrate(wrongKey, (request) => false);
 
             // Act
-            var keys = sut.Resolve(new Command());
+            var key = sut.Resolve(new Command());
 
             // Assert
-            Assert.Contains(rightKey, keys);
-            Assert.DoesNotContain(wrongKey, keys);
+            Assert.Equal(rightKey, key);
         }
 
-        [Fact(DisplayName = "RequestSenderKeyContainer - Resolve - Multiple key exists")]
-        public void RequestSenderKeyContainer_Resolve_MultipleKeyExists()
+        [Fact(DisplayName = "RequestSenderKeyContainer - Resolve - Key does not exists")]
+        public void RequestSenderKeyContainer_Resolve_KeyDoesNotExists()
         {
             // Arrange
             var sut = CreateSUT();
-            var key1 = "key1";
-            var key2 = "key2";
-            sut.Registrate(key1, (request) => true);
-            sut.Registrate(key2, (request) => true);
 
             // Act
-            var keys = sut.Resolve(new Command());
+            var key = sut.Resolve(new Command());
 
             // Assert
-            Assert.Contains(key1, keys);
-            Assert.Contains(key2, keys);
+            Assert.Null(key);
         }
     }
 }

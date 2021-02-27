@@ -26,10 +26,15 @@ namespace Netension.Request.NetCore.Asp.Senders
             _logger = logger;
         }
 
-        public async Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+        public Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
 
+            return QueryInternalAsync(query, cancellationToken);
+        }
+
+        private async Task<TResponse> QueryInternalAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+        {
             var content = await _wrapper.WrapAsync(query, cancellationToken);
 
             _logger.LogDebug("Send {requestId} query to {url}", query.RequestId, $"{_client.BaseAddress}{_options.Path}");

@@ -8,7 +8,7 @@ namespace Netension.Request.Abstraction.Handlers
     /// Responsible for handle <see cref="ICommand"/>. Only an <see cref="ICommandHandler{TCommand}"/> could be for each <see cref="ICommand"/>.
     /// </summary>
     /// <typeparam name="TCommand">Type of the handled <see cref="ICommand"/>.</typeparam>
-    public interface ICommandHandler<TCommand>
+    public interface ICommandHandler<in TCommand>
         where TCommand : ICommand
     {
         /// <summary>

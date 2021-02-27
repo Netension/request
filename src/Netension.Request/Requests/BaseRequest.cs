@@ -15,16 +15,6 @@ namespace Netension.Request.Requests
         }
 
         /// <summary>
-        /// True if the id of the requests are equal, otherwise false.
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public bool Equals(IRequest other)
-        {
-            return other != null && RequestId.Equals(other.RequestId);
-        }
-
-        /// <summary>
         /// Server hash code for the <see cref="IRequest"/> based on the RequestId.
         /// </summary>
         /// <returns>Generated hash code.</returns>
@@ -35,7 +25,20 @@ namespace Netension.Request.Requests
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as IRequest);
+            return Equals(this, obj as IRequest);
+        }
+
+        public bool Equals(IRequest x, IRequest y)
+        {
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
+            if (x.RequestId.Equals(y.RequestId)) return true;
+            return false;
+        }
+
+        public int GetHashCode(IRequest obj)
+        {
+            return -2107324841 + obj.RequestId.GetHashCode();
         }
     }
 }

@@ -22,29 +22,27 @@ namespace Netension.Request.Dispatchers
 
         public async Task<TResponse> DispatchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
+            _logger.LogDebug("Dispatch {id} {type}", query.RequestId, query.GetType().Name);
+            _logger.LogTrace("Query object: {@query}", query);
+
+            var requestHandlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
+            _logger.LogDebug("Look for {type} handler", requestHandlerType);
+
+            var handler = _serviceProvider.GetService(requestHandlerType);
+            if (handler == null)
             {
-                _logger.LogDebug("Dispatch {id} {type}", query.RequestId, query.GetType().Name);
-                _logger.LogTrace("Query object: {@query}", query);
+                _logger.LogError("Handler not found for {type}", requestHandlerType);
+                throw new InvalidOperationException($"Handler not found for {requestHandlerType}");
+            }
 
-                var requestHandlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
-                _logger.LogDebug("Look for {type} handler", requestHandlerType);
-
-                var handler = _serviceProvider.GetService(requestHandlerType);
-                if (handler == null)
-                {
-                    _logger.LogError("Handler not found for {type}", requestHandlerType);
-                    throw new InvalidOperationException($"Handler not found for {requestHandlerType}");
-                }
-
-                try
-                {
-                    return await ((dynamic)handler).HandleAsync((dynamic)query, cancellationToken);
-                }
-                catch
-                {
-                    _logger.LogError("Exception during handle {query} query", query.GetType().Name);
-                    throw;
-                }
+            try
+            {
+                return await ((dynamic)handler).HandleAsync((dynamic)query, cancellationToken);
+            }
+            catch
+            {
+                _logger.LogError("Exception during handle {query} query", query.GetType().Name);
+                throw;
             }
         }
     }

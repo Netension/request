@@ -1,5 +1,4 @@
 ﻿using Netension.Request.Abstraction.Requests;
-using System.Collections.Generic;
 
 namespace Netension.Request.Abstraction.Resolvers
 {
@@ -15,7 +14,7 @@ namespace Netension.Request.Abstraction.Resolvers
         /// Resolve key's according to the <see cref="IRequest"/>.
         /// </summary>
         /// <param name="request"><see cref="IRequest"/> to be sent.</param>
-        /// <returns>List of the resolved keys.</returns>
-        IEnumerable<string> Resolve(IRequest request);
+        /// <returns>Key of the sender.</returns>
+        string Resolve(IRequest request);
     }
 }

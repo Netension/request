@@ -23,30 +23,23 @@ namespace Netension.Request.Senders
 
         async Task<TResponse> IQuerySender.QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
-            var keys = _resolver.Resolve(query);
+            var key = _resolver.Resolve(query);
+            _logger.LogDebug("{sender} resolved for {id} request", key, query.RequestId);
 
-            foreach (var key in keys)
-            {
-                _logger.LogDebug("Send {id} request to {key} sender", query.RequestId, key);
-                var querySenderFactory = (Func<string, IQuerySender>)_serviceProvider.GetService(typeof(Func<string, IQuerySender>));
-                var querySender = querySenderFactory(key);
-                return await querySender.QueryAsync(query, cancellationToken);
-            }
+            var querySenderFactory = (Func<string, IQuerySender>)_serviceProvider.GetService(typeof(Func<string, IQuerySender>));
+            var querySender = querySenderFactory(key);
 
-            return default(TResponse);
+            return await querySender.QueryAsync(query, cancellationToken);
         }
 
         async Task ICommandSender.SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) 
         {
-            var keys = _resolver.Resolve(command);
+            var key = _resolver.Resolve(command);
+            _logger.LogDebug("{sender} resolved for {id} request", key, command.RequestId);
 
-            foreach (var key in keys)
-            {
-                _logger.LogDebug("Send {id} request to {key} sender", command.RequestId, key);
-                var commandSenderFactory = (Func<string, ICommandSender>)_serviceProvider.GetService(typeof(Func<string, ICommandSender>));
-                var commandSender = commandSenderFactory(key);
-                await commandSender.SendAsync(command, cancellationToken);
-            }
+            var commandSenderFactory = (Func<string, ICommandSender>)_serviceProvider.GetService(typeof(Func<string, ICommandSender>));
+            var commandSender = commandSenderFactory(key);
+            await commandSender.SendAsync(command, cancellationToken);
         }
     }
 }

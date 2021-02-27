@@ -16,9 +16,12 @@ namespace Netension.Request.Containers
             _keys.Add(key, predicate);
         }
 
-        public IEnumerable<string> Resolve(IRequest request)
+        public string Resolve(IRequest request)
         {
-            return _keys.Where(k => k.Value(request)).Select(k => k.Key);
+            var key = _keys.FirstOrDefault(k => k.Value(request));
+            if (key.Equals(default(KeyValuePair<string, Func<IRequest, bool>>))) return null;
+
+            return key.Key;
         }
     }
 }

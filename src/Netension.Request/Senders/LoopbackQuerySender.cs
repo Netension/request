@@ -29,10 +29,14 @@ namespace Netension.Request.Senders
             _logger = logger;
         }
 
-        public async Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+        public Task<TResponse> QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
+            return QueryInternalAsync(query, cancellationToken);
+        }
 
+        private async Task<TResponse> QueryInternalAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+        {
             _logger.LogDebug("Send {id} query via {sender} sender", query.RequestId, "loopback");
 
             var message = await _wrapper.WrapAsync(query, cancellationToken);

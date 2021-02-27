@@ -25,11 +25,16 @@ namespace Netension.Request.NetCore.Asp.Senders
             _logger = logger;
         }
 
-        public async Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+        public Task SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
             where TCommand : ICommand
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
+            return SendInternalAsync(command, cancellationToken);
+        }
 
+        public async Task SendInternalAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : ICommand
+        {
             var content = await _wrapper.WrapAsync(command, cancellationToken);
 
             _logger.LogDebug("Send {requestId} command to {url}", command.RequestId, $"{_client.BaseAddress}{_options.Path}");
