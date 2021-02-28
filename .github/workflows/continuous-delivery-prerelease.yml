@@ -6,8 +6,7 @@ name: Publish
 # events but only for the develop branch
 on:
   push:
-    tags:
-      - '*'
+    branches: [develop]
 
 env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -56,11 +55,17 @@ jobs:
         with:
           fetch-depth: 0
           
+      - name: Calculate Version
+        id: calculate_version
+        uses: PaulHatch/semantic-version@v4
+        with:
+          format: "${major}.${minor}.${patch}-beta.${increment}"
+          
       - name: Setup .NET Core SDK
         uses: actions/setup-dotnet@v1.7.2
         
       - name: Pack
-        run: dotnet pack ./src/*.sln --configuration Release --output ./artifacts
+        run: dotnet pack ./src/*.sln -p:PackageVersion=${{ steps.calculate_version.outputs.version }} --configuration Release --output ./artifacts
         
       - name: Publish packages 
         run: dotnet nuget push ./artifacts/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate true 
