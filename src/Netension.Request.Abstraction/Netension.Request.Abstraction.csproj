@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Netension.Extensions.Correlation" Version="1.0.0" />
+    <PackageReference Include="Netension.Extensions.Correlation" Version="0.0.1-beta.17" />
   </ItemGroup>
 
 </Project>
