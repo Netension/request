@@ -24,6 +24,11 @@ namespace Netension.Request.Senders
         async Task<TResponse> IQuerySender.QueryAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
             var key = _resolver.Resolve(query);
+            if (string.IsNullOrEmpty(key))
+            {
+                _logger.LogError("Sender was not found for {id} request", query.RequestId);
+                throw new InvalidOperationException($"Sender was not found for {query.RequestId} request.");
+            }
             _logger.LogDebug("{sender} resolved for {id} request", key, query.RequestId);
 
             var querySenderFactory = (Func<string, IQuerySender>)_serviceProvider.GetService(typeof(Func<string, IQuerySender>));
@@ -35,6 +40,12 @@ namespace Netension.Request.Senders
         async Task ICommandSender.SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) 
         {
             var key = _resolver.Resolve(command);
+            if (string.IsNullOrEmpty(key))
+            {
+                _logger.LogError("Sender was not found for {id} request", command.RequestId);
+                throw new InvalidOperationException($"Sender was not found for {command.RequestId} request.");
+            }
+
             _logger.LogDebug("{sender} resolved for {id} request", key, command.RequestId);
 
             var commandSenderFactory = (Func<string, ICommandSender>)_serviceProvider.GetService(typeof(Func<string, ICommandSender>));
