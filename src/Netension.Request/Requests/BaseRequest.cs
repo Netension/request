@@ -38,7 +38,7 @@ namespace Netension.Request.Requests
 
         public int GetHashCode(IRequest obj)
         {
-            return -2107324841 + obj.RequestId.GetHashCode();
+            return obj.GetHashCode();
         }
     }
 }
