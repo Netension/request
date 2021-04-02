@@ -34,7 +34,7 @@ namespace Netension.Request.Hosting.LightInject.Builders
             });
         }
 
-        public void RegistrateRequestSenders(Action<RequestSenderBuilder> build)
+        public void RegistrateRequestSenders(Action<RequestSenderRegister> build)
         {
             var requestSenderKeyContainer = new RequestSenderKeyContainer();
 
@@ -47,10 +47,10 @@ namespace Netension.Request.Hosting.LightInject.Builders
                 container.RegisterInstance<IRequestSenderKeyResolver>(requestSenderKeyContainer);
             });
 
-            build(new RequestSenderBuilder(HostBuilder, requestSenderKeyContainer));
+            build(new RequestSenderRegister(HostBuilder, requestSenderKeyContainer));
         }
 
-        public void RegistrateRequestReceivers(Action<RequestReceiverBuilder> build)
+        public void RegistrateRequestReceivers(Action<RequestReceiverRegister> build)
         {
             HostBuilder.ConfigureContainer<IServiceContainer>(container =>
             {
@@ -58,7 +58,7 @@ namespace Netension.Request.Hosting.LightInject.Builders
                 container.RegisterScoped<IQueryDispatcher, QueryDispatcher>();
             });
 
-            build(new RequestReceiverBuilder(HostBuilder));
+            build(new RequestReceiverRegister(HostBuilder));
         }
     }
 }

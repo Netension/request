@@ -17,12 +17,12 @@ namespace Netension.Request.Hosting.LightInject.Builders
 {
     public static class RequestSenderBuilderExtensions
     {
-        public static void RegistrateSender(this RequestSenderBuilder builder, HttpSenderEnumeration senderEnumeration)
+        public static void RegistrateSender(this RequestSenderRegister builder, HttpSenderEnumeration senderEnumeration)
         {
             builder.RegistrateHttpSender(senderEnumeration.Name, senderEnumeration.Configure, senderEnumeration.Build, senderEnumeration.Predicate);
         }
 
-        public static void RegistrateHttpSender(this RequestSenderBuilder builder, string key, Action<HttpSenderOptions, IConfiguration> configure, Action<HttpSenderBuilder> build, Func<IRequest, bool> predicate)
+        public static void RegistrateHttpSender(this RequestSenderRegister builder, string key, Action<HttpSenderOptions, IConfiguration> configure, Action<HttpSenderBuilder> build, Func<IRequest, bool> predicate)
         {
             builder.Register.Registrate(key, predicate);
 

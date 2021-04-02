@@ -6,11 +6,11 @@ using System;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {
-    public class RequestReceiverBuilder
+    public class RequestReceiverRegister
     {
         public IHostBuilder HostBuilder { get; }
 
-        public RequestReceiverBuilder(IHostBuilder HostBuilder)
+        public RequestReceiverRegister(IHostBuilder HostBuilder)
         {
             this.HostBuilder = HostBuilder;
         }

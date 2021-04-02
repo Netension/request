@@ -10,12 +10,12 @@ using System;
 
 namespace Netension.Request.Hosting.LightInject.Builders
 {
-    public class RequestSenderBuilder
+    public class RequestSenderRegister
     {
         public IHostBuilder HostBuilder { get; }
         public IRequestSenderKeyRegister Register { get; }
 
-        public RequestSenderBuilder(IHostBuilder hostBuilder, IRequestSenderKeyRegister register)
+        public RequestSenderRegister(IHostBuilder hostBuilder, IRequestSenderKeyRegister register)
         {
             HostBuilder = hostBuilder;
             Register = register;

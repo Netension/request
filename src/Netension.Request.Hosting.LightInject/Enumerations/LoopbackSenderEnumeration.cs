@@ -6,6 +6,8 @@ namespace Netension.Request.Hosting.LightInject.Enumerations
 {
     public class LoopbackSenderEnumeration : SenderEnumeration<LoopbackSenderBuilder>
     {
+
+
         public LoopbackSenderEnumeration(int id, Action<LoopbackSenderBuilder> build, Func<IRequest, bool> predicate)
             : this(id, RequestingDefaults.Senders.LOOPBACK, build, predicate)
         {

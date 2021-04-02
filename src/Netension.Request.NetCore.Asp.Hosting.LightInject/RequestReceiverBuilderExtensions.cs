@@ -9,7 +9,7 @@ namespace Netension.Request.Hosting.LightInject.Builders
 {
     public static class RequestReceiverBuilderExtensions
     {
-        public static void RegistrateHttpRequestReceiver(this RequestReceiverBuilder builder, Action<HttpReceiverBuilder> build)
+        public static void RegistrateHttpRequestReceiver(this RequestReceiverRegister builder, Action<HttpReceiverBuilder> build)
         {
             builder.HostBuilder.ConfigureServices((context, services) =>
             {
