@@ -21,10 +21,8 @@ namespace Netension.Request.Sample
                 {
                     builder.RegistrateCorrelation();
 
-                    builder.RegistrateHandlers((register) =>
-                    {
-                        register.RegistrateHandlerFromAssemblyOf<Startup>();
-                    });
+                    builder.RegistrateHandlers<Startup>();
+                    builder.RegistrateValidators<Startup>();
 
                     builder.RegistrateRequestSenders(builder =>
                     {
@@ -34,7 +32,7 @@ namespace Netension.Request.Sample
 
                     builder.RegistrateRequestReceivers(builder =>
                     {
-                        builder.RegistrateLoopbackRequestReceiver(builder => { builder.UseCorrelation(); });
+                        builder.RegistrateLoopbackRequestReceiver(builder => builder.UseCorrelation());
                         builder.RegistrateHttpRequestReceiver(builder => { builder.UseCorrelation(); });
                     });
                 })
