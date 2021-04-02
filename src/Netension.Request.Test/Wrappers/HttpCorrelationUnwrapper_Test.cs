@@ -70,9 +70,14 @@ namespace Netension.Request.Test.Wrappers
             httpRequestMock.SetupGet(hr => hr.Headers)
                 .Returns(new HeaderDictionary(new Dictionary<string, StringValues>()));
 
+            _httpRequestUnwrapperMock.Setup(hru => hru.UnwrapAsync(It.IsAny<HttpRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Command(Guid.NewGuid()));
+
             // Act
+            await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+
             // Assert
-            await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None));
+            _correlationMutatorMock.VerifySet(cm => cm.CorrelationId = It.IsAny<Guid>(), Times.Once);
         }
 
         [Fact(DisplayName = "HttpCorrelationUnwrapper - UnwrapAsync - Read Causation-Id header")]

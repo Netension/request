@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.Logging;
+using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Handlers;
 using System.Threading;
@@ -35,6 +36,8 @@ namespace Netension.Request.Sample.Requests
 
         public async override Task HandleAsync(SampleCommand command, CancellationToken cancellationToken)
         {
+            if (command.Required.Equals("Test")) throw new VerificationException(402, "Value is Test");
+
             Logger.LogInformation("SampleCommand handled!");
             Logger.LogInformation(await QueryAsnyc(new SampleQuery(), cancellationToken));
         }

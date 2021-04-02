@@ -16,6 +16,7 @@ namespace Netension.Request.Abstraction.Wrappers
         /// <param name="request"><see cref="IRequest"/> instance.</param>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> of the async method.</param>
         /// <returns><typeparamref name="TEnvelop"/> instance with the wrapped <see cref="IRequest"/>.</returns>
-        Task<TEnvelop> WrapAsync(IRequest request, CancellationToken cancellationToken);
+        Task<TEnvelop> WrapAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : IRequest;
     }
 }

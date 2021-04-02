@@ -20,7 +20,7 @@ namespace Netension.Request.Sample.Controllers
         [HttpGet]
         public async Task Get()
         {
-            await _commandSender.SendAsync(new SampleCommand("Sample value"), CancellationToken.None);
+            await _commandSender.SendAsync(new SampleCommand(null), CancellationToken.None);
         }
     }
 }
