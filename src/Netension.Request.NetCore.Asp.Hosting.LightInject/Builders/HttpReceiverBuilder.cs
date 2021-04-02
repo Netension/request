@@ -14,12 +14,14 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Builders
         }
 
 
-        public void UseCorrelation()
+        public HttpReceiverBuilder UseCorrelation()
         {
             HostBuilder.ConfigureContainer<IServiceContainer>(container =>
             {
                 container.Decorate<IHttpRequestUnwrapper, HttpCorrelationUnwrapper>();
             });
+
+            return this;
         }
     }
 }

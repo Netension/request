@@ -2,12 +2,15 @@
 using Microsoft.Extensions.Hosting;
 using Netension.Extensions.Correlation;
 using Netension.Request.Abstraction.Dispatchers;
+using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Abstraction.Resolvers;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Containers;
 using Netension.Request.Dispatchers;
+using Netension.Request.Hosting.LightInject.Registers;
 using Netension.Request.Hosting.LightInject.Registrates;
 using Netension.Request.Senders;
+using Netension.Request.Validators;
 using System;
 
 namespace Netension.Request.Hosting.LightInject.Builders
@@ -21,9 +24,14 @@ namespace Netension.Request.Hosting.LightInject.Builders
             HostBuilder = hostBuilder;
         }
 
-        public void RegistrateHandlers(Action<HandlerRegister> registering)
+        public void RegistrateHandlers<TType>()
         {
-            registering(new HandlerRegister(HostBuilder));
+            RegistrateHandlers(register => register.RegistrateHandlerFromAssemblyOf<TType>());
+        }
+
+        public void RegistrateHandlers(Action<HandlerRegister> registrate)
+        {
+            registrate(new HandlerRegister(HostBuilder));
         }
 
         public void RegistrateCorrelation()
@@ -59,6 +67,22 @@ namespace Netension.Request.Hosting.LightInject.Builders
             });
 
             build(new RequestReceiverRegister(HostBuilder));
+        }
+
+        public void RegistrateValidators<TType>()
+        {
+            RegistrateValidators(register => register.RegistrateHandlerFromAssemblyOf<TType>());
+        }
+
+        public void RegistrateValidators(Action<ValidatorRegister> registrate)
+        {
+            HostBuilder.ConfigureContainer<IServiceContainer>(container =>
+            {
+                container.Decorate(typeof(ICommandHandler<>), typeof(CommandValidator<>));
+                container.Decorate(typeof(IQueryHandler<,>), typeof(QueryValidator<,>));
+            });
+
+            registrate(new ValidatorRegister(HostBuilder));
         }
     }
 }

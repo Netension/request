@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FluentValidation;
+using Microsoft.Extensions.Logging;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Handlers;
 using System.Threading;
@@ -8,6 +9,21 @@ namespace Netension.Request.Sample.Requests
 {
     public class SampleCommand : Command
     {
+        public string Required { get; }
+
+        public SampleCommand(string required)
+        {
+            Required = required;
+        }
+    }
+
+    public class SampleCommandValidator : AbstractValidator<SampleCommand>
+    {
+        public SampleCommandValidator()
+        {
+            RuleFor(c => c.Required)
+                .NotEmpty();
+        }
     }
 
     public class SampleCommandHandler : CommandHandler<SampleCommand>

@@ -1,21 +1,16 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
-using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-[assembly: InternalsVisibleTo("Netension.Request.Test")]
 namespace Netension.Request.Validators
 {
-    internal class CommandValidator<TCommand> : ICommandHandler<TCommand>
+    public class CommandValidator<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
         private readonly IEnumerable<IValidator<TCommand>> _validators;
