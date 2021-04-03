@@ -3,7 +3,6 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
 using Moq.Protected;
 using Netension.Core.Exceptions;
@@ -14,8 +13,8 @@ using Netension.Request.NetCore.Asp.Options;
 using Netension.Request.NetCore.Asp.Senders;
 using Netension.Request.NetCore.Asp.ValueObjects;
 using Netension.Request.NetCore.Asp.Wrappers;
+using Netension.Request.Test.Extensions;
 using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -148,7 +147,7 @@ namespace Netension.Request.Test.Senders
             //Assert
             await ExceptionAssert.ThrowsAsync<ValidationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None), exception =>
             {
-                Assert.Collection(exception.Errors, e => failures.Any(f => f.Equals(e)), e => failures.Any(f => f.Equals(e)), e => failures.Any(f => f.Equals(e)));
+                Assert.Collection(exception.Errors, failures.Validate, failures.Validate, failures.Validate);
             });
         }
 
