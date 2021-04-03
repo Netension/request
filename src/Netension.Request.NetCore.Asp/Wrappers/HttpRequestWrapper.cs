@@ -21,7 +21,8 @@ namespace Netension.Request.NetCore.Asp.Wrappers
             _logger = logger;
         }
 
-        public Task<JsonContent> WrapAsync(IRequest request, CancellationToken cancellationToken)
+        public Task<JsonContent> WrapAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : IRequest
         {
             _logger.LogDebug("Serialize {request} to Json", request.RequestId);
             var content = JsonContent.Create(request, options: _options.Value);

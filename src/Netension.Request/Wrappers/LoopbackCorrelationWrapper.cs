@@ -37,7 +37,8 @@ namespace Netension.Request.Wrappers
         /// <param name="request"><inheritdoc/></param>
         /// <param name="cancellationToken"><inheritdoc/></param>
         /// <returns><see cref="LoopbackMessage"/> instance with the wrapped <see cref="IRequest"/>.</returns>
-        public async Task<LoopbackMessage> WrapAsync(IRequest request, CancellationToken cancellationToken)
+        public async Task<LoopbackMessage> WrapAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : IRequest
         {
             var message = await _next.WrapAsync(request, cancellationToken);
 

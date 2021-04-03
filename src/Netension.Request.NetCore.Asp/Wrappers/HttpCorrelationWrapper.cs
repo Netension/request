@@ -22,7 +22,8 @@ namespace Netension.Request.NetCore.Asp.Wrappers
             _logger = logger;
         }
 
-        public async Task<JsonContent> WrapAsync(IRequest request, CancellationToken cancellationToken)
+        public async Task<JsonContent> WrapAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
+            where TRequest : IRequest
         {
             var response = await _next.WrapAsync(request, cancellationToken);
 

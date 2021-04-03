@@ -45,7 +45,7 @@ namespace Netension.Request.Test.Senders
             await sut.QueryAsync(query, CancellationToken.None);
 
             // Assert
-            _wrapperMock.Verify(w => w.WrapAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
+            _wrapperMock.Verify(w => w.WrapAsync(It.Is<IRequest>(q => q.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact(DisplayName = "LoopbackCommandSender - SendAsync - Call receiver")]

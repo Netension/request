@@ -35,7 +35,7 @@ namespace Netension.Request.NetCore.Asp.Receivers
             if (request is ICommand command)
             {
                 await _commandDispatcher.DispatchAsync(command, cancellationToken);
-                return new OkResult();
+                return new AcceptedResult();
             }
             else if (request.GetType().GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IQuery<>)))
             {
