@@ -7,6 +7,7 @@ using System;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netension.Request.NetCore.Asp.Middlewares
@@ -31,24 +32,18 @@ namespace Netension.Request.NetCore.Asp.Middlewares
             catch (VerificationException exception)
             {
                 _logger.LogError(exception, ErrorCodeEnumeration.VerificationError.Message);
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(exception.Serialize()), context.RequestAborted);
+                await context.Response.WriteErrorAsync(StatusCodes.Status400BadRequest, exception, context.RequestAborted);
 
             }
             catch (ValidationException exception)
             {
                 _logger.LogError(exception, ErrorCodeEnumeration.ValidationFailed.Message);
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(exception.Serialize()), context.RequestAborted);
+                await context.Response.WriteErrorAsync(StatusCodes.Status400BadRequest, exception, context.RequestAborted);
             }
             catch (Exception exception)
             {
                 _logger.LogError(exception, ErrorCodeEnumeration.InternalServerError.Message);
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.WriteAsync(JsonSerializer.Serialize(exception.Serialize()), context.RequestAborted);
+                await context.Response.WriteErrorAsync(StatusCodes.Status500InternalServerError, exception, context.RequestAborted);
             }
         }
     }
@@ -65,9 +60,17 @@ namespace Netension.Request.NetCore.Asp.Middlewares
         }
     }
 
-    public static class ExceptionExtensions
+    public static class ErrorHandlingExtensions
     {
-        public static Error Serialize(this ValidationException exception)
+        public static async Task WriteErrorAsync<TException>(this HttpResponse response, int statusCode, TException exception, CancellationToken cancellationToken)
+            where TException : Exception
+        {
+            response.StatusCode = statusCode;
+            response.ContentType = MediaTypeNames.Application.Json;
+            await response.Body.WriteAsync(exception.Encode(), cancellationToken);
+        }
+
+        public static ReadOnlyMemory<byte> Encode(this ValidationException exception)
         {
             var message = new StringBuilder(ErrorCodeEnumeration.ValidationFailed.Message);
             message.AppendLine();
@@ -77,17 +80,17 @@ namespace Netension.Request.NetCore.Asp.Middlewares
                 message.AppendLine($"--{failure.PropertyName}: {failure.ErrorMessage}");
             }
 
-            return new Error(ErrorCodeEnumeration.ValidationFailed.Id, message.ToString());
+            return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(message));
         }
 
-        public static Error Serialize(this Exception exception)
+        public static ReadOnlyMemory<byte> Encode(this Exception exception)
         {
-            return new Error(ErrorCodeEnumeration.InternalServerError.Id, ErrorCodeEnumeration.InternalServerError.Message);
+            return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(new Error(ErrorCodeEnumeration.InternalServerError.Id, ErrorCodeEnumeration.InternalServerError.Message)));
         }
 
-        public static Error Serialize(this VerificationException exception)
+        public static ReadOnlyMemory<byte> Serialize(this VerificationException exception)
         {
-            return new Error(exception.Code, exception.Message);
+            return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(new Error(exception.Code, exception.Message)));
         }
     }
 
