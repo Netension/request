@@ -36,7 +36,6 @@ namespace Netension.Request.NetCore.Asp.Middlewares
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
-
             }
             catch (ValidationException exception)
             {
@@ -85,5 +84,4 @@ namespace Netension.Request.NetCore.Asp.Middlewares
             return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(new Error(ErrorCodeEnumeration.InternalServerError.Id, ErrorCodeEnumeration.InternalServerError.Message)));
         }
     }
-
 }

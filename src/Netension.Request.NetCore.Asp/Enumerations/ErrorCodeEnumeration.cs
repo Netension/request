@@ -15,6 +15,5 @@ namespace Netension.Request.NetCore.Asp.Enumerations
         {
             Message = message;
         }
-
     }
 }

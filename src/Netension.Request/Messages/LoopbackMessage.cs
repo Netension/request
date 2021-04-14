@@ -8,11 +8,10 @@ namespace Netension.Request.Messages
     /// </summary>
     public class LoopbackMessage
     {
-        private readonly IDictionary<string, object> _headers = new Dictionary<string, object>();
         /// <summary>
         /// Headers of the message. It can bearer additional informations about the <see cref="IRequest"/>.
         /// </summary>
-        public IDictionary<string, object> Headers => _headers;
+        public IDictionary<string, object> Headers { get; } = new Dictionary<string, object>();
 
         /// <summary>
         /// <see cref="IRequest"/> instance.
@@ -23,10 +22,6 @@ namespace Netension.Request.Messages
         /// Initializes a new instance <see cref="LoopbackMessage"/>.
         /// </summary>
         /// <param name="request"><see cref="IRequest"/> to be sent.</param>
-        public LoopbackMessage(IRequest request)
-        {
-            Request = request;
-        }
-
+        public LoopbackMessage(IRequest request) => Request = request;
     }
 }

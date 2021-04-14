@@ -12,7 +12,6 @@ namespace Netension.Request.Test.Dispatchers
 {
     public class QueryDispatcher_Test
     {
-
         private readonly ILogger<QueryDispatcher> _logger;
         private Mock<IServiceProvider> _serviceProviderMock;
 

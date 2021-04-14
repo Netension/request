@@ -19,5 +19,4 @@ namespace Netension.Request.NetCore.Asp.ValueObjects
             return new object[] { Code, Message };
         }
     }
-
 }

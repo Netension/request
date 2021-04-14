@@ -24,11 +24,9 @@ namespace Netension.Request.Receivers
 
         public async Task<object> ReceiveAsync(LoopbackMessage message, CancellationToken cancellationToken)
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                _logger.LogDebug("New scope created for loopback message");
-                return await _next.ReceiveAsync(message, cancellationToken);
-            }
+            using var scope = _serviceScopeFactory.CreateScope();
+            _logger.LogDebug("New scope created for loopback message");
+            return await _next.ReceiveAsync(message, cancellationToken);
         }
     }
 }
