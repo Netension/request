@@ -27,7 +27,7 @@ namespace Netension.Request.Test.Senders
 {
     public class HttpQuerySender_Test
     {
-        private readonly Uri BASE_ADRESS = new Uri("http://test-uri");
+        private readonly Uri BASE_ADRESS = new("http://test-uri");
         private readonly PathString PATH = "/test-path";
 
         private readonly ILogger<HttpQuerySender> _logger;
