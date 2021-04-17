@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LightInject" Version="6.4.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Netension.Request.Abstraction\Netension.Request.Abstraction.csproj" />
+    <ProjectReference Include="..\Netension.Request.Hosting.LightInject\Netension.Request.Hosting.LightInject.csproj" />
+    <ProjectReference Include="..\Netension.Request.Infrastructure.Abstraction\Netension.Request.Annotations.csproj" />
+  </ItemGroup>
+
+</Project>

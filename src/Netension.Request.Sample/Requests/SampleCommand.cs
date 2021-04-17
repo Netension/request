@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Senders;
+using Netension.Request.Annotations;
 using Netension.Request.Handlers;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace Netension.Request.Sample.Requests
         }
     }
 
+    [Transaction]
     public class SampleCommandHandler : CommandHandler<SampleCommand>
     {
         public SampleCommandHandler(IQuerySender querySender, ILogger<SampleCommandHandler> logger)
