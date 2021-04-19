@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Netension.Request.Infrastructure.EFCore\Netension.Request.Infrastructure.EFCore.csproj" />
     <ProjectReference Include="..\Netension.Request.NetCore.Asp\Netension.Request.NetCore.Asp.csproj" />
     <ProjectReference Include="..\Netension.Request\Netension.Request.csproj" />
   </ItemGroup>

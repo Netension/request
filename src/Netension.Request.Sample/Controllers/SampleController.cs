@@ -15,6 +15,6 @@ namespace Netension.Request.Sample.Controllers
         public SampleController(ICommandSender commandSender) => _commandSender = commandSender;
 
         [HttpGet]
-        public async Task Get() => await _commandSender.SendAsync(new SampleCommand("Test"), CancellationToken.None);
+        public async Task Get() => await _commandSender.SendAsync(new SampleCommand("Test Value"), CancellationToken.None);
     }
 }

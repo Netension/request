@@ -37,6 +37,8 @@ namespace Netension.Request.Sample
 
                     builder.RegistrateRequestReceivers(builder =>
                     {
+                        builder.UseCorrelationLogger();
+
                         builder.RegistrateLoopbackRequestReceiver(builder => builder.UseCorrelation());
                         builder.RegistrateHttpRequestReceiver(builder => { builder.UseCorrelation(); });
                     });

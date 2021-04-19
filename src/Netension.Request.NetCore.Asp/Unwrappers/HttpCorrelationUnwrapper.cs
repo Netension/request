@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Netension.Extensions.Correlation;
+using Netension.Extensions.Logging.Extensions;
+using Netension.Request.Abstraction.Defaults;
 using Netension.Request.Abstraction.Requests;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,7 +36,6 @@ namespace Netension.Request.NetCore.Asp.Unwrappers
 
             _logger.LogDebug("Set {property} to {id}", nameof(_correlationMutator.MessageId), request.RequestId);
             _correlationMutator.MessageId = request.RequestId.Value;
-
             return request;
         }
     }

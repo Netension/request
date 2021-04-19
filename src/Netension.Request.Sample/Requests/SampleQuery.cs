@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Netension.Request.Annotations;
 using Netension.Request.Handlers;
 using System;
 using System.Threading;
@@ -10,9 +11,10 @@ namespace Netension.Request.Sample.Requests
     {
     }
 
+    [Transaction]
     public class SampleQueryHandler : QueryHandler<SampleQuery, string>
     {
-        public SampleQueryHandler(ILogger<SampleQueryHandler> logger) 
+        public SampleQueryHandler(ILogger<SampleQueryHandler> logger)
             : base(logger)
         {
         }

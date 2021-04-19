@@ -8,6 +8,7 @@
     <PackageReference Include="LightInject" Version="6.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Netension.Extensions.Logging" Version="0.0.1-beta.26" />
   </ItemGroup>
 
   <ItemGroup>

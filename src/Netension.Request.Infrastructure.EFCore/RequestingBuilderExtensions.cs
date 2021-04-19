@@ -10,7 +10,11 @@ namespace Netension.Request.Infrastructure.EFCore
     {
         public static void RegistrateTransactionHandlers(this RequestingBuilder builder)
         {
-            builder.HostBuilder.ConfigureContainer<IServiceContainer>((context, container) => container.Decorate(typeof(ICommandHandler<>), typeof(TransactionCommandHandler<>), registration => registration.ImplementingType?.GetCustomAttributes(typeof(TransactionAttribute), true).Length > 0));
+            builder.HostBuilder.ConfigureContainer<IServiceContainer>((context, container) =>
+            {
+                container.Decorate(typeof(ICommandHandler<>), typeof(TransactionalCommandHandler<>), registration => registration.ImplementingType?.GetCustomAttributes(typeof(TransactionAttribute), true).Length > 0);
+                container.Decorate(typeof(IQueryHandler<,>), typeof(TransactionQueryHandler<,>), registration => registration.ImplementingType?.GetCustomAttributes(typeof(TransactionAttribute), true).Length > 0);
+            });
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using LightInject;
 using Microsoft.Extensions.Hosting;
+using Netension.Request.Abstraction.Dispatchers;
+using Netension.Request.Dispatchers;
 using Netension.Request.Receivers;
 using Netension.Request.Unwrappers;
 using System;
@@ -13,6 +15,15 @@ namespace Netension.Request.Hosting.LightInject.Builders
         public RequestReceiverRegister(IHostBuilder HostBuilder)
         {
             this.HostBuilder = HostBuilder;
+        }
+
+        public void UseCorrelationLogger()
+        {
+            HostBuilder.ConfigureContainer<IServiceContainer>(container =>
+            {
+                container.Decorate<ICommandDispatcher, CommandLoggingDispatcher>();
+                container.Decorate<IQueryDispatcher, QueryLoggingDispatcher>();
+            });
         }
 
         public void RegistrateLoopbackRequestReceiver(Action<LoopbackReceiverBuilder> build)

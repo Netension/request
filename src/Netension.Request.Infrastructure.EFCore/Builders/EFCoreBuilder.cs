@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Netension.Request.Infrastructure.EFCore.Abstractions;
+using Netension.Request.Infrastructure.EFCore.Managers;
 using System;
 
 namespace Netension.Request.Infrastructure.EFCore.Builders
@@ -20,8 +22,8 @@ namespace Netension.Request.Infrastructure.EFCore.Builders
         {
             HostBuilder.ConfigureServices(services => services.AddDbContext<TContext>(configure));
             HostBuilder.ConfigureContainer<IServiceContainer>(container =>
-            {   
-                container.RegisterScoped(factory => factory.GetInstance<TContext>().Database);
+            {
+                container.RegisterScoped<ITransactionManager>(factory => new TransactionManager(factory.GetInstance<TContext>().Database));
             });
         }
     }
