@@ -15,6 +15,7 @@ namespace Netension.Request.Abstraction.Dispatchers
         /// <param name="command">Incoming <see cref="ICommand"/> instance.</param>
         /// <param name="cancellationToken"><see cref="CancellationToken"/> of the async method.</param>
         /// <exception cref="System.InvalidOperationException">Throws if handler does not found for the incoming <see cref="ICommand"/>.</exception>
-        Task DispatchAsync(ICommand command, CancellationToken cancellationToken);
+        Task DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : ICommand;
     }
 }

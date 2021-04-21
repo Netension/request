@@ -32,9 +32,9 @@ namespace Netension.Request.NetCore.Asp.Receivers
             _logger.LogDebug("Receive {id} request", message.GetHashCode());
             var request = await _unwrapper.UnwrapAsync(message, cancellationToken);
 
-            if (request is ICommand command)
+            if (request is ICommand)
             {
-                await _commandDispatcher.DispatchAsync(command, cancellationToken);
+                await _commandDispatcher.DispatchAsync((dynamic)request, cancellationToken);
                 return new AcceptedResult();
             }
             else if (request.GetType().GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IQuery<>)))
