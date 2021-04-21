@@ -32,7 +32,7 @@ namespace Netension.Request.Receivers
 
             if (request is ICommand command)
             {
-                await _commandDispatcher.DispatchAsync(command, cancellationToken);
+                await _commandDispatcher.DispatchAsync((dynamic)command, cancellationToken);
                 return null;
             }
             else if (request.GetType().GetInterfaces().Any(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IQuery<>)))

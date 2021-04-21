@@ -22,7 +22,8 @@ namespace Netension.Request.Dispatchers
             _logger = logger;
         }
 
-        public async Task DispatchAsync(ICommand command, CancellationToken cancellationToken)
+        public async Task DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : ICommand
         {
             using (_logger.BeginScope(LoggingDefaults.CorrelationId, _correlation.CorrelationId))
             {

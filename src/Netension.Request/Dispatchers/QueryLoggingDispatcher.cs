@@ -23,13 +23,14 @@ namespace Netension.Request.Dispatchers
         }
 
 
-        public async Task<TResponse> DispatchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
+        public async Task<TResponse> DispatchAsync<TQuery, TResponse>(TQuery query, CancellationToken cancellationToken)
+            where TQuery : IQuery<TResponse>
         {
             using (_logger.BeginScope(LoggingDefaults.CorrelationId, _correlation.CorrelationId))
             {
                 using (_logger.BeginScope(LoggingDefaults.CausationId, _correlation.CausationId))
                 {
-                    return await _next.DispatchAsync(query, cancellationToken);
+                    return await _next.DispatchAsync<TQuery, TResponse>(query, cancellationToken);
                 }
             }
         }

@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
+using Netension.Request.Abstraction.Behaviors;
 using Netension.Request.Abstraction.Handlers;
+using Netension.Request.Abstraction.Requests;
 using Netension.Request.Dispatchers;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -34,11 +37,11 @@ namespace Netension.Request.Test.Dispatchers
         {
             // Arrange
             var sut = CreateSUT();
-            _serviceProviderMock.Setup(sp => sp.GetService(It.IsAny<Type>()))
+            _serviceProviderMock.Setup(sp => sp.GetService(typeof(IQueryHandler<Query<object>, object>)))
                 .Returns(new Mock<IQueryHandler<Query<object>, object>>().Object);
 
             // Act
-            await sut.DispatchAsync(new Query<object>(), CancellationToken.None);
+            await sut.DispatchAsync<Query<object>, object>(new Query<object>(), CancellationToken.None);
 
             // Assert
             _serviceProviderMock.Verify(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>)))), Times.Once);
@@ -52,11 +55,11 @@ namespace Netension.Request.Test.Dispatchers
             var handlerMock = new Mock<IQueryHandler<Query<object>, object>>();
             var query = new Query<object>();
 
-            _serviceProviderMock.Setup(sp => sp.GetService(It.IsAny<Type>()))
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>)))))
                 .Returns(handlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(query, CancellationToken.None);
+            await sut.DispatchAsync<Query<object>, object>(query, CancellationToken.None);
 
             // Assert
             handlerMock.Verify(handlerMock => handlerMock.HandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -70,7 +73,7 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync<IQuery<object>, object>(new Query<object>(), CancellationToken.None));
         }
 
         [Fact(DisplayName = "QueryDispatcher - DispatchAsnyc - Handler throws exception")]
@@ -81,7 +84,7 @@ namespace Netension.Request.Test.Dispatchers
 
             var handlerMock = new Mock<IQueryHandler<Query<object>, object>>();
 
-            _serviceProviderMock.Setup(sp => sp.GetService(It.IsAny<Type>()))
+            _serviceProviderMock.Setup(sp => sp.GetService(typeof(IQueryHandler<Query<object>, object>)))
                 .Returns(handlerMock.Object);
 
             handlerMock.Setup(h => h.HandleAsync(It.IsAny<Query<object>>(), It.IsAny<CancellationToken>()))
@@ -89,7 +92,118 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None));
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync<Query<object>, object>(new Query<object>(), CancellationToken.None));
+        }
+
+        [Fact(DisplayName = "[UNT-PRHB001]: Call 'PreHandler' behavior (Query)")]
+        [Trait("Feature", "PRHB - Pre Handler Behavior")]
+        public async Task QueryDispacted_DispatchAsync_PreQueryHandler()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var preQueryHandlerMock = new Mock<IPreQueryHandler<Query<object>, object>>();
+            var query = new Query<object>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(new Mock<IQueryHandler<Query<object>, object>>().Object);
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPreQueryHandler<Query<object>, object>>))))).Returns(new List<IPreQueryHandler<Query<object>, object>> { preQueryHandlerMock.Object, preQueryHandlerMock.Object });
+
+            // Act
+            await sut.DispatchAsync<Query<object>, object>(query, default);
+
+            // Assert
+            preQueryHandlerMock.Verify(pch => pch.PreHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+        }
+
+        [Fact(DisplayName = "[UNT-PRHB002]: 'PreHandler' not configured (Query)")]
+        [Trait("Feature", "PRHB - Pre Handler Behavior")]
+        public async Task QueryDispacted_DispatchAsync_PreQueryHandlerNotFound()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var queryHandlerMock = new Mock<IQueryHandler<Query<object>, object>>();
+            var query = new Query<object>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(queryHandlerMock.Object);
+
+            // Act
+            await sut.DispatchAsync<Query<object>, object>(query, default);
+
+            // Assert
+            queryHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "[UNT-POHB001]: Call 'PostHandler' behavior (Query)")]
+        [Trait("Feature", "POHB - Post Handler Behavior")]
+        public async Task QueryDispacted_DispatchAsync_PostQueryHandler()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var postQueryHandlerMock = new Mock<IPostQueryHandler<Query<object>, object>>();
+            var query = new Query<object>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(new Mock<IQueryHandler<Query<object>, object>>().Object);
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPostQueryHandler<Query<object>, object>>))))).Returns(new List<IPostQueryHandler<Query<object>, object>> { postQueryHandlerMock.Object, postQueryHandlerMock.Object });
+
+            // Act
+            await sut.DispatchAsync<Query<object>, object>(query, default);
+
+            // Assert
+            postQueryHandlerMock.Verify(pch => pch.PostHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<object>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+        }
+
+        [Fact(DisplayName = "[UNT-PRHB002]: 'PostHandler' not configured (Query)")]
+        [Trait("Feature", "POHB - Post Handler Behavior")]
+        public async Task QueryDispacted_DispatchAsync_PostQueryHandlerNotFound()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var queryHandlerMock = new Mock<IQueryHandler<Query<object>, object>>();
+            var query = new Query<object>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(queryHandlerMock.Object);
+
+            // Act
+            await sut.DispatchAsync<Query<object>, object>(query, default);
+
+            // Assert
+            queryHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [Fact(DisplayName = "[UNT-FLHB001]: Call 'FailureHandler' behavior (Query)")]
+        [Trait("Feature", "FLHB - Failure Handler Behavior")]
+        public async Task QueryDispacted_DispatchAsync_FailureQueryHandler()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var postQueryHandlerMock = new Mock<IPostQueryHandler<Query<object>, object>>();
+            var query = new Query<object>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(new Mock<IQueryHandler<Query<object>, object>>().Object);
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPostQueryHandler<Query<object>, object>>))))).Returns(new List<IPostQueryHandler<Query<object>, object>> { postQueryHandlerMock.Object, postQueryHandlerMock.Object });
+
+            // Act
+            await sut.DispatchAsync<Query<object>, object>(query, default);
+
+            // Assert
+            postQueryHandlerMock.Verify(pch => pch.PostHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<object>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+        }
+
+        [Fact(DisplayName = "[UNT-FLHB002]: 'FailureHandler' not configured (Query)")]
+        [Trait("Feature", "FLHB - Failure Handler Behavior")]
+        public async Task QueryDispacted_DispatchAsync_FailureQueryHandlerNotFound()
+        {
+            // Arrange
+            var sut = CreateSUT();
+            var queryHandlerMock = new Mock<IQueryHandler<Query<object>, object>>();
+            var query = new Query<object>();
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(queryHandlerMock.Object);
+
+            // Act
+            await sut.DispatchAsync<Query<object>, object>(query, default);
+
+            // Assert
+            queryHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

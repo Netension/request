@@ -1,10 +1,15 @@
 ﻿using Microsoft.Extensions.Logging;
+using Netension.Request.Abstraction.Behaviors;
 using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Abstraction.Requests;
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace Netension.Request.Dispatchers
 {
@@ -20,27 +25,40 @@ namespace Netension.Request.Dispatchers
             _logger = logger;
         }
 
-        public async Task DispatchAsync(ICommand command, CancellationToken cancellationToken)
+        public async Task DispatchAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
+            where TCommand : ICommand
         {
             _logger.LogDebug("Dispatch {id} {type}", command.RequestId, command.GetType().Name);
             _logger.LogTrace("Command object: {@command}", command);
 
-            var requestHandlerType = typeof(ICommandHandler<>).MakeGenericType(command.GetType());
-            _logger.LogDebug("Look for {type} handler", requestHandlerType);
-
-            var handler = _serviceProvider.GetService(requestHandlerType);
-            if (handler == null)
+            var handler = _serviceProvider.GetService<ICommandHandler<TCommand>>();
+            if (handler is null)
             {
-                _logger.LogError("Handler not found for {type}", requestHandlerType);
-                throw new InvalidOperationException($"Handler not found for {requestHandlerType}");
+                _logger.LogError("Handler not found for {command}", command.GetType().Name);
+                throw new InvalidOperationException($"Handler not found for {command.GetType().Name}");
             }
+            var attributes = handler.GetType().GetCustomAttributes(true);
 
             try
             {
-                await ((dynamic)handler).HandleAsync((dynamic)command, cancellationToken);
+                foreach (var preHandler in _serviceProvider.GetService<IEnumerable<IPreCommandHandler<TCommand>>>() ?? Enumerable.Empty<IPreCommandHandler<TCommand>>())
+                {
+                    await preHandler.PreHandleAsync(command, attributes, cancellationToken);
+                }
+
+                await handler.HandleAsync(command, cancellationToken);
+
+                foreach (var postHandler in _serviceProvider.GetService<IEnumerable<IPostCommandHandler<TCommand>>>() ?? Enumerable.Empty<IPostCommandHandler<TCommand>>())
+                {
+                    await postHandler.PostHandleAsync(command, attributes, cancellationToken);
+                }
             }
-            catch
+            catch (Exception exception)
             {
+                foreach (var failureHandler in _serviceProvider.GetService<IEnumerable<IFailureCommandHandler<TCommand>>>() ?? Enumerable.Empty<IFailureCommandHandler<TCommand>>())
+                {
+                    await failureHandler.FailHandleAsync(command, exception, attributes, cancellationToken);
+                }
                 _logger.LogError("Exception during handle {command} command", command.GetType().Name);
                 throw;
             }
