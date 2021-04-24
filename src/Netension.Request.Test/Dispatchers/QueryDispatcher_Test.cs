@@ -175,17 +175,20 @@ namespace Netension.Request.Test.Dispatchers
         {
             // Arrange
             var sut = CreateSUT();
-            var postQueryHandlerMock = new Mock<IPostQueryHandler<Query<object>, object>>();
+            var failureQueryHandlerMock = new Mock<IFailureQueryHandler<Query<object>, object>>();
             var query = new Query<object>();
+            var queryHandlerMock = new Mock<IQueryHandler<Query<object>, object>>();
 
-            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(new Mock<IQueryHandler<Query<object>, object>>().Object);
-            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPostQueryHandler<Query<object>, object>>))))).Returns(new List<IPostQueryHandler<Query<object>, object>> { postQueryHandlerMock.Object, postQueryHandlerMock.Object });
+            queryHandlerMock.Setup(qh => qh.HandleAsync(It.IsAny<Query<object>>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception());
+
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(queryHandlerMock.Object);
+            _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IFailureQueryHandler<Query<object>, object>>))))).Returns(new List<IFailureQueryHandler<Query<object>, object>> { failureQueryHandlerMock.Object, failureQueryHandlerMock.Object });
 
             // Act
-            await sut.DispatchAsync(query, default);
-
             // Assert
-            postQueryHandlerMock.Verify(pch => pch.PostHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<object>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(query, default));
+            failureQueryHandlerMock.Verify(pch => pch.FailHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<Exception>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
 
         [Fact(DisplayName = "[UNT-FLHB002]: 'FailureHandler' not configured (Query)")]
