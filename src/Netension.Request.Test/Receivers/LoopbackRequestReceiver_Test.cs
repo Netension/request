@@ -87,7 +87,7 @@ namespace Netension.Request.Test.Receivers
             await sut.ReceiveAsync(message, CancellationToken.None);
 
             // Assert
-            _queryDispatcherMock.Verify(c => c.DispatchAsync<Query<object>, object>(It.Is<Query<object>>(c => c.Equals(message.Request)), It.IsAny<CancellationToken>()), Times.Once);
+            _queryDispatcherMock.Verify(c => c.DispatchAsync(It.Is<Query<object>>(c => c.Equals(message.Request)), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

@@ -93,7 +93,7 @@ namespace Netension.Request.Test.Receivers
             await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None);
 
             // Assert
-            _queryDispatcherMock.Verify(qd => qd.DispatchAsync<Query<object>, object>(It.IsAny<Query<object>>(), It.IsAny<CancellationToken>()), Times.Once);
+            _queryDispatcherMock.Verify(qd => qd.DispatchAsync<object>(It.IsAny<Query<object>>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact(DisplayName = "HttpRequestReceiver - ReceiveAsync - Unsupported Message-Type")]

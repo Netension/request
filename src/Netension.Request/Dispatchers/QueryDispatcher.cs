@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Netension.Request.Abstraction.Behaviors;
 using System.Xml.Linq;
+using System.Collections;
 
 namespace Netension.Request.Dispatchers
 {
@@ -42,27 +43,42 @@ namespace Netension.Request.Dispatchers
 
             try
             {
-                //foreach (var preHandler in _serviceProvider.GetService<IEnumerable<IPreQueryHandler<IQuery<TResponse>, TResponse>>>() ?? Enumerable.Empty<IPreQueryHandler<IQuery<TResponse>, TResponse>>())
-                //{
-                //    await preHandler.PreHandleAsync(query, attributes, cancellationToken);
-                //}
+                var preHandlerType = typeof(IEnumerable<>).MakeGenericType(typeof(IPreQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse)));
+                var preHandlers = _serviceProvider.GetService(preHandlerType);
+                if (!(preHandlers is null))
+                {
+                    foreach (var preHandler in (IEnumerable)preHandlers)
+                    {
+                        await ((dynamic)preHandler).PreHandleAsync((dynamic)query, attributes, cancellationToken);
+                    }
+                }
 
                 var response = await handler.HandleAsync((dynamic)query, cancellationToken);
 
-                //foreach (var postHandler in _serviceProvider.GetService<IEnumerable<IPostQueryHandler<IQuery<TResponse>, TResponse>>>() ?? Enumerable.Empty<IPostQueryHandler<IQuery<TResponse>, TResponse>>())
-                //{
-                //    await postHandler.PostHandleAsync(query, response, attributes, cancellationToken);
-                //}
+                var postHandlerType = typeof(IEnumerable<>).MakeGenericType(typeof(IPostQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse)));
+                var postHandlers = _serviceProvider.GetService(postHandlerType);
+                if (!(postHandlers is null))
+                {
+                    foreach (var postHandler in (IEnumerable)postHandlers)
+                    {
+                        await ((dynamic)postHandler).PostHandleAsync((dynamic)query, response, attributes, cancellationToken);
+                    }
+                }
 
                 return response;
             }
             catch (Exception exception)
             {
-                //foreach (var failureHandler in _serviceProvider.GetService<IEnumerable<IFailureQueryHandler<IQuery<TResponse>, TResponse>>>() ?? Enumerable.Empty<IFailureQueryHandler<IQuery<TResponse>, TResponse>>())
-                //{
-                //    await failureHandler.FailHandleAsync(query, exception, attributes, cancellationToken);
-                //}
-                //_logger.LogError("Exception during handle {query} query", query.GetType().Name);
+                var failureHandlerType = typeof(IEnumerable<>).MakeGenericType(typeof(IFailureQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse)));
+                var failureHandlers = _serviceProvider.GetService(failureHandlerType);
+                if (!(failureHandlers is null))
+                {
+                    foreach (var failureHandler in (IEnumerable)failureHandlers)
+                    {
+                        await ((dynamic)failureHandler).FailHandleAsync((dynamic)query, exception, attributes, cancellationToken);
+                    }
+                }
+                _logger.LogError("Exception during handle {query} query", query.GetType().Name);
                 throw;
             }
         }
