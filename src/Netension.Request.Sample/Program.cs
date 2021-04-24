@@ -20,14 +20,13 @@ namespace Netension.Request.Sample
             Host.CreateDefaultBuilder(args)
                 .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
                 .UseLightInject()
-                .UseEFCore(builder => builder.AddDatabase<SampleDbContext>((provider, builder) => builder.UseSqlite("Filename=:memory:")))
                 .UseRequesting(builder =>
                 {
                     builder.RegistrateCorrelation();
 
                     builder.RegistrateHandlers<Startup>();
                     builder.RegistrateValidators<Startup>();
-                    builder.RegistrateTransactionHandlers();
+                    //builder.RegistrateTransactionHandlers();
 
                     builder.RegistrateRequestSenders(builder =>
                     {

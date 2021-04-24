@@ -4,11 +4,13 @@ using Netension.Extensions.Logging.Extensions;
 using Netension.Request.Abstraction.Defaults;
 using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Requests;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netension.Request.Dispatchers
 {
+    [ExcludeFromCodeCoverage]
     public class QueryLoggingDispatcher : IQueryDispatcher
     {
         private readonly ICorrelationAccessor _correlation;
@@ -23,14 +25,13 @@ namespace Netension.Request.Dispatchers
         }
 
 
-        public async Task<TResponse> DispatchAsync<TQuery, TResponse>(TQuery query, CancellationToken cancellationToken)
-            where TQuery : IQuery<TResponse>
+        public async Task<TResponse> DispatchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
             using (_logger.BeginScope(LoggingDefaults.CorrelationId, _correlation.CorrelationId))
             {
                 using (_logger.BeginScope(LoggingDefaults.CausationId, _correlation.CausationId))
                 {
-                    return await _next.DispatchAsync<TQuery, TResponse>(query, cancellationToken);
+                    return await _next.DispatchAsync(query, cancellationToken);
                 }
             }
         }

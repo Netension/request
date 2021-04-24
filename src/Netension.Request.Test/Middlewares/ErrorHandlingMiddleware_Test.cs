@@ -79,7 +79,7 @@ namespace Netension.Request.Test.Middlewares
             httpResponseMock.VerifySet(hr => hr.ContentType = MediaTypeNames.Application.Json);
         }
 
-        [Fact(DisplayName = "ErrorHandlingMiddleware - ValidationException - SetContent", Skip = "Temporarly")]
+        [Fact(DisplayName = "ErrorHandlingMiddleware - ValidationException - SetContent")]
         public async Task ErrorHandlingMiddleware_ValidationException_SetContent()
         {
             // Arrange
@@ -141,7 +141,7 @@ namespace Netension.Request.Test.Middlewares
             httpResponseMock.VerifySet(hr => hr.ContentType = MediaTypeNames.Application.Json);
         }
 
-        [Fact(DisplayName = "ErrorHandlingMiddleware - VerificationException - SetContent", Skip = "Temporarly")]
+        [Fact(DisplayName = "ErrorHandlingMiddleware - VerificationException - SetContent")]
         public async Task ErrorHandlingMiddleware_VerificationException_SetContent()
         {
             // Arrange
@@ -228,8 +228,19 @@ namespace Netension.Request.Test.Middlewares
 
     public static class TestExtensions
     {
-        public static bool Validate<TException>(this ReadOnlyMemory<byte> content, TException exception)
-            where TException : Exception
+        public static bool Validate(this ReadOnlyMemory<byte> content, ValidationException exception)
+        {
+            var expected = exception.Encode();
+            return expected.ToArray().SequenceEqual(content.ToArray());
+        }
+
+        public static bool Validate(this ReadOnlyMemory<byte> content, VerificationException exception)
+        {
+            var expected = exception.Encode();
+            return expected.ToArray().SequenceEqual(content.ToArray());
+        }
+
+        public static bool Validate(this ReadOnlyMemory<byte> content, Exception exception)
         {
             var expected = exception.Encode();
             return expected.ToArray().SequenceEqual(content.ToArray());

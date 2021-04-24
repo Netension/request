@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Netension.Request.Annotations;
-using Netension.Request.Handlers;
+using Netension.Request.Infrastructure.EFCore.Handlers;
+using Netension.Request.Sample.Contexts;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,15 +11,14 @@ namespace Netension.Request.Sample.Requests
     {
     }
 
-    [Transaction]
-    public class SampleQueryHandler : QueryHandler<SampleQuery, string>
+    public class SampleQueryHandler : TransactionalQueryHandler<SampleQuery, string, SampleDbContext>
     {
-        public SampleQueryHandler(ILogger<SampleQueryHandler> logger)
-            : base(logger)
+        public SampleQueryHandler(SampleDbContext context, ILogger<SampleQueryHandler> logger)
+            : base(context, logger)
         {
         }
 
-        public override Task<string> HandleAsync(SampleQuery query, CancellationToken cancellationToken)
+        protected override Task<string> HandleInternalAsync(SampleQuery query, CancellationToken cancellationToken)
         {
             return Task.FromResult($"SampleQuery call at {DateTime.Now}");
         }

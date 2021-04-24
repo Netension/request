@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +30,7 @@ namespace Netension.Request.Sample
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Netension.Request.Sample", Version = "v1" });
             });
 
-            services.AddDbContext<SampleDbContext>();
+            services.AddDbContext<SampleDbContext>(builder => builder.UseSqlite("Filename=:memory:"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Netension.Request.Abstraction.Behaviors;
 using System.Xml.Linq;
+using System.Collections;
 
 namespace Netension.Request.Dispatchers
 {
@@ -25,13 +26,14 @@ namespace Netension.Request.Dispatchers
             _logger = logger;
         }
 
-        public async Task<TResponse> DispatchAsync<TQuery, TResponse>(TQuery query, CancellationToken cancellationToken)
-            where TQuery : IQuery<TResponse>
+        public async Task<TResponse> DispatchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Dispatch {id} {type}", query.RequestId, query.GetType().Name);
             _logger.LogTrace("Query object: {@query}", query);
 
-            var handler = _serviceProvider.GetService<IQueryHandler<TQuery, TResponse>>();
+            var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
+
+            var handler = (dynamic)_serviceProvider.GetService(handlerType);
             if (handler == null)
             {
                 _logger.LogError("Handler not found for {type}", query.GetType().Name);
@@ -41,25 +43,40 @@ namespace Netension.Request.Dispatchers
 
             try
             {
-                foreach (var preHandler in _serviceProvider.GetService<IEnumerable<IPreQueryHandler<TQuery, TResponse>>>() ?? Enumerable.Empty<IPreQueryHandler<TQuery, TResponse>>())
+                var preHandlerType = typeof(IEnumerable<>).MakeGenericType(typeof(IPreQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse)));
+                var preHandlers = _serviceProvider.GetService(preHandlerType);
+                if (!(preHandlers is null))
                 {
-                    await preHandler.PreHandleAsync(query, attributes, cancellationToken);
+                    foreach (var preHandler in (IEnumerable)preHandlers)
+                    {
+                        await ((dynamic)preHandler).PreHandleAsync((dynamic)query, attributes, cancellationToken);
+                    }
                 }
 
-                var response = await handler.HandleAsync(query, cancellationToken);
+                var response = await handler.HandleAsync((dynamic)query, cancellationToken);
 
-                foreach (var postHandler in _serviceProvider.GetService<IEnumerable<IPostQueryHandler<TQuery, TResponse>>>() ?? Enumerable.Empty<IPostQueryHandler<TQuery, TResponse>>())
+                var postHandlerType = typeof(IEnumerable<>).MakeGenericType(typeof(IPostQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse)));
+                var postHandlers = _serviceProvider.GetService(postHandlerType);
+                if (!(postHandlers is null))
                 {
-                    await postHandler.PostHandleAsync(query, response, attributes, cancellationToken);
+                    foreach (var postHandler in (IEnumerable)postHandlers)
+                    {
+                        await ((dynamic)postHandler).PostHandleAsync((dynamic)query, response, attributes, cancellationToken);
+                    }
                 }
 
                 return response;
             }
             catch (Exception exception)
             {
-                foreach (var failureHandler in _serviceProvider.GetService<IEnumerable<IFailureQueryHandler<TQuery, TResponse>>>() ?? Enumerable.Empty<IFailureQueryHandler<TQuery, TResponse>>())
+                var failureHandlerType = typeof(IEnumerable<>).MakeGenericType(typeof(IFailureQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse)));
+                var failureHandlers = _serviceProvider.GetService(failureHandlerType);
+                if (!(failureHandlers is null))
                 {
-                    await failureHandler.FailHandleAsync(query, exception, attributes, cancellationToken);
+                    foreach (var failureHandler in (IEnumerable)failureHandlers)
+                    {
+                        await ((dynamic)failureHandler).FailHandleAsync((dynamic)query, exception, attributes, cancellationToken);
+                    }
                 }
                 _logger.LogError("Exception during handle {query} query", query.GetType().Name);
                 throw;

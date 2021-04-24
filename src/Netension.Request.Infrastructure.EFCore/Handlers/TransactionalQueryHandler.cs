@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Netension.Request.Abstraction.Requests;
-using Netension.Request.Abstraction.Senders;
 using Netension.Request.Handlers;
 using System;
 using System.Collections.Generic;
@@ -12,30 +11,31 @@ using System.Threading.Tasks;
 namespace Netension.Request.Infrastructure.EFCore.Handlers
 {
     [ExcludeFromCodeCoverage]
-    public abstract class TransactionalCommandHandler<TCommand, TContext> : CommandHandler<TCommand>
-        where TCommand : ICommand
+    public abstract class TransactionalQueryHandler<TQuery, TResponse, TContext> : QueryHandler<TQuery, TResponse>
+        where TQuery : IQuery<TResponse>
         where TContext : DbContext
     {
         protected TContext Context { get; }
 
-        protected TransactionalCommandHandler(TContext context, IQuerySender querySender, ILogger logger) 
-            : base(querySender, logger)
+        protected TransactionalQueryHandler(TContext context, ILogger logger) 
+            : base(logger)
         {
             Context = context;
         }
 
-        public override async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
-{
-            if (!(Context.Database.CurrentTransaction is null)) await HandleInternalAsync(command, cancellationToken);
+        public override async Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken)
+        {
+            if (!(Context.Database.CurrentTransaction is null)) return await HandleInternalAsync(query, cancellationToken);
 
             using var transaction = await Context.Database.BeginTransactionAsync(cancellationToken);
-
-            using (Logger.BeginScope(new Dictionary<string, object> { ["TransactionId"] = transaction.TransactionId }))
+            using (Logger.BeginScope(new Dictionary<string, object> { ["TransactionId"] = transaction.TransactionId}))
             {
                 try
                 {
-                    await HandleInternalAsync(command, cancellationToken);
+                    var response = await HandleInternalAsync(query, cancellationToken);
                     await transaction.CommitAsync(cancellationToken);
+
+                    return response;
                 }
                 catch
                 {
@@ -45,6 +45,6 @@ namespace Netension.Request.Infrastructure.EFCore.Handlers
             }
         }
 
-        protected abstract Task HandleInternalAsync(TCommand command, CancellationToken cancellationToken);
+        protected abstract Task<TResponse> HandleInternalAsync(TQuery query, CancellationToken cancellationToken);
     }
 }

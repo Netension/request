@@ -1,7 +1,6 @@
 Feature: TCH - Transactional Handler
 
     Rule: In case if queries and commands
-        Background: Transaction handler only work in case of the 'CommandHandler' is marked as 'Transaction' handler
 
         Scenario: [UNT-TCH001]: Begin Transaction
             When Call 'CommandHandler.HandleAsync'

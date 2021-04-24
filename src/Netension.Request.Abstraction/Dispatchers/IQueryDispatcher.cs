@@ -16,7 +16,6 @@ namespace Netension.Request.Abstraction.Dispatchers
         /// <param name="cancellationToken"><see cref="CancellationToken"/> of the async method.</param>
         /// <returns>Result of the incoming <see cref="IQuery{TResponse}"/></returns>
         /// <exception cref="System.InvalidOperationException">Throws if handler does not found for the incoming <see cref="IQuery{TResponse}"/>.</exception>
-        Task<TResponse> DispatchAsync<TQuery, TResponse>(TQuery query, CancellationToken cancellationToken)
-            where TQuery : IQuery<TResponse>;
+        Task<TResponse> DispatchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken);
     }
 }
