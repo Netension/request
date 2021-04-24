@@ -4,11 +4,13 @@ using Netension.Extensions.Logging.Extensions;
 using Netension.Request.Abstraction.Defaults;
 using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Requests;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netension.Request.Dispatchers
 {
+    [ExcludeFromCodeCoverage]
     public class QueryLoggingDispatcher : IQueryDispatcher
     {
         private readonly ICorrelationAccessor _correlation;

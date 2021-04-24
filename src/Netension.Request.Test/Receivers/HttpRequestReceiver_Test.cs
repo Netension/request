@@ -79,7 +79,7 @@ namespace Netension.Request.Test.Receivers
             _commandDispatcherMock.Verify(cd => cd.DispatchAsync(It.Is<ICommand>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact(DisplayName = "HttpRequestReceiver - ReceiveAsync - Dispatch query", Skip = "Temporarly")]
+        [Fact(DisplayName = "HttpRequestReceiver - ReceiveAsync - Dispatch query")]
         public async Task HttpRequestReceiver_ReceiveAsync_DispatchQuery()
         {
             // Arrange

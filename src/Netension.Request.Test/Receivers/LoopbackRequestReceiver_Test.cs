@@ -36,7 +36,7 @@ namespace Netension.Request.Test.Receivers
             return new LoopbackRequestReceiver(_commandDispatcherMock.Object, _queryDispatcherMock.Object, _unwrapperMock.Object, _logger);
         }
 
-        [Fact(DisplayName = "LoopbackRequestReceiver - ReceiveAsync - Unwrap message", Skip = "Temporarly")]
+        [Fact(DisplayName = "LoopbackRequestReceiver - ReceiveAsync - Unwrap message")]
         public async Task LoopbackRequestReceiver_ReceiveAsync_UnwrapMessage()
         {
             // Arrange
@@ -72,7 +72,7 @@ namespace Netension.Request.Test.Receivers
             _commandDispatcherMock.Verify(c => c.DispatchAsync(It.Is<ICommand>(c => c.Equals(message.Request)), It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact(DisplayName = "LoopbackRequestReceiver - ReceiveAsync - Dispatch query", Skip = "Temporarly")]
+        [Fact(DisplayName = "LoopbackRequestReceiver - ReceiveAsync - Dispatch query")]
         public async Task LoopbackRequestReceiver_ReceiveAsync_DispatchQuery()
         {
             // Arrange

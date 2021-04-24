@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Abstraction.Requests;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netension.Request.Handlers
 {
+    [ExcludeFromCodeCoverage]
     public abstract class QueryHandler<TQuery, TResponse> : IQueryHandler<TQuery, TResponse>
         where TQuery : IQuery<TResponse>
     {

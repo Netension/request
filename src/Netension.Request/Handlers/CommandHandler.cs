@@ -2,11 +2,13 @@
 using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netension.Request.Handlers
 {
+    [ExcludeFromCodeCoverage]
     public abstract class CommandHandler<TCommand> : ICommandHandler<TCommand>
         where TCommand : ICommand
     {
