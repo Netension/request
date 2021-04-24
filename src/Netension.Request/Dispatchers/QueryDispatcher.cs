@@ -25,13 +25,14 @@ namespace Netension.Request.Dispatchers
             _logger = logger;
         }
 
-        public async Task<TResponse> DispatchAsync<TQuery, TResponse>(TQuery query, CancellationToken cancellationToken)
-            where TQuery : IQuery<TResponse>
+        public async Task<TResponse> DispatchAsync<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Dispatch {id} {type}", query.RequestId, query.GetType().Name);
             _logger.LogTrace("Query object: {@query}", query);
 
-            var handler = _serviceProvider.GetService<IQueryHandler<TQuery, TResponse>>();
+            var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
+
+            var handler = (dynamic)_serviceProvider.GetService(handlerType);
             if (handler == null)
             {
                 _logger.LogError("Handler not found for {type}", query.GetType().Name);
@@ -41,27 +42,27 @@ namespace Netension.Request.Dispatchers
 
             try
             {
-                foreach (var preHandler in _serviceProvider.GetService<IEnumerable<IPreQueryHandler<TQuery, TResponse>>>() ?? Enumerable.Empty<IPreQueryHandler<TQuery, TResponse>>())
-                {
-                    await preHandler.PreHandleAsync(query, attributes, cancellationToken);
-                }
+                //foreach (var preHandler in _serviceProvider.GetService<IEnumerable<IPreQueryHandler<IQuery<TResponse>, TResponse>>>() ?? Enumerable.Empty<IPreQueryHandler<IQuery<TResponse>, TResponse>>())
+                //{
+                //    await preHandler.PreHandleAsync(query, attributes, cancellationToken);
+                //}
 
-                var response = await handler.HandleAsync(query, cancellationToken);
+                var response = await handler.HandleAsync((dynamic)query, cancellationToken);
 
-                foreach (var postHandler in _serviceProvider.GetService<IEnumerable<IPostQueryHandler<TQuery, TResponse>>>() ?? Enumerable.Empty<IPostQueryHandler<TQuery, TResponse>>())
-                {
-                    await postHandler.PostHandleAsync(query, response, attributes, cancellationToken);
-                }
+                //foreach (var postHandler in _serviceProvider.GetService<IEnumerable<IPostQueryHandler<IQuery<TResponse>, TResponse>>>() ?? Enumerable.Empty<IPostQueryHandler<IQuery<TResponse>, TResponse>>())
+                //{
+                //    await postHandler.PostHandleAsync(query, response, attributes, cancellationToken);
+                //}
 
                 return response;
             }
             catch (Exception exception)
             {
-                foreach (var failureHandler in _serviceProvider.GetService<IEnumerable<IFailureQueryHandler<TQuery, TResponse>>>() ?? Enumerable.Empty<IFailureQueryHandler<TQuery, TResponse>>())
-                {
-                    await failureHandler.FailHandleAsync(query, exception, attributes, cancellationToken);
-                }
-                _logger.LogError("Exception during handle {query} query", query.GetType().Name);
+                //foreach (var failureHandler in _serviceProvider.GetService<IEnumerable<IFailureQueryHandler<IQuery<TResponse>, TResponse>>>() ?? Enumerable.Empty<IFailureQueryHandler<IQuery<TResponse>, TResponse>>())
+                //{
+                //    await failureHandler.FailHandleAsync(query, exception, attributes, cancellationToken);
+                //}
+                //_logger.LogError("Exception during handle {query} query", query.GetType().Name);
                 throw;
             }
         }

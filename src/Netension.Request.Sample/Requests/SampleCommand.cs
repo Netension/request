@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Senders;
-using Netension.Request.Annotations;
-using Netension.Request.Handlers;
+using Netension.Request.Infrastructure.EFCore.Handlers;
+using Netension.Request.Sample.Contexts;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,15 +28,14 @@ namespace Netension.Request.Sample.Requests
         }
     }
 
-    [Transaction]
-    public class SampleCommandHandler : CommandHandler<SampleCommand>
+    public class SampleCommandHandler : TransactionalCommandHandler<SampleCommand, SampleDbContext>
     {
-        public SampleCommandHandler(IQuerySender querySender, ILogger<SampleCommandHandler> logger)
-            : base(querySender, logger)
+        public SampleCommandHandler(SampleDbContext context, IQuerySender querySender, ILogger<SampleCommandHandler> logger)
+            : base(context, querySender, logger)
         {
         }
 
-        public async override Task HandleAsync(SampleCommand command, CancellationToken cancellationToken)
+        protected async override Task HandleInternalAsync(SampleCommand command, CancellationToken cancellationToken)
         {
             if (command.Required.Equals("Test")) throw new VerificationException(402, "Value is Test");
 
