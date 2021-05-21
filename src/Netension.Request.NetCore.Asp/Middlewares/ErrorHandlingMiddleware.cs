@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Netension.Core.Exceptions;
+using Netension.Extensions.Logging.Extensions;
 using Netension.Request.NetCore.Asp.Enumerations;
 using Netension.Request.NetCore.Asp.ValueObjects;
 using System;
+using System.Collections.Generic;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -32,21 +34,43 @@ namespace Netension.Request.NetCore.Asp.Middlewares
             }
             catch (VerificationException exception)
             {
-                _logger.LogError(exception, ErrorCodeEnumeration.VerificationError.Message);
+                using (_logger.BeginScope(new Dictionary<string, object>
+                {
+                    ["Exception"] = exception.GetType().Name,
+                    ["Message"] = exception.Message
+                }))
+                {
+                    _logger.LogError(exception, ErrorCodeEnumeration.VerificationError.Message);
+
+                }
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
             }
             catch (ValidationException exception)
             {
-                _logger.LogError(exception, ErrorCodeEnumeration.ValidationFailed.Message);
+                using (_logger.BeginScope(new Dictionary<string, object>
+                {
+                    ["Exception"] = exception.GetType().Name,
+                    ["Message"] = exception.Message
+                }))
+                {
+                    _logger.LogError(exception, ErrorCodeEnumeration.ValidationFailed.Message);
+                }
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, ErrorCodeEnumeration.InternalServerError.Message);
+                using (_logger.BeginScope(new Dictionary<string, object>
+                {
+                    ["Exception"] = exception.GetType().Name,
+                    ["Message"] = exception.Message
+                }))
+                {
+                    _logger.LogError(exception, ErrorCodeEnumeration.InternalServerError.Message);
+                }
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
