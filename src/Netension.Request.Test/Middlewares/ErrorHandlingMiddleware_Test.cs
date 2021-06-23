@@ -224,25 +224,70 @@ namespace Netension.Request.Test.Middlewares
             // Assert
             bodyMock.Verify(b => b.WriteAsync(It.Is<ReadOnlyMemory<byte>>(c => c.Validate(exception)), It.IsAny<CancellationToken>()), Times.Once);
         }
+
+        [Fact(DisplayName = "ErrorHandlingMiddleware - NotFoundException - HttpCode")]
+        public async Task ErrorHandlingMiddleware_NotFoundException_HttpCode()
+        {
+            // Arrange
+            var exception = new Fixture().Create<NotFoundException>();
+            var sut = CreateSUT(context => throw exception);
+            var httpResponseMock = new Mock<HttpResponse>();
+            var bodyMock = new Mock<Stream>();
+
+            httpResponseMock.SetupGet(hr => hr.Body)
+                .Returns(bodyMock.Object);
+
+            _httpContextMock.SetupGet(hc => hc.Response)
+                .Returns(httpResponseMock.Object);
+
+            // Act
+            await sut.InvokeAsync(_httpContextMock.Object);
+
+            // Assert
+            httpResponseMock.VerifySet(hr => hr.StatusCode = StatusCodes.Status404NotFound);
+        }
+
+
+        [Fact(DisplayName = "ErrorHandlingMiddleware - ConflictException - HttpCode")]
+        public async Task ErrorHandlingMiddleware_ConflictException_HttpCode()
+        {
+            // Arrange
+            var exception = new Fixture().Create<ConflictException>();
+            var sut = CreateSUT(context => throw exception);
+            var httpResponseMock = new Mock<HttpResponse>();
+            var bodyMock = new Mock<Stream>();
+
+            httpResponseMock.SetupGet(hr => hr.Body)
+                .Returns(bodyMock.Object);
+
+            _httpContextMock.SetupGet(hc => hc.Response)
+                .Returns(httpResponseMock.Object);
+
+            // Act
+            await sut.InvokeAsync(_httpContextMock.Object);
+
+            // Assert
+            httpResponseMock.VerifySet(hr => hr.StatusCode = StatusCodes.Status409Conflict);
+        }
     }
 
     public static class TestExtensions
     {
         public static bool Validate(this ReadOnlyMemory<byte> content, ValidationException exception)
         {
-            var expected = exception.Encode();
+            var expected = exception.GetBytes();
             return expected.ToArray().SequenceEqual(content.ToArray());
         }
 
         public static bool Validate(this ReadOnlyMemory<byte> content, VerificationException exception)
         {
-            var expected = exception.Encode();
+            var expected = exception.GetBytes();
             return expected.ToArray().SequenceEqual(content.ToArray());
         }
 
         public static bool Validate(this ReadOnlyMemory<byte> content, Exception exception)
         {
-            var expected = exception.Encode();
+            var expected = exception.GetBytes();
             return expected.ToArray().SequenceEqual(content.ToArray());
         }
     }

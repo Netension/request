@@ -32,54 +32,43 @@ namespace Netension.Request.NetCore.Asp.Middlewares
             {
                 await _next.Invoke(context);
             }
+            catch (NotFoundException exception)
+            {
+                _logger.LogError(exception, "Exception during processing request");
+                await context.Response.PrepareResponse(StatusCodes.Status404NotFound, exception.GetBytes(), context.RequestAborted);
+            }
+            catch (ConflictException exception)
+            {
+                _logger.LogError(exception, "Exception during processing request");
+                await context.Response.PrepareResponse(StatusCodes.Status409Conflict, exception.GetBytes(), context.RequestAborted);
+            }
             catch (VerificationException exception)
             {
-                using (_logger.BeginScope(new Dictionary<string, object>
-                {
-                    ["Exception"] = exception.GetType().Name,
-                    ["Message"] = exception.Message
-                }))
-                {
-                    _logger.LogError(exception, ErrorCodeEnumeration.VerificationError.Message);
-
-                }
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
+                _logger.LogError(exception, "Exception during processing request");
+                await context.Response.PrepareResponse(StatusCodes.Status400BadRequest, exception.GetBytes(), context.RequestAborted);
             }
             catch (ValidationException exception)
             {
-                using (_logger.BeginScope(new Dictionary<string, object>
-                {
-                    ["Exception"] = exception.GetType().Name,
-                    ["Message"] = exception.Message
-                }))
-                {
-                    _logger.LogError(exception, ErrorCodeEnumeration.ValidationFailed.Message);
-                }
-                context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
+                _logger.LogError(exception, "Exception during processing request");
+                await context.Response.PrepareResponse(StatusCodes.Status400BadRequest, exception.GetBytes(), context.RequestAborted);
             }
             catch (Exception exception)
             {
-                using (_logger.BeginScope(new Dictionary<string, object>
-                {
-                    ["Exception"] = exception.GetType().Name,
-                    ["Message"] = exception.Message
-                }))
-                {
-                    _logger.LogError(exception, ErrorCodeEnumeration.InternalServerError.Message);
-                }
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
+                _logger.LogError(exception, "Exception during processing request");
+                await context.Response.PrepareResponse(StatusCodes.Status500InternalServerError, exception.GetBytes(), context.RequestAborted);
             }
         }
     }
 
     public static class ErrorHandlingExtensions
     {
+        public static async Task PrepareResponse(this HttpResponse response, int statusCode, ReadOnlyMemory<byte> content, CancellationToken cancellationToken)
+        {
+            response.StatusCode = statusCode;
+            response.ContentType = MediaTypeNames.Application.Json;
+            await response.Body.WriteAsync(content, cancellationToken);
+        }
+
         public static Error ToError(this ValidationException exception)
         {
             var message = new StringBuilder(ErrorCodeEnumeration.ValidationFailed.Message);
@@ -93,19 +82,19 @@ namespace Netension.Request.NetCore.Asp.Middlewares
             return new Error(ErrorCodeEnumeration.ValidationFailed.Id, message.ToString());
         }
 
-        public static ReadOnlyMemory<byte> Encode(this ValidationException exception)
+        public static ReadOnlyMemory<byte> GetBytes(this Exception exception)
         {
-            return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(exception.ToError()));
+            return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(new Error(ErrorCodeEnumeration.InternalServerError.Id, ErrorCodeEnumeration.InternalServerError.Message)));
         }
 
-        public static ReadOnlyMemory<byte> Encode(this VerificationException exception)
+        public static ReadOnlyMemory<byte> GetBytes(this VerificationException exception)
         {
             return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(new Error(exception.Code, exception.Message)));
         }
 
-        public static ReadOnlyMemory<byte> Encode(this Exception exception)
+        public static ReadOnlyMemory<byte> GetBytes(this ValidationException exception)
         {
-            return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(new Error(ErrorCodeEnumeration.InternalServerError.Id, ErrorCodeEnumeration.InternalServerError.Message)));
+            return new ReadOnlyMemory<byte>(JsonSerializer.SerializeToUtf8Bytes(exception.ToError()));
         }
     }
 }
