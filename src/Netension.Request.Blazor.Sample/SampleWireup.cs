@@ -1,9 +1,7 @@
 ﻿using LightInject;
 using Microsoft.Extensions.DependencyInjection;
-using Netension.Request.Blazor.Handlers;
 using Netension.Request.Blazor.Hosting.LightInject;
 using Netension.Request.Blazor.Hosting.LightInject.Contexts;
-using Netension.Request.Blazor.Sample.Pages;
 
 namespace Netension.Request.Blazor.Sample
 {
@@ -16,7 +14,7 @@ namespace Netension.Request.Blazor.Sample
 
         protected override void ConfigureServices(HostContext context, IServiceCollection services)
         {
-            services.AddTransient<IErrorHandler, SampleErrorHandler>();
+            
         }
     }
 }

@@ -46,8 +46,8 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
             var container = new ServiceContainer(ContainerOptions.Default.WithMicrosoftSettings());
             build(new RequestSenderBuilder(HostBuilder, container));
 
-            container.Decorate<IQuerySender, QuerySenderExceptionHandler>();
-            container.Decorate<ICommandSender, CommandSenderExecptionHandler>();
+            container.Decorate<IQuerySender, QueryExceptionHandlerMiddleware>();
+            container.Decorate<ICommandSender, CommandExceptionHandlerMiddleware>();
 
             HostBuilder.ConfigureContainer(new LightInjectServiceProviderFactory(container));
 

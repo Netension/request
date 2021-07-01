@@ -44,7 +44,7 @@ namespace Netension.Request.NetCore.Asp.Receivers
             }
 
             _logger.LogError("{requestType} message is unsupported", request.GetType().Name);
-            throw new InvalidOperationException($"{request.GetType().Name} message type is unsupported");
+            throw new BadHttpRequestException($"{request.GetType().Name} message type is unsupported");
         }
     }
 }

@@ -109,7 +109,6 @@ namespace Netension.Request.Test.Receivers
             // Act
             // Assert
             await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
-            ;
         }
     }
 }

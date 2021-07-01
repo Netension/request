@@ -25,7 +25,7 @@ namespace Netension.Request.NetCore.Asp.Unwrappers
             if (messageType == null)
             {
                 _logger.LogError("{header} header not present", RequestDefaults.Header.MessageType);
-                throw new InvalidOperationException($"{RequestDefaults.Header.MessageType} header not present");
+                throw new BadHttpRequestException($"{RequestDefaults.Header.MessageType} header not present");
             }
 
             _logger.LogDebug("Unwrap {type} request", messageType);
