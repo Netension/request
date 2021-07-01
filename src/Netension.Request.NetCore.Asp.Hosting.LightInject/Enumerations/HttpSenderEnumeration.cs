@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Hosting.LightInject.Enumerations;
+using Netension.Request.Http.Options;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
-using Netension.Request.NetCore.Asp.Options;
 using System;
 
 namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Enumerations

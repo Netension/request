@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Validators;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -50,7 +49,7 @@ namespace Netension.Request.Test.Validators
                 .ReturnsAsync(new ValidationResult());
 
             // Act
-            await sut.HandleAsync(query, default);
+            await sut.HandleAsync(query, default).ConfigureAwait(false);
 
             // Assert
             validatorMock.Verify(v => v.ValidateAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Exactly(2));
@@ -71,7 +70,7 @@ namespace Netension.Request.Test.Validators
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ValidationException>(async () => await sut.HandleAsync(query, default));
+            await Assert.ThrowsAsync<ValidationException>(async () => await sut.HandleAsync(query, default).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "QueryValidator - HandleAsync - Validator not found")]
@@ -82,7 +81,7 @@ namespace Netension.Request.Test.Validators
             var query = new Query<object>();
 
             // Act
-            await sut.HandleAsync(query, default);
+            await sut.HandleAsync(query, default).ConfigureAwait(false);
 
             // Assert
             _queryHandlerMock.Verify(ch => ch.HandleAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);

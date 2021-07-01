@@ -2,15 +2,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Netension.Core.Exceptions;
-using Netension.Extensions.Logging.Extensions;
-using Netension.Request.NetCore.Asp.Enumerations;
-using Netension.Request.NetCore.Asp.ValueObjects;
+using Netension.Request.Http.Enumerations;
+using Netension.Request.Http.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Netension.Request.NetCore.Asp.Middlewares
@@ -30,7 +28,7 @@ namespace Netension.Request.NetCore.Asp.Middlewares
         {
             try
             {
-                await _next.Invoke(context);
+                await _next.Invoke(context).ConfigureAwait(false);
             }
             catch (VerificationException exception)
             {
@@ -41,11 +39,11 @@ namespace Netension.Request.NetCore.Asp.Middlewares
                 }))
                 {
                     _logger.LogError(exception, ErrorCodeEnumeration.VerificationError.Message);
-
                 }
+
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
+                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted).ConfigureAwait(false);
             }
             catch (ValidationException exception)
             {
@@ -59,7 +57,7 @@ namespace Netension.Request.NetCore.Asp.Middlewares
                 }
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
+                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -73,7 +71,7 @@ namespace Netension.Request.NetCore.Asp.Middlewares
                 }
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = MediaTypeNames.Application.Json;
-                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted);
+                await context.Response.Body.WriteAsync(exception.Encode(), context.RequestAborted).ConfigureAwait(false);
             }
         }
     }
@@ -87,7 +85,7 @@ namespace Netension.Request.NetCore.Asp.Middlewares
 
             foreach (var failure in exception.Errors)
             {
-                message.AppendLine($"--{failure.PropertyName}: {failure.ErrorMessage}");
+                message.Append("--").Append(failure.PropertyName).Append(": ").AppendLine(failure.ErrorMessage);
             }
 
             return new Error(ErrorCodeEnumeration.ValidationFailed.Id, message.ToString());

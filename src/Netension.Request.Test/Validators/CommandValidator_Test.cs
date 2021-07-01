@@ -49,7 +49,7 @@ namespace Netension.Request.Test.Validators
                 .ReturnsAsync(new ValidationResult());
 
             // Act
-            await sut.HandleAsync(command, default);
+            await sut.HandleAsync(command, default).ConfigureAwait(false);
 
             // Assert
             validatorMock.Verify(v => v.ValidateAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Exactly(2));
@@ -70,7 +70,7 @@ namespace Netension.Request.Test.Validators
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ValidationException>(async () => await sut.HandleAsync(command, default));
+            await Assert.ThrowsAsync<ValidationException>(async () => await sut.HandleAsync(command, default).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "CommandValidator - HandleAsync - Validator not found")]
@@ -81,7 +81,7 @@ namespace Netension.Request.Test.Validators
             var command = new Command();
 
             // Act
-            await sut.HandleAsync(command, default);
+            await sut.HandleAsync(command, default).ConfigureAwait(false);
 
             // Assert
             _commandHandlerMock.Verify(ch => ch.HandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);

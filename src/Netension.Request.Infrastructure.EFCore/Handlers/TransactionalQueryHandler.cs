@@ -17,7 +17,7 @@ namespace Netension.Request.Infrastructure.EFCore.Handlers
     {
         protected TContext Context { get; }
 
-        protected TransactionalQueryHandler(TContext context, ILogger logger) 
+        protected TransactionalQueryHandler(TContext context, ILogger logger)
             : base(logger)
         {
             Context = context;
@@ -25,21 +25,21 @@ namespace Netension.Request.Infrastructure.EFCore.Handlers
 
         public override async Task<TResponse> HandleAsync(TQuery query, CancellationToken cancellationToken)
         {
-            if (!(Context.Database.CurrentTransaction is null)) return await HandleInternalAsync(query, cancellationToken);
+            if (!(Context.Database.CurrentTransaction is null)) return await HandleInternalAsync(query, cancellationToken).ConfigureAwait(false);
 
-            using var transaction = await Context.Database.BeginTransactionAsync(cancellationToken);
-            using (Logger.BeginScope(new Dictionary<string, object> { ["TransactionId"] = transaction.TransactionId}))
+            using var transaction = await Context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+            using (Logger.BeginScope(new Dictionary<string, object> { ["TransactionId"] = transaction.TransactionId }))
             {
                 try
                 {
-                    var response = await HandleInternalAsync(query, cancellationToken);
-                    await transaction.CommitAsync(cancellationToken);
+                    var response = await HandleInternalAsync(query, cancellationToken).ConfigureAwait(false);
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
 
                     return response;
                 }
                 catch
                 {
-                    await transaction.RollbackAsync(new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token);
+                    await transaction.RollbackAsync(new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token).ConfigureAwait(false);
                     throw;
                 }
             }

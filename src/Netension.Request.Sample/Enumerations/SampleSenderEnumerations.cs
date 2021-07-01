@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Netension.Request.Hosting.LightInject.Enumerations;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Enumerations;
-using Netension.Request.Sample.Requests;
 
 namespace Netension.Request.Sample.Enumerations
 {

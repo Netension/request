@@ -51,7 +51,7 @@ namespace Netension.Request.Test.Wrappers
             message.Headers.SetCorrelationId(Guid.NewGuid());
 
             // Act
-            await sut.UnwrapAsync(message, CancellationToken.None);
+            await sut.UnwrapAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(requestId, _correlationMutatorMock.MessageId);
@@ -68,7 +68,7 @@ namespace Netension.Request.Test.Wrappers
             message.Headers.SetCorrelationId(correlationId);
 
             // Act
-            await sut.UnwrapAsync(message, CancellationToken.None);
+            await sut.UnwrapAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(correlationId, _correlationMutatorMock.CorrelationId);
@@ -86,7 +86,7 @@ namespace Netension.Request.Test.Wrappers
             message.Headers.SetCausationId(causationId);
 
             // Act
-            await sut.UnwrapAsync(message, CancellationToken.None);
+            await sut.UnwrapAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(causationId, _correlationMutatorMock.CausationId);
@@ -102,7 +102,7 @@ namespace Netension.Request.Test.Wrappers
             message.Headers.SetCorrelationId(Guid.NewGuid());
 
             // Act
-            await sut.UnwrapAsync(message, CancellationToken.None);
+            await sut.UnwrapAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _loopbackRequestUnwrapperMock.Verify(lru => lru.UnwrapAsync(It.Is<LoopbackMessage>(lm => lm.Request.Equals(message.Request)), It.IsAny<CancellationToken>()), Times.Once);

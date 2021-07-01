@@ -7,12 +7,12 @@ using Moq;
 using Moq.Protected;
 using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Requests;
-using Netension.Request.NetCore.Asp.Enumerations;
+using Netension.Request.Http.Enumerations;
+using Netension.Request.Http.Options;
+using Netension.Request.Http.Senders;
+using Netension.Request.Http.ValueObjects;
+using Netension.Request.Http.Wrappers;
 using Netension.Request.NetCore.Asp.Middlewares;
-using Netension.Request.NetCore.Asp.Options;
-using Netension.Request.NetCore.Asp.Senders;
-using Netension.Request.NetCore.Asp.ValueObjects;
-using Netension.Request.NetCore.Asp.Wrappers;
 using Netension.Request.Test.Extensions;
 using System;
 using System.Net;
@@ -66,7 +66,7 @@ namespace Netension.Request.Test.Senders
             var command = new Command();
 
             // Act
-            await sut.SendAsync(command, CancellationToken.None);
+            await sut.SendAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _wrapperMock.Verify(w => w.WrapAsync(It.Is<IRequest>(r => r.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -83,7 +83,7 @@ namespace Netension.Request.Test.Senders
                 .ReturnsAsync(JsonContent.Create(command));
 
             // Act
-            await sut.SendAsync(new Command(), CancellationToken.None);
+            await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _httpMessageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(hrm => hrm.Verify(command)), ItExpr.IsAny<CancellationToken>());
@@ -97,7 +97,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             //Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SendAsync<ICommand>(null, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SendAsync<ICommand>(null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "HttpCommandSender - SendAsync - VerificationException")]
@@ -117,11 +117,11 @@ namespace Netension.Request.Test.Senders
 
             // Act
             //Assert
-            await ExceptionAssert.ThrowsAsync<VerificationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None), exception =>
+            await ExceptionAssert.ThrowsAsync<VerificationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false), exception =>
             {
                 Assert.Equal(errorCode, exception.Code);
                 Assert.Equal(message, exception.Message);
-            });
+            }).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "HttpCommandSender - SendAsync - ValidationException")]
@@ -145,10 +145,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             //Assert
-            await ExceptionAssert.ThrowsAsync<ValidationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None), exception =>
-            {
-                Assert.Collection(exception.Errors, failures.Validate, failures.Validate, failures.Validate);
-            });
+            await ExceptionAssert.ThrowsAsync<ValidationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false), exception => Assert.Collection(exception.Errors, failures.Validate, failures.Validate, failures.Validate)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "HttpCommandSender - SendAsync - Exception")]
@@ -166,7 +163,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             //Assert
-            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.SendAsync(new Command(), CancellationToken.None));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 
@@ -183,7 +180,7 @@ namespace Netension.Request.Test.Senders
         public static async Task ThrowsAsync<TException>(Func<Task> testCode, Action<TException> validate)
             where TException : Exception
         {
-            validate(await Assert.ThrowsAsync<TException>(testCode));
+            validate(await Assert.ThrowsAsync<TException>(testCode).ConfigureAwait(false));
         }
     }
 }

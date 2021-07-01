@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
-using Netension.Request.NetCore.Asp.ValueObjects;
+using Netension.Request.Http.ValueObjects;
 using System;
 using System.Collections.Generic;
 

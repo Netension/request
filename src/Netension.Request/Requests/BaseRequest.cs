@@ -9,15 +9,24 @@ namespace Netension.Request.Requests
         public Guid? RequestId { get; }
         public string MessageType => $"{GetType().FullName}, {GetType().Assembly.GetName().Name}";
 
-        protected BaseRequest(Guid? requestId) => RequestId = requestId;
+        protected BaseRequest(Guid? requestId)
+        {
+            RequestId = requestId;
+        }
 
         /// <summary>
         /// Server hash code for the <see cref="IRequest"/> based on the RequestId.
         /// </summary>
         /// <returns>Generated hash code.</returns>
-        public override int GetHashCode() => -2107324841 + RequestId.GetHashCode();
+        public override int GetHashCode()
+        {
+            return -2107324841 + RequestId.GetHashCode();
+        }
 
-        public override bool Equals(object obj) => Equals(this, obj as IRequest);
+        public override bool Equals(object obj)
+        {
+            return Equals(this, obj as IRequest);
+        }
 
         public bool Equals(IRequest x, IRequest y)
         {
@@ -27,6 +36,9 @@ namespace Netension.Request.Requests
             return false;
         }
 
-        public int GetHashCode(IRequest obj) => obj.GetHashCode();
+        public int GetHashCode(IRequest obj)
+        {
+            return obj.GetHashCode();
+        }
     }
 }

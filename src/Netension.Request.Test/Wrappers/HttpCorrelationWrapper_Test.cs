@@ -2,7 +2,7 @@
 using Moq;
 using Netension.Extensions.Correlation;
 using Netension.Request.Abstraction.Requests;
-using Netension.Request.NetCore.Asp.Wrappers;
+using Netension.Request.Http.Wrappers;
 using System;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -50,7 +50,7 @@ namespace Netension.Request.Test.Wrappers
                 .Returns(Guid.NewGuid());
 
             // Act
-            await sut.WrapAsync(command, CancellationToken.None);
+            await sut.WrapAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _httpRequestWrapperMock.Verify(hrw => hrw.WrapAsync(It.Is<IRequest>(r => r.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -73,7 +73,7 @@ namespace Netension.Request.Test.Wrappers
                 .Returns(Guid.NewGuid());
 
             // Act
-            var request = await sut.WrapAsync(command, CancellationToken.None);
+            var request = await sut.WrapAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(correlationId, request.Headers.GetCorrelationId());
@@ -96,7 +96,7 @@ namespace Netension.Request.Test.Wrappers
                 .Returns(messageId);
 
             // Act
-            var request = await sut.WrapAsync(command, CancellationToken.None);
+            var request = await sut.WrapAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(messageId, request.Headers.GetCausationId());

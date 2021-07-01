@@ -32,7 +32,7 @@ namespace Netension.Request.Test.Wrappers
             var command = new Command();
 
             // Act
-            var request = await sut.UnwrapAsync(new LoopbackMessage(command), CancellationToken.None);
+            var request = await sut.UnwrapAsync(new LoopbackMessage(command), CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(command, request);

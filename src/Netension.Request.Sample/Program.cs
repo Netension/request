@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Netension.Request.Hosting.LightInject.Builders;
-using Netension.Request.Infrastructure.EFCore;
-using Netension.Request.Sample.Contexts;
 using Netension.Request.Sample.Enumerations;
 using Serilog;
 
@@ -16,35 +13,37 @@ namespace Netension.Request.Sample
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
-                .UseLightInject()
-                .UseRequesting(builder =>
-                {
-                    builder.RegistrateCorrelation();
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args)
+.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
+.UseLightInject()
+.UseRequesting(builder =>
+{
+    builder.RegistrateCorrelation();
 
-                    builder.RegistrateHandlers<Startup>();
-                    builder.RegistrateValidators<Startup>();
-                    //builder.RegistrateTransactionHandlers();
+    builder.RegistrateHandlers<Startup>();
+    builder.RegistrateValidators<Startup>();
+    //builder.RegistrateTransactionHandlers();
 
-                    builder.RegistrateRequestSenders(builder =>
-                    {
-                        builder.RegistrateSender(SampleSenders.Loopback);
-                        builder.RegistrateSender(SampleSenders.Http);
-                    });
+    builder.RegistrateRequestSenders(builder =>
+{
+    builder.RegistrateSender(SampleSenders.Loopback);
+    builder.RegistrateSender(SampleSenders.Http);
+});
 
-                    builder.RegistrateRequestReceivers(builder =>
-                    {
-                        builder.UseCorrelationLogger();
+    builder.RegistrateRequestReceivers(builder =>
+    {
+        builder.UseCorrelationLogger();
 
-                        builder.RegistrateLoopbackRequestReceiver(builder => builder.UseCorrelation());
-                        builder.RegistrateHttpRequestReceiver(builder => { builder.UseCorrelation(); });
-                    });
-                })
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        builder.RegistrateLoopbackRequestReceiver(builder => builder.UseCorrelation());
+        builder.RegistrateHttpRequestReceiver(builder => { builder.UseCorrelation(); });
+    });
+})
+.ConfigureWebHostDefaults(webBuilder =>
+{
+    webBuilder.UseStartup<Startup>();
+});
+        }
     }
 }

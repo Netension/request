@@ -48,7 +48,7 @@ namespace Netension.Request.Test.Receivers
                 .ReturnsAsync(message.Request);
 
             // Act
-            await sut.ReceiveAsync(message, CancellationToken.None);
+            await sut.ReceiveAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _unwrapperMock.Verify(u => u.UnwrapAsync(It.Is<LoopbackMessage>(lm => lm.Equals(message)), It.IsAny<CancellationToken>()), Times.Once);
@@ -66,7 +66,7 @@ namespace Netension.Request.Test.Receivers
                 .ReturnsAsync(message.Request);
 
             // Act
-            await sut.ReceiveAsync(message, CancellationToken.None);
+            await sut.ReceiveAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _commandDispatcherMock.Verify(c => c.DispatchAsync(It.Is<ICommand>(c => c.Equals(message.Request)), It.IsAny<CancellationToken>()), Times.Once);
@@ -84,7 +84,7 @@ namespace Netension.Request.Test.Receivers
                 .ReturnsAsync(message.Request);
 
             // Act
-            await sut.ReceiveAsync(message, CancellationToken.None);
+            await sut.ReceiveAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _queryDispatcherMock.Verify(c => c.DispatchAsync(It.Is<Query<object>>(c => c.Equals(message.Request)), It.IsAny<CancellationToken>()), Times.Once);

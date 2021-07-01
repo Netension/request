@@ -22,6 +22,9 @@ namespace Netension.Request.Messages
         /// Initializes a new instance <see cref="LoopbackMessage"/>.
         /// </summary>
         /// <param name="request"><see cref="IRequest"/> to be sent.</param>
-        public LoopbackMessage(IRequest request) => Request = request;
+        public LoopbackMessage(IRequest request)
+        {
+            Request = request;
+        }
     }
 }

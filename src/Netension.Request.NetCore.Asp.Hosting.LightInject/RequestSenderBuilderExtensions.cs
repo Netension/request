@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
+using Netension.Request.Http.Options;
+using Netension.Request.Http.Senders;
+using Netension.Request.Http.Wrappers;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Enumerations;
-using Netension.Request.NetCore.Asp.Options;
-using Netension.Request.NetCore.Asp.Senders;
-using Netension.Request.NetCore.Asp.Wrappers;
 using System;
 using System.Net.Http;
 
@@ -36,7 +36,7 @@ namespace Netension.Request.Hosting.LightInject.Builders
                 services.AddHttpClient<HttpQuerySender>(key, (provider, client) => ConfigureClient(provider, client, key));
             });
 
-            builder.HostBuilder.ConfigureContainer<IServiceContainer>((context, container) =>
+            builder.HostBuilder.ConfigureContainer<IServiceRegistry>((context, container) =>
             {
                 container.RegisterScoped<IHttpRequestWrapper, HttpRequestWrapper>(key);
 

@@ -53,7 +53,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             httpResponseMock.VerifySet(hr => hr.StatusCode = StatusCodes.Status400BadRequest);
@@ -73,7 +73,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             httpResponseMock.VerifySet(hr => hr.ContentType = MediaTypeNames.Application.Json);
@@ -95,7 +95,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             bodyMock.Verify(b => b.WriteAsync(It.Is<ReadOnlyMemory<byte>>(c => c.Validate(exception)), It.IsAny<CancellationToken>()), Times.Once);
@@ -115,7 +115,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             httpResponseMock.VerifySet(hr => hr.StatusCode = StatusCodes.Status400BadRequest);
@@ -135,7 +135,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             httpResponseMock.VerifySet(hr => hr.ContentType = MediaTypeNames.Application.Json);
@@ -157,7 +157,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             bodyMock.Verify(b => b.WriteAsync(It.Is<ReadOnlyMemory<byte>>(c => c.Validate(exception)), It.IsAny<CancellationToken>()), Times.Once);
@@ -177,7 +177,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             httpResponseMock.VerifySet(hr => hr.StatusCode = StatusCodes.Status500InternalServerError);
@@ -197,7 +197,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             httpResponseMock.VerifySet(hr => hr.ContentType = MediaTypeNames.Application.Json);
@@ -219,7 +219,7 @@ namespace Netension.Request.Test.Middlewares
                 .Returns(httpResponseMock.Object);
 
             // Act
-            await sut.InvokeAsync(_httpContextMock.Object);
+            await sut.InvokeAsync(_httpContextMock.Object).ConfigureAwait(false);
 
             // Assert
             bodyMock.Verify(b => b.WriteAsync(It.Is<ReadOnlyMemory<byte>>(c => c.Validate(exception)), It.IsAny<CancellationToken>()), Times.Once);

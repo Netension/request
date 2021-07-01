@@ -20,7 +20,7 @@ namespace Netension.Request.NetCore.Asp.ConnectionHandlers
         [HttpPost]
         public async Task<IActionResult> PostAsync(CancellationToken cancellationToken)
         {
-            return await _requestReceiver.ReceiveAsync(_contextAccessor.HttpContext.Request, cancellationToken);
+            return await _requestReceiver.ReceiveAsync(_contextAccessor.HttpContext.Request, cancellationToken).ConfigureAwait(false);
         }
     }
 }

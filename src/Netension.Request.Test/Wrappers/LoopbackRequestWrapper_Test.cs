@@ -32,7 +32,7 @@ namespace Netension.Request.Test.Wrappers
             var command = new Command();
 
             // Act
-            var message = await sut.WrapAsync(command, CancellationToken.None);
+            var message = await sut.WrapAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(command, message.Request);
@@ -46,7 +46,7 @@ namespace Netension.Request.Test.Wrappers
             var command = new Command();
 
             // Act
-            var message = await sut.WrapAsync(command, CancellationToken.None);
+            var message = await sut.WrapAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(command.MessageType, message.Headers.GetMessageType());

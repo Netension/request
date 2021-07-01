@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.NetCore.Asp.Unwrappers;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace Netension.Request.NetCore.Asp.Receivers
         public async Task<IActionResult> ReceiveAsync(HttpRequest message, CancellationToken cancellationToken)
         {
             _logger.LogDebug("Receive {id} request", message.GetHashCode());
-            var request = await _unwrapper.UnwrapAsync(message, cancellationToken);
+            var request = await _unwrapper.UnwrapAsync(message, cancellationToken).ConfigureAwait(false);
 
             if (request is ICommand)
             {
@@ -43,7 +44,7 @@ namespace Netension.Request.NetCore.Asp.Receivers
             }
 
             _logger.LogError("{requestType} message is unsupported", request.GetType().Name);
-            throw new BadHttpRequestException($"{request.GetType().Name} message type is unsupported");
+            throw new InvalidOperationException($"{request.GetType().Name} message type is unsupported");
         }
     }
 }

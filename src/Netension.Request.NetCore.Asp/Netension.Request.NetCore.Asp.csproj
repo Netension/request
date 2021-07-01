@@ -10,15 +10,12 @@
   
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="9.5.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
-    <PackageReference Include="Netension.Core" Version="1.1.1-beta.7" />
+    <PackageReference Include="Netension.Core" Version="1.1.1-beta.8" />
     <PackageReference Include="Netension.Extensions.Logging" Version="0.0.1-beta.26" />
-    <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Netension.Request.Abstraction\Netension.Request.Abstraction.csproj" />
+    <ProjectReference Include="..\Netension.Request.Http\Netension.Request.Http.csproj" />
   </ItemGroup>
 
 </Project>

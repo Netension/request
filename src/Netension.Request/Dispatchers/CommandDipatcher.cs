@@ -1,15 +1,14 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Netension.Request.Abstraction.Behaviors;
 using Netension.Request.Abstraction.Dispatchers;
 using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Abstraction.Requests;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace Netension.Request.Dispatchers
 {
@@ -43,21 +42,21 @@ namespace Netension.Request.Dispatchers
             {
                 foreach (var preHandler in _serviceProvider.GetService<IEnumerable<IPreCommandHandler<TCommand>>>() ?? Enumerable.Empty<IPreCommandHandler<TCommand>>())
                 {
-                    await preHandler.PreHandleAsync(command, attributes, cancellationToken);
+                    await preHandler.PreHandleAsync(command, attributes, cancellationToken).ConfigureAwait(false);
                 }
 
-                await handler.HandleAsync(command, cancellationToken);
+                await handler.HandleAsync(command, cancellationToken).ConfigureAwait(false);
 
                 foreach (var postHandler in _serviceProvider.GetService<IEnumerable<IPostCommandHandler<TCommand>>>() ?? Enumerable.Empty<IPostCommandHandler<TCommand>>())
                 {
-                    await postHandler.PostHandleAsync(command, attributes, cancellationToken);
+                    await postHandler.PostHandleAsync(command, attributes, cancellationToken).ConfigureAwait(false);
                 }
             }
             catch (Exception exception)
             {
                 foreach (var failureHandler in _serviceProvider.GetService<IEnumerable<IFailureCommandHandler<TCommand>>>() ?? Enumerable.Empty<IFailureCommandHandler<TCommand>>())
                 {
-                    await failureHandler.FailHandleAsync(command, exception, attributes, cancellationToken);
+                    await failureHandler.FailHandleAsync(command, exception, attributes, cancellationToken).ConfigureAwait(false);
                 }
                 _logger.LogError("Exception during handle {command} command", command.GetType().Name);
                 throw;

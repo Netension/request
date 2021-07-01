@@ -26,7 +26,7 @@ namespace Netension.Request.Receivers
         {
             using var scope = _serviceScopeFactory.CreateScope();
             _logger.LogDebug("New scope created for loopback message");
-            return await _next.ReceiveAsync(message, cancellationToken);
+            return await _next.ReceiveAsync(message, cancellationToken).ConfigureAwait(false);
         }
     }
 }

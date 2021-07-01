@@ -1,16 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
+using Netension.Request.Abstraction.Behaviors;
 using Netension.Request.Abstraction.Dispatchers;
+using Netension.Request.Abstraction.Handlers;
 using Netension.Request.Abstraction.Requests;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Netension.Request.Abstraction.Handlers;
-using System.Collections.Generic;
-using System.Linq;
-using Netension.Request.Abstraction.Behaviors;
-using System.Xml.Linq;
-using System.Collections;
 
 namespace Netension.Request.Dispatchers
 {

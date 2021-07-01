@@ -2,8 +2,8 @@
 using LightInject;
 using Microsoft.Extensions.Hosting;
 using Netension.Request.Abstraction.Requests;
-using System.Reflection;
 using Netension.Request.Hosting.LightInject.Extensions;
+using System.Reflection;
 
 namespace Netension.Request.Hosting.LightInject.Registers
 {
