@@ -1,6 +1,7 @@
 ﻿using LightInject;
 using LightInject.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -19,7 +20,7 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
         public WebAssemblyHostBuilder HostBuilder { get; init; }
         public RequestSenderKeyContainer Container { get; init; }
 
-        public RequestSenderRegisty RegistrateHttpSender(Action<HttpSenderOptions> configure, Action<RequestSenderBuilder> build)
+        public RequestSenderRegisty RegistrateHttpSender(Action<HttpSenderOptions, IConfiguration> configure, Action<RequestSenderBuilder> build)
         {
             HostBuilder.Services.AddOptions<HttpSenderOptions>()
                 .Configure(configure)

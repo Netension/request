@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Netension.Extensions.Correlation;
 using Netension.Request.Abstraction.Senders;
-using Netension.Request.Blazor.Handlers;
+using Netension.Request.Blazor.Brokers;
 using Netension.Request.Blazor.Senders;
 using Netension.Request.Containers;
 using Netension.Request.Senders;
@@ -21,17 +21,18 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
             HostBuilder.Services.RegistrateCorrelation();
         }
 
-        public void UseErrorHandler<TErrorHandler>()
-            where TErrorHandler : class, IErrorHandler
+        public void UseErrorHandler()
         {
-            HostBuilder.Services.AddTransient<IErrorHandler, TErrorHandler>();
+            HostBuilder.Services.AddSingleton<ErrorBroker>();
+            HostBuilder.Services.AddSingleton<IErrorPublisher>(provider => provider.GetRequiredService<ErrorBroker>());
+            HostBuilder.Services.AddSingleton<IErrorChannel>(provider => provider.GetRequiredService<ErrorBroker>());
 
             var container = new ServiceContainer();
 
             container.Decorate<ICommandSender, CommandExceptionHandlerMiddleware>();
             container.Decorate<IQuerySender, QueryExceptionHandlerMiddleware>();
 
-            HostBuilder.ConfigureContainer<IServiceContainer>(new LightInjectServiceProviderFactory(container));
+            HostBuilder.ConfigureContainer(new LightInjectServiceProviderFactory(container));
         }
 
         public void RegistrateSenders(Action<RequestSenderRegisty> registrate)

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Senders;
-using Netension.Request.Blazor.Handlers;
+using Netension.Request.Blazor.Brokers;
 using Netension.Request.Blazor.Senders;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace Netension.Request.Test.Senders
     {
         private readonly ILogger<QueryExceptionHandlerMiddleware> _logger;
         private Mock<IQuerySender> _querySenderMock;
-        private Mock<IErrorHandler> _errorHandlerMock;
+        private Mock<IErrorPublisher> _errorHandlerMock;
 
         public QueryExceptionHandlerMiddleware_Test(ITestOutputHelper outputHelper)
         {
@@ -31,13 +31,14 @@ namespace Netension.Request.Test.Senders
         private QueryExceptionHandlerMiddleware CreateSUT()
         {
             _querySenderMock = new Mock<IQuerySender>();
-            _errorHandlerMock = new Mock<IErrorHandler>();
+            _errorHandlerMock = new Mock<IErrorPublisher>();
 
             return new QueryExceptionHandlerMiddleware(_querySenderMock.Object, _errorHandlerMock.Object, _logger);
         }
 
         [Fact(DisplayName = "[BLAZOR-EHM001][Query]: Handle Server Error")]
         [Trait("Technology", "Blazor")]
+        [Trait("Feature", "Error Handling")]
         public async Task Blazor_Query_HandleServerError()
         {
             // Arrange
@@ -50,11 +51,12 @@ namespace Netension.Request.Test.Senders
             await sut.QueryAsync(new Query<object>(), default);
 
             // Assert
-            _errorHandlerMock.Verify(eh => eh.HandleServerErrorAsync(It.IsAny<CancellationToken>()), Times.Once());
+            _errorHandlerMock.Verify(eh => eh.PublishAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact(DisplayName = "[BLAZOR-EHM001][Query]: Handle Verification error")]
         [Trait("Technology", "Blazor")]
+        [Trait("Feature", "Error Handling")]
         public async Task Blazor_Query_HandleVerificationError()
         {
             // Arrange
@@ -70,11 +72,12 @@ namespace Netension.Request.Test.Senders
             await sut.QueryAsync(new Query<object>(), default);
 
             // Assert
-            _errorHandlerMock.Verify(eh => eh.HandleVerificationErrorAsync(It.Is<int>(ec => ec == errorCode), It.Is<string>(m => m.Equals(message)), It.IsAny<CancellationToken>()), Times.Once());
+            _errorHandlerMock.Verify(eh => eh.PublishAsync(It.Is<int>(ec => ec == errorCode), It.Is<string>(m => m.Equals(message)), It.IsAny<CancellationToken>()), Times.Once());
         }
 
         [Fact(DisplayName = "[BLAZOR-EHM001][Query]: Handle Validation error")]
         [Trait("Technology", "Blazor")]
+        [Trait("Feature", "Error Handling")]
         public async Task Blazor_Query_HandleValidationError()
         {
             // Arrange
@@ -89,7 +92,7 @@ namespace Netension.Request.Test.Senders
             await sut.QueryAsync(new Query<object>(), default);
 
             // Assert
-            _errorHandlerMock.Verify(eh => eh.HandleValidationErrorAsync(It.Is<IEnumerable<ValidationFailure>>(vf => vf.Equals(failures)), It.IsAny<CancellationToken>()), Times.Once());
+            _errorHandlerMock.Verify(eh => eh.PublishAsync(It.Is<IEnumerable<ValidationFailure>>(vf => vf.Equals(failures)), It.IsAny<CancellationToken>()), Times.Once());
         }
     }
 }

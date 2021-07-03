@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.Blazor.Sa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.Http", "Netension.Request.Http\Netension.Request.Http.csproj", "{2B126418-7D1B-441E-BD72-800382D408CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Netension.Request.Blazor", "Netension.Request.Blazor\Netension.Request.Blazor.csproj", "{5E51D7B1-017C-4838-9296-80865DC54FF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Netension.Request.Blazor", "Netension.Request.Blazor\Netension.Request.Blazor.csproj", "{5E51D7B1-017C-4838-9296-80865DC54FF7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

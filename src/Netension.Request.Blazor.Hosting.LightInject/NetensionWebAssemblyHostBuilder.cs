@@ -30,12 +30,7 @@ namespace Netension.Request.Blazor.Hosting.LightInject
 
             builder.UseLightInject(container);
 
-            builder.UseRequesting(builder =>
-            {
-                builder.RegistrateCorrelation();
-
-                builder.RegistrateSenders(registry => registry.RegistrateHttpSender(options => { options.BaseAddress = new Uri("https://webhook.site/"); options.Path = "6fb36f97-62e4-473a-b086-df9a9e1e9bef"; }, builder => builder.UseCorrelation()));
-            });
+            builder.UseRequesting(wireup.ConfigureRequesting);
 
             return builder;
         }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Netension.Request.Blazor.Hosting.LightInject;
 using Netension.Request.Blazor.Hosting.LightInject.Builders;
 using Netension.Request.Blazor.Hosting.LightInject.Contexts;
+using System;
 
 namespace Netension.Request.Blazor.Sample
 {
@@ -16,13 +17,6 @@ namespace Netension.Request.Blazor.Sample
         protected override void ConfigureServices(HostContext context, IServiceCollection services)
         {
             
-        }
-
-        protected override void ConfigureRequesting(RequestingBuilder builder)
-        {
-            base.ConfigureRequesting(builder);
-
-            builder.UseErrorHandler<SampleErrorHandler>();
         }
     }
 }
