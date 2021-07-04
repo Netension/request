@@ -25,7 +25,7 @@ namespace Netension.Request.Blazor.Brokers
                 return Task.CompletedTask;
             }
 
-            _handlers.Invoke(new Error { Code = 500, Message = "Unexpected server error" }, cancellationToken);
+            _handlers.Invoke(new InternalServerError(), cancellationToken);
             return Task.CompletedTask;
         }
 
@@ -37,7 +37,7 @@ namespace Netension.Request.Blazor.Brokers
                 return Task.CompletedTask;
             }
 
-            _handlers.Invoke(new Error { Code = code, Message = message }, cancellationToken);
+            _handlers.Invoke(new VerificationError(code, message), cancellationToken);
             return Task.CompletedTask;
         }
 
@@ -49,7 +49,7 @@ namespace Netension.Request.Blazor.Brokers
                 return Task.CompletedTask;
             }
 
-            _handlers.Invoke(new Error { Code = 400, Message = "Validation exception" }, cancellationToken);
+            _handlers.Invoke(new ValidationError(failures), cancellationToken);
             return Task.CompletedTask;
         }
 

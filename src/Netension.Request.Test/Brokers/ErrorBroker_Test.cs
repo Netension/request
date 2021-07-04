@@ -1,8 +1,8 @@
 ﻿using AutoFixture;
-using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
 using Netension.Request.Blazor.Brokers;
 using Netension.Request.Blazor.ValueObjects;
+using Netension.Request.Http.Enumerations;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -25,22 +25,24 @@ namespace Netension.Request.Test
             return new ErrorBroker(_logger);
         }
 
-        [Fact(DisplayName = "[BLAZOR-ERB001]: Publish server error")]
+        [Fact(DisplayName = "[BALZOR-ERB001]: Publish server error")]
         [Trait("Technology", "Blazor")]
         [Trait("Feature", "Error Handling")]
         public async Task PublishServerError()
         {
             // Arrange
             var sut = CreateSUT();
-            var handled = false;
+            Error result = null;
 
-            sut.Subscribe((_, _) => { handled = true; return Task.CompletedTask; });
+            sut.Subscribe((error, _) => { result = error; return Task.CompletedTask; });
 
             // Act
             await sut.PublishAsync(default);
 
             // Assert
-            Assert.True(handled);
+            var typedResult = Assert.IsType<InternalServerError>(result);
+            Assert.Equal(ErrorCodeEnumeration.InternalServerError.Id, typedResult.Code);
+            Assert.Equal(ErrorCodeEnumeration.InternalServerError.Message, typedResult.Message);
         }
 
         [Fact(DisplayName = "[BLAZOR-ERB002]: Publish verification error")]
@@ -50,7 +52,7 @@ namespace Netension.Request.Test
         {
             // Arrange
             var sut = CreateSUT();
-            var error = new Fixture().Create<Error>();
+            var error = new Fixture().Create<VerificationError>();
 
             Error result = null;
 
@@ -60,29 +62,32 @@ namespace Netension.Request.Test
             await sut.PublishAsync(error.Code, error.Message, default);
 
             // Assert
-            Assert.Equal(error.Code, result.Code);
-            Assert.Equal(error.Message, result.Message);
+            var typedResult = Assert.IsType<VerificationError>(result);
+            Assert.Equal(error.Code, typedResult.Code);
+            Assert.Equal(error.Message, typedResult.Message);
         }
 
-        [Fact(DisplayName = "[BLAZOR-ERB001]: Publish validation error")]
+        [Fact(DisplayName = "[BLAZOR-ERB003]: Publish validation error")]
         [Trait("Technology", "Blazor")]
         [Trait("Feature", "Error Handling")]
         public async Task PublishValidationError()
         {
             // Arrange
             var sut = CreateSUT();
-            var failures = new Fixture().CreateMany<ValidationFailure>(3);
+            var error = new Fixture().Create<ValidationError>();
 
             Error result = null;
 
             sut.Subscribe((error, _) => { result = error; return Task.CompletedTask; });
 
             // Act
-            await sut.PublishAsync(failures, default);
+            await sut.PublishAsync(error.Failures, default);
 
             // Assert
-            Assert.Equal(400, result.Code);
-            Assert.Equal("Validation exception", result.Message);
+            var typedResult = Assert.IsType<ValidationError>(result);
+            Assert.Equal(ErrorCodeEnumeration.ValidationFailed.Id, typedResult.Code);
+            Assert.Equal(ErrorCodeEnumeration.ValidationFailed.Message, typedResult.Message);
+            Assert.Equal(error.Failures, typedResult.Failures);
         }
 
         [Fact(DisplayName = "[BLAZOR-ERB004]: Unsubscribe")]
