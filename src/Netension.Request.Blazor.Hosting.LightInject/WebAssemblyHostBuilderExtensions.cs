@@ -26,9 +26,9 @@ namespace Netension.Request.Blazor.Hosting.LightInject
             return builder;
         }
 
-        public static WebAssemblyHostBuilder UseRequesting(this WebAssemblyHostBuilder hostBuilder, Action<RequestingBuilder> build)
+        public static WebAssemblyHostBuilder UseRequesting(this WebAssemblyHostBuilder hostBuilder, Action<RequestingBuilder> build, IServiceContainer container)
         {
-            var builder = new RequestingBuilder { HostBuilder = hostBuilder };
+            var builder = new RequestingBuilder(hostBuilder, container);
             build(builder);
 
             return hostBuilder;

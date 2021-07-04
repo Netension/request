@@ -17,8 +17,16 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
 {
     public class RequestSenderRegisty
     {
-        public WebAssemblyHostBuilder HostBuilder { get; init; }
-        public RequestSenderKeyContainer Container { get; init; }
+        public WebAssemblyHostBuilder HostBuilder { get; }
+        public RequestSenderKeyContainer Keys { get; }
+        public IServiceContainer Container { get; }
+
+        public RequestSenderRegisty(WebAssemblyHostBuilder hostBuilder, RequestSenderKeyContainer keys, IServiceContainer container)
+        {
+            HostBuilder = hostBuilder;
+            Keys = keys;
+            Container = container;
+        }
 
         public RequestSenderRegisty RegistrateHttpSender(Action<HttpSenderOptions, IConfiguration> configure, Action<RequestSenderBuilder> build)
         {
@@ -44,13 +52,10 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
                 return new HttpQuerySender(client, provider.GetRequiredService<IOptions<HttpSenderOptions>>().Value, provider.GetRequiredService<IHttpRequestWrapper>(), provider.GetRequiredService<ILogger<HttpQuerySender>>());
             });
 
-            var container = new ServiceContainer(ContainerOptions.Default.WithMicrosoftSettings());
-            build(new RequestSenderBuilder(HostBuilder, container));
+            build(new RequestSenderBuilder(HostBuilder, Container));
 
-            container.Decorate<IQuerySender, QueryExceptionHandlerMiddleware>();
-            container.Decorate<ICommandSender, CommandExceptionHandlerMiddleware>();
-
-            HostBuilder.ConfigureContainer(new LightInjectServiceProviderFactory(container));
+            Container.Decorate<IQuerySender, QueryExceptionHandlerMiddleware>();
+            Container.Decorate<ICommandSender, CommandExceptionHandlerMiddleware>();
 
             return this;
         }

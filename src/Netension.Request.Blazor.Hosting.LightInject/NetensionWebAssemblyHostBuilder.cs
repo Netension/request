@@ -30,7 +30,7 @@ namespace Netension.Request.Blazor.Hosting.LightInject
 
             builder.UseLightInject(container);
 
-            builder.UseRequesting(wireup.ConfigureRequesting);
+            builder.UseRequesting(wireup.ConfigureRequesting, container);
 
             return builder;
         }

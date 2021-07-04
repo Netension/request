@@ -14,7 +14,14 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
 {
     public class RequestingBuilder
     {
-        public WebAssemblyHostBuilder HostBuilder { get; init; }
+        public WebAssemblyHostBuilder HostBuilder { get; }
+        public IServiceContainer Container { get; }
+
+        public RequestingBuilder(WebAssemblyHostBuilder hostBuilder, IServiceContainer container)
+        {
+            HostBuilder = hostBuilder;
+            Container = container;
+        }
 
         public void RegistrateCorrelation()
         {
@@ -27,12 +34,8 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
             HostBuilder.Services.AddSingleton<IErrorPublisher>(provider => provider.GetRequiredService<ErrorBroker>());
             HostBuilder.Services.AddSingleton<IErrorChannel>(provider => provider.GetRequiredService<ErrorBroker>());
 
-            var container = new ServiceContainer();
-
-            container.Decorate<ICommandSender, CommandExceptionHandlerMiddleware>();
-            container.Decorate<IQuerySender, QueryExceptionHandlerMiddleware>();
-
-            HostBuilder.ConfigureContainer(new LightInjectServiceProviderFactory(container));
+            Container.Decorate<ICommandSender, CommandExceptionHandlerMiddleware>();
+            Container.Decorate<IQuerySender, QueryExceptionHandlerMiddleware>();
         }
 
         public void RegistrateSenders(Action<RequestSenderRegisty> registrate)
@@ -41,7 +44,7 @@ namespace Netension.Request.Blazor.Hosting.LightInject.Builders
 
             HostBuilder.Services.AddScoped<RequestSender>();
 
-            registrate(new RequestSenderRegisty { HostBuilder = HostBuilder, Container = requestSenderKeyContainer });
+            registrate(new RequestSenderRegisty(HostBuilder, requestSenderKeyContainer, Container));
         }
     }
 }
