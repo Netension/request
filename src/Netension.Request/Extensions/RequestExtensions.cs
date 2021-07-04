@@ -16,7 +16,7 @@ namespace Netension.Request.Extensions
             var validationResults = new List<ValidationResult>();
             foreach (var validator in validators)
             {
-                validationResults.Add(await validator.ValidateAsync(request, cancellationToken));
+                validationResults.Add(await validator.ValidateAsync(request, cancellationToken).ConfigureAwait(false));
             }
 
             if (validationResults.Any(vr => !vr.IsValid)) throw new ValidationException($"{request.RequestId} is invalid", validationResults.SelectMany(vr => vr.Errors));

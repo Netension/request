@@ -12,7 +12,10 @@ namespace Netension.Request.Extensions
         /// </summary>
         /// <param name="headers">Instance of the <see cref="IDictionary{TKey, TValue}"/>.</param>
         /// <param name="value">Value of the header.</param>
-        public static void SetMessageType(this IDictionary<string, object> headers, string value) => headers.Add(RequestDefaults.Header.MessageType, value);
+        public static void SetMessageType(this IDictionary<string, object> headers, string value)
+        {
+            headers.Add(RequestDefaults.Header.MessageType, value);
+        }
 
         /// <summary>
         /// Get Message-Type header's value.
@@ -31,7 +34,10 @@ namespace Netension.Request.Extensions
         /// </summary>
         /// <param name="headers">Instance of the <see cref="Dictionary{TKey, TValue}"/>.</param>
         /// <param name="value">Value of the Correlation-Id.</param>
-        public static void SetCorrelationId(this IDictionary<string, object> headers, Guid value) => headers.Add(CorrelationDefaults.CorrelationId, value);
+        public static void SetCorrelationId(this IDictionary<string, object> headers, Guid value)
+        {
+            headers.Add(CorrelationDefaults.CorrelationId, value);
+        }
 
         /// <summary>
         /// Get Correlation-Id header's value.
@@ -51,7 +57,10 @@ namespace Netension.Request.Extensions
         /// </summary>
         /// <param name="headers">Instance of the <see cref="Dictionary{TKey, TValue}"/>.</param>
         /// <param name="value">Value of the Causation-Id.</param>
-        public static void SetCausationId(this IDictionary<string, object> headers, Guid? value) => headers.Add(CorrelationDefaults.CausationId, value);
+        public static void SetCausationId(this IDictionary<string, object> headers, Guid? value)
+        {
+            headers.Add(CorrelationDefaults.CausationId, value);
+        }
 
         /// <summary>
         /// Get Causation-Id header's value.

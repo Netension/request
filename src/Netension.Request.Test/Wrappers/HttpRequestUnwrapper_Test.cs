@@ -55,7 +55,7 @@ namespace Netension.Request.Test.Wrappers
             httpRequestMock.SetupGet(hr => hr.BodyReader).Returns(PipeReader.Create(bodyMemoryStream));
 
             // Act
-            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(command, request);
@@ -72,7 +72,7 @@ namespace Netension.Request.Test.Wrappers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None));
+            await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

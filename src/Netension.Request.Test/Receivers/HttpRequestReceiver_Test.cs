@@ -56,7 +56,7 @@ namespace Netension.Request.Test.Receivers
                 .ReturnsAsync(new Command());
 
             // Act
-            await sut.ReceiveAsync(httpRequestMock.Object, CancellationToken.None);
+            await sut.ReceiveAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _unwrapperMock.Verify(uw => uw.UnwrapAsync(It.Is<HttpRequest>(hr => hr.Equals(httpRequestMock.Object)), It.IsAny<CancellationToken>()), Times.Once);
@@ -73,7 +73,7 @@ namespace Netension.Request.Test.Receivers
                 .ReturnsAsync(command);
 
             // Act
-            await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None);
+            await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _commandDispatcherMock.Verify(cd => cd.DispatchAsync(It.Is<ICommand>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -90,7 +90,7 @@ namespace Netension.Request.Test.Receivers
                 .ReturnsAsync(query);
 
             // Act
-            await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None);
+            await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _queryDispatcherMock.Verify(qd => qd.DispatchAsync<object>(It.IsAny<Query<object>>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -108,8 +108,7 @@ namespace Netension.Request.Test.Receivers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None));
-            ;
+            await Assert.ThrowsAsync<BadHttpRequestException>(async () => await sut.ReceiveAsync(new Mock<HttpRequest>().Object, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

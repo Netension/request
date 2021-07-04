@@ -53,7 +53,7 @@ namespace Netension.Request.Test.Senders
                 .Returns(key);
 
             // Act
-            await ((IQuerySender)sut).QueryAsync(query, CancellationToken.None);
+            await ((IQuerySender)sut).QueryAsync(query, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             querySenderMock.Verify(qs => qs.QueryAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -67,7 +67,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await ((IQuerySender)sut).QueryAsync(new Query<object>(), CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await ((IQuerySender)sut).QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "RequestSender - SendAsync - Send command")]
@@ -86,7 +86,7 @@ namespace Netension.Request.Test.Senders
                 .Returns(key);
 
             // Act
-            await ((ICommandSender)sut).SendAsync(command, CancellationToken.None);
+            await ((ICommandSender)sut).SendAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             commandSenderMock.Verify(cs => cs.SendAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -100,7 +100,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await ((ICommandSender)sut).SendAsync(new Command(), CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await ((ICommandSender)sut).SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

@@ -12,9 +12,15 @@ namespace Netension.Request.Sample.Controllers
     {
         private readonly ICommandSender _commandSender;
 
-        public SampleController(ICommandSender commandSender) => _commandSender = commandSender;
+        public SampleController(ICommandSender commandSender)
+        {
+            _commandSender = commandSender;
+        }
 
         [HttpGet]
-        public async Task Get() => await _commandSender.SendAsync(new SampleCommand("Test Value"), CancellationToken.None);
+        public async Task Get()
+        {
+            await _commandSender.SendAsync(new SampleCommand("Test Value"), CancellationToken.None).ConfigureAwait(false);
+        }
     }
 }

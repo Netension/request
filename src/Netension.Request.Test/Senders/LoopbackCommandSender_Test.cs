@@ -42,7 +42,7 @@ namespace Netension.Request.Test.Senders
             var command = new Command();
 
             // Act
-            await sut.SendAsync(command, CancellationToken.None);
+            await sut.SendAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _wrapperMock.Verify(w => w.WrapAsync(It.Is<IRequest>(r => r.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -60,7 +60,7 @@ namespace Netension.Request.Test.Senders
                 .ReturnsAsync(message);
 
             // Act
-            await sut.SendAsync(command, CancellationToken.None);
+            await sut.SendAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _loopbackRequestReceiverMock.Verify(lrr => lrr.ReceiveAsync(It.Is<LoopbackMessage>(lm => lm.Request.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -74,7 +74,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SendAsync<Command>(null, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SendAsync<Command>(null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }

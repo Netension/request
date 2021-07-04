@@ -39,8 +39,8 @@ namespace Netension.Request.Senders
         {
             _logger.LogDebug("Send {id} command via {type} sender", command.RequestId, "loopback");
 
-            var message = await _wrapper.WrapAsync(command, cancellationToken);
-            await _receiver.ReceiveAsync(message, cancellationToken);
+            var message = await _wrapper.WrapAsync(command, cancellationToken).ConfigureAwait(false);
+            await _receiver.ReceiveAsync(message, cancellationToken).ConfigureAwait(false);
         }
     }
 }

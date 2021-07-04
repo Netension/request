@@ -29,12 +29,12 @@ namespace Netension.Request.Validators
             if (_validators.Any())
             {
                 _logger.LogDebug("Validate {id} query", query.RequestId);
-                await query.ValidateAsync(_validators, cancellationToken);
+                await query.ValidateAsync(_validators, cancellationToken).ConfigureAwait(false);
                 _logger.LogDebug("{id} query succesfully validated", query.RequestId);
             }
             else _logger.LogDebug("Validator not found for {id} query", query.RequestId);
 
-            return await _next.HandleAsync(query, cancellationToken);
+            return await _next.HandleAsync(query, cancellationToken).ConfigureAwait(false);
         }
     }
 }

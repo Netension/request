@@ -38,7 +38,7 @@ namespace Netension.Request.Test.Receivers
             var sut = CreateSUT();
 
             // Act
-            await sut.ReceiveAsync(new LoopbackMessage(new Command()), CancellationToken.None);
+            await sut.ReceiveAsync(new LoopbackMessage(new Command()), CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _serviceScopeFactoryMock.Verify(ssf => ssf.CreateScope(), Times.Once);
@@ -52,7 +52,7 @@ namespace Netension.Request.Test.Receivers
             var message = new LoopbackMessage(new Command());
 
             // Act
-            await sut.ReceiveAsync(message, CancellationToken.None);
+            await sut.ReceiveAsync(message, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _loopbackRequestReceiverMock.Verify(lrr => lrr.ReceiveAsync(It.Is<LoopbackMessage>(lm => lm.Equals(message)), It.IsAny<CancellationToken>()), Times.Once);

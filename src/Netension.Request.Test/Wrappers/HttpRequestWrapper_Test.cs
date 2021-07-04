@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
-using Netension.Request.NetCore.Asp.Wrappers;
+using Netension.Request.Http.Wrappers;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -41,7 +41,7 @@ namespace Netension.Request.Test.Wrappers
             var command = new Command();
 
             // Act
-            var content = await sut.WrapAsync(command, CancellationToken.None);
+            var content = await sut.WrapAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(command.MessageType, content.Headers.GetMessageType());
@@ -55,10 +55,10 @@ namespace Netension.Request.Test.Wrappers
             var command = new Command();
 
             // Act
-            var content = await sut.WrapAsync(command, CancellationToken.None);
+            var content = await sut.WrapAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
-            Assert.Equal(command, await content.ReadFromJsonAsync<Command>());
+            Assert.Equal(command, await content.ReadFromJsonAsync<Command>().ConfigureAwait(false));
         }
     }
 }

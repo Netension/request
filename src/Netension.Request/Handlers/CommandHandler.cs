@@ -25,7 +25,7 @@ namespace Netension.Request.Handlers
 
         protected async Task<TResponse> QueryAsnyc<TResponse>(IQuery<TResponse> query, CancellationToken cancellationToken)
         {
-            return await _querySender.QueryAsync(query, cancellationToken);
+            return await _querySender.QueryAsync(query, cancellationToken).ConfigureAwait(false);
         }
     }
 }

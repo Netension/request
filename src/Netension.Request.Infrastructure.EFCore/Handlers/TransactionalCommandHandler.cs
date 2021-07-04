@@ -18,28 +18,28 @@ namespace Netension.Request.Infrastructure.EFCore.Handlers
     {
         protected TContext Context { get; }
 
-        protected TransactionalCommandHandler(TContext context, IQuerySender querySender, ILogger logger) 
+        protected TransactionalCommandHandler(TContext context, IQuerySender querySender, ILogger logger)
             : base(querySender, logger)
         {
             Context = context;
         }
 
         public override async Task HandleAsync(TCommand command, CancellationToken cancellationToken)
-{
-            if (!(Context.Database.CurrentTransaction is null)) await HandleInternalAsync(command, cancellationToken);
+        {
+            if (!(Context.Database.CurrentTransaction is null)) await HandleInternalAsync(command, cancellationToken).ConfigureAwait(false);
 
-            using var transaction = await Context.Database.BeginTransactionAsync(cancellationToken);
+            using var transaction = await Context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
 
             using (Logger.BeginScope(new Dictionary<string, object> { ["TransactionId"] = transaction.TransactionId }))
             {
                 try
                 {
-                    await HandleInternalAsync(command, cancellationToken);
-                    await transaction.CommitAsync(cancellationToken);
+                    await HandleInternalAsync(command, cancellationToken).ConfigureAwait(false);
+                    await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
                 }
                 catch
                 {
-                    await transaction.RollbackAsync(new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token);
+                    await transaction.RollbackAsync(new CancellationTokenSource(TimeSpan.FromSeconds(5)).Token).ConfigureAwait(false);
                     throw;
                 }
             }

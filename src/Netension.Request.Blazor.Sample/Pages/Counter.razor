@@ -1,0 +1,27 @@
+﻿@page "/counter"
+@using Microsoft.Extensions.Logging
+@using Netension.Request.Abstraction.Senders
+
+@inject ICommandSender CommandSender
+
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private async Task IncrementCount()
+    {
+        await CommandSender.SendAsync(new SampleCommand { Message = "Sent From Blazor Sample App" }, default);
+
+        currentCount++;
+    }
+
+    class SampleCommand : Command
+    {
+        public string Message { get; init; }
+    }
+}

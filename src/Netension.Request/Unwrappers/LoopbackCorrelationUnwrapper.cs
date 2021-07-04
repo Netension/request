@@ -1,12 +1,10 @@
-﻿using Netension.Extensions.Correlation;
+﻿using Microsoft.Extensions.Logging;
+using Netension.Extensions.Correlation;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Extensions;
 using Netension.Request.Messages;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Netension.Extensions.Logging.Extensions;
-using Netension.Request.Abstraction.Defaults;
 
 namespace Netension.Request.Unwrappers
 {
@@ -48,7 +46,7 @@ namespace Netension.Request.Unwrappers
             _logger.LogDebug("Set {property} to {causationId}", nameof(_correlationMutator.CausationId), envelop.Headers.GetCausationId());
             _correlationMutator.CausationId = envelop.Headers.GetCausationId();
 
-            return await _next.UnwrapAsync(envelop, cancellationToken);
+            return await _next.UnwrapAsync(envelop, cancellationToken).ConfigureAwait(false);
         }
     }
 }

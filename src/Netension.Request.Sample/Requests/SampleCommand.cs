@@ -40,7 +40,7 @@ namespace Netension.Request.Sample.Requests
             if (command.Required.Equals("Test")) throw new VerificationException(402, "Value is Test");
 
             Logger.LogInformation("SampleCommand handled!");
-            Logger.LogInformation(await QueryAsnyc(new SampleQuery(), cancellationToken));
+            Logger.LogInformation(await QueryAsnyc(new SampleQuery(), cancellationToken).ConfigureAwait(false));
         }
     }
 }

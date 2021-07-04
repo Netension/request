@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="9.5.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="5.0.0" />
+    <PackageReference Include="Netension.Core" Version="1.1.1-beta.8" />
+    <PackageReference Include="Netension.Extensions.Correlation" Version="0.0.1-beta.26" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Netension.Request.Abstraction\Netension.Request.Abstraction.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -31,7 +31,7 @@ namespace Netension.Request.Dispatchers
             {
                 using (_logger.BeginScope(LoggingDefaults.CausationId, _correlation.CausationId))
                 {
-                    await _next.DispatchAsync(command, cancellationToken);
+                    await _next.DispatchAsync(command, cancellationToken).ConfigureAwait(false);
                 }
             }
         }

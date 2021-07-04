@@ -1,7 +1,7 @@
-﻿using System.Threading;
+﻿using Netension.Request.Abstraction.Requests;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
-using Netension.Request.Abstraction.Requests;
 
 namespace Netension.Request.Abstraction.Behaviors
 {

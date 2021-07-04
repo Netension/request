@@ -54,7 +54,7 @@ namespace Netension.Request.Test.Wrappers
                 .ReturnsAsync(new Command(Guid.NewGuid()));
 
             // Act
-            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _correlationMutatorMock.VerifySet(m => m.CorrelationId = correlationId);
@@ -74,7 +74,7 @@ namespace Netension.Request.Test.Wrappers
                 .ReturnsAsync(new Command(Guid.NewGuid()));
 
             // Act
-            await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+            await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _correlationMutatorMock.VerifySet(cm => cm.CorrelationId = It.IsAny<Guid>(), Times.Once);
@@ -99,7 +99,7 @@ namespace Netension.Request.Test.Wrappers
                 .ReturnsAsync(new Command(Guid.NewGuid()));
 
             // Act
-            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _correlationMutatorMock.VerifySet(m => m.CausationId = causationId);
@@ -122,7 +122,7 @@ namespace Netension.Request.Test.Wrappers
                 .ReturnsAsync(new Command(Guid.NewGuid()));
 
             // Act
-            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+            var request = await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _correlationMutatorMock.VerifySet(m => m.CausationId = null);
@@ -146,7 +146,7 @@ namespace Netension.Request.Test.Wrappers
                 .ReturnsAsync(new Command(Guid.NewGuid()));
 
             // Act
-            await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+            await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _httpRequestUnwrapperMock.Verify(hru => hru.UnwrapAsync(It.Is<HttpRequest>(hr => hr.Equals(httpRequestMock.Object)), It.IsAny<CancellationToken>()), Times.Once);
@@ -171,7 +171,7 @@ namespace Netension.Request.Test.Wrappers
                 .ReturnsAsync(new Command(requestId));
 
             // Act
-            await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None);
+            await sut.UnwrapAsync(httpRequestMock.Object, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _correlationMutatorMock.VerifySet(cm => cm.MessageId = requestId);

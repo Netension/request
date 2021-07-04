@@ -7,12 +7,12 @@ using Moq;
 using Moq.Protected;
 using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Requests;
-using Netension.Request.NetCore.Asp.Enumerations;
+using Netension.Request.Http.Enumerations;
+using Netension.Request.Http.Options;
+using Netension.Request.Http.Senders;
+using Netension.Request.Http.ValueObjects;
+using Netension.Request.Http.Wrappers;
 using Netension.Request.NetCore.Asp.Middlewares;
-using Netension.Request.NetCore.Asp.Options;
-using Netension.Request.NetCore.Asp.Senders;
-using Netension.Request.NetCore.Asp.ValueObjects;
-using Netension.Request.NetCore.Asp.Wrappers;
 using Netension.Request.Test.Extensions;
 using System;
 using System.Net;
@@ -70,7 +70,7 @@ namespace Netension.Request.Test.Senders
             var query = new Query<object>();
 
             // Act
-            await sut.QueryAsync(query, CancellationToken.None);
+            await sut.QueryAsync(query, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _wrapperMock.Verify(w => w.WrapAsync(It.Is<IRequest>(r => r.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -87,7 +87,7 @@ namespace Netension.Request.Test.Senders
                 .ReturnsAsync(JsonContent.Create(query));
 
             // Act
-            await sut.QueryAsync(query, CancellationToken.None);
+            await sut.QueryAsync(query, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _httpMessageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(hrm => hrm.Verify(query)), ItExpr.IsAny<CancellationToken>());
@@ -101,7 +101,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.QueryAsync<IQuery<object>>(null, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.QueryAsync<IQuery<object>>(null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "HttpQuerySender - QueryAsync - VerificationException")]
@@ -121,11 +121,11 @@ namespace Netension.Request.Test.Senders
 
             // Act
             //Assert
-            await ExceptionAssert.ThrowsAsync<VerificationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None), exception =>
+            await ExceptionAssert.ThrowsAsync<VerificationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false), exception =>
             {
                 Assert.Equal(errorCode, exception.Code);
                 Assert.Equal(message, exception.Message);
-            });
+            }).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "HttpQuerySender - QueryAsync - ValidationException")]
@@ -149,10 +149,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             //Assert
-            await ExceptionAssert.ThrowsAsync<ValidationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None), exception =>
-            {
-                Assert.Collection(exception.Errors, failures.Validate, failures.Validate, failures.Validate);
-            });
+            await ExceptionAssert.ThrowsAsync<ValidationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false), exception => Assert.Collection(exception.Errors, failures.Validate, failures.Validate, failures.Validate)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "HttpQuerySender - SendAsync - Exception")]
@@ -170,7 +167,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             //Assert
-            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None));
+            await Assert.ThrowsAnyAsync<Exception>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 

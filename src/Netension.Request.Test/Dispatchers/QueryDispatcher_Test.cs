@@ -2,7 +2,6 @@
 using Moq;
 using Netension.Request.Abstraction.Behaviors;
 using Netension.Request.Abstraction.Handlers;
-using Netension.Request.Abstraction.Requests;
 using Netension.Request.Dispatchers;
 using System;
 using System.Collections.Generic;
@@ -41,7 +40,7 @@ namespace Netension.Request.Test.Dispatchers
                 .Returns(new Mock<IQueryHandler<Query<object>, object>>().Object);
 
             // Act
-            await sut.DispatchAsync(new Query<object>(), CancellationToken.None);
+            await sut.DispatchAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _serviceProviderMock.Verify(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>)))), Times.Once);
@@ -59,7 +58,7 @@ namespace Netension.Request.Test.Dispatchers
                 .Returns(handlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(query, CancellationToken.None);
+            await sut.DispatchAsync(query, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             handlerMock.Verify(handlerMock => handlerMock.HandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -73,7 +72,7 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "QueryDispatcher - DispatchAsnyc - Handler throws exception")]
@@ -92,7 +91,7 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None));
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "[UNT-PRHB001]: Call 'PreHandler' behavior (Query)")]
@@ -108,7 +107,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPreQueryHandler<Query<object>, object>>))))).Returns(new List<IPreQueryHandler<Query<object>, object>> { preQueryHandlerMock.Object, preQueryHandlerMock.Object });
 
             // Act
-            await sut.DispatchAsync(query, default);
+            await sut.DispatchAsync(query, default).ConfigureAwait(false);
 
             // Assert
             preQueryHandlerMock.Verify(pch => pch.PreHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
@@ -126,7 +125,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(queryHandlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(query, default);
+            await sut.DispatchAsync(query, default).ConfigureAwait(false);
 
             // Assert
             queryHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -145,7 +144,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPostQueryHandler<Query<object>, object>>))))).Returns(new List<IPostQueryHandler<Query<object>, object>> { postQueryHandlerMock.Object, postQueryHandlerMock.Object });
 
             // Act
-            await sut.DispatchAsync(query, default);
+            await sut.DispatchAsync(query, default).ConfigureAwait(false);
 
             // Assert
             postQueryHandlerMock.Verify(pch => pch.PostHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<object>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
@@ -163,7 +162,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(queryHandlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(query, default);
+            await sut.DispatchAsync(query, default).ConfigureAwait(false);
 
             // Assert
             queryHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -187,7 +186,7 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(query, default));
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(query, default).ConfigureAwait(false)).ConfigureAwait(false);
             failureQueryHandlerMock.Verify(pch => pch.FailHandleAsync(It.Is<Query<object>>(q => q.Equals(query)), It.IsAny<Exception>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
 
@@ -203,7 +202,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IQueryHandler<Query<object>, object>))))).Returns(queryHandlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(query, default);
+            await sut.DispatchAsync(query, default).ConfigureAwait(false);
 
             // Assert
             queryHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Query<object>>(c => c.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);

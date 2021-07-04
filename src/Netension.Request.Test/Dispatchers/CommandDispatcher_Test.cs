@@ -40,7 +40,7 @@ namespace Netension.Request.Test.Dispatchers
                 .Returns(new Mock<ICommandHandler<Command>>().Object);
 
             // Act
-            await sut.DispatchAsync(new Command(), CancellationToken.None);
+            await sut.DispatchAsync(new Command(), CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _serviceProviderMock.Verify(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(ICommandHandler<Command>)))), Times.Once);
@@ -58,7 +58,7 @@ namespace Netension.Request.Test.Dispatchers
                 .Returns(handlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(command, CancellationToken.None);
+            await sut.DispatchAsync(command, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             handlerMock.Verify(h => h.HandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -72,7 +72,7 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync(new Command(), CancellationToken.None));
+            await Assert.ThrowsAsync<InvalidOperationException>(async () => await sut.DispatchAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "CommandDispatcher - DispatchAsnyc - Handler throws exception")]
@@ -91,7 +91,7 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(new Command(), CancellationToken.None));
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
         [Fact(DisplayName = "[UNT-PRHB001]: Call 'PreHandler' behavior (Command)")]
@@ -107,7 +107,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPreCommandHandler<Command>>))))).Returns(new List<IPreCommandHandler<Command>> { preCommandHandlerMock.Object, preCommandHandlerMock.Object });
 
             // Act
-            await sut.DispatchAsync(command, default);
+            await sut.DispatchAsync(command, default).ConfigureAwait(false);
 
             // Assert
             preCommandHandlerMock.Verify(pch => pch.PreHandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
@@ -125,7 +125,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(ICommandHandler<Command>))))).Returns(commandHandlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(command, default);
+            await sut.DispatchAsync(command, default).ConfigureAwait(false);
 
             // Assert
             commandHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -144,7 +144,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(IEnumerable<IPostCommandHandler<Command>>))))).Returns(new List<IPostCommandHandler<Command>> { postCommandHandlerMock.Object, postCommandHandlerMock.Object });
 
             // Act
-            await sut.DispatchAsync(command, default);
+            await sut.DispatchAsync(command, default).ConfigureAwait(false);
 
             // Assert
             postCommandHandlerMock.Verify(pch => pch.PostHandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
@@ -162,7 +162,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(ICommandHandler<Command>))))).Returns(commandHandlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(command, default);
+            await sut.DispatchAsync(command, default).ConfigureAwait(false);
 
             // Assert
             commandHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
@@ -185,7 +185,7 @@ namespace Netension.Request.Test.Dispatchers
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<Exception>(async() => await sut.DispatchAsync(command, default));
+            await Assert.ThrowsAsync<Exception>(async () => await sut.DispatchAsync(command, default).ConfigureAwait(false)).ConfigureAwait(false);
             failureCommandHandlerMock.Verify(pch => pch.FailHandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<Exception>(), It.IsAny<object[]>(), It.IsAny<CancellationToken>()), Times.Exactly(2));
         }
 
@@ -201,7 +201,7 @@ namespace Netension.Request.Test.Dispatchers
             _serviceProviderMock.Setup(sp => sp.GetService(It.Is<Type>(t => t.Equals(typeof(ICommandHandler<Command>))))).Returns(commandHandlerMock.Object);
 
             // Act
-            await sut.DispatchAsync(command, default);
+            await sut.DispatchAsync(command, default).ConfigureAwait(false);
 
             // Assert
             commandHandlerMock.Verify(pch => pch.HandleAsync(It.Is<Command>(c => c.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);

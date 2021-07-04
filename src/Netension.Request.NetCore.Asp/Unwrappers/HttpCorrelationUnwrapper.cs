@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Netension.Extensions.Correlation;
-using Netension.Extensions.Logging.Extensions;
-using Netension.Request.Abstraction.Defaults;
 using Netension.Request.Abstraction.Requests;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,7 +22,7 @@ namespace Netension.Request.NetCore.Asp.Unwrappers
 
         public async Task<IRequest> UnwrapAsync(HttpRequest envelop, CancellationToken cancellationToken)
         {
-            var request = await _next.UnwrapAsync(envelop, cancellationToken);
+            var request = await _next.UnwrapAsync(envelop, cancellationToken).ConfigureAwait(false);
 
             var correlationId = envelop.Headers.GetCorrelationId();
             _logger.LogDebug("Set {property} to {id}", nameof(_correlationMutator.CorrelationId), correlationId);

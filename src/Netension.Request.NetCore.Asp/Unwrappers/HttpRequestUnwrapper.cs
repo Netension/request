@@ -29,7 +29,7 @@ namespace Netension.Request.NetCore.Asp.Unwrappers
             }
 
             _logger.LogDebug("Unwrap {type} request", messageType);
-            return (IRequest)await envelop.ReadFromJsonAsync(Type.GetType(messageType), cancellationToken);
+            return (IRequest)await envelop.ReadFromJsonAsync(Type.GetType(messageType), cancellationToken: cancellationToken).ConfigureAwait(false);
         }
     }
 }

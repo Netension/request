@@ -46,7 +46,7 @@ namespace Netension.Request.Test.Wrappers
             _correlationAccessorMock.SetupGet(ca => ca.CorrelationId).Returns(correlationId);
 
             // Act
-            var message = await sut.WrapAsync(new Command(), CancellationToken.None);
+            var message = await sut.WrapAsync(new Command(), CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(correlationId, message.Headers.GetCorrelationId());
@@ -66,7 +66,7 @@ namespace Netension.Request.Test.Wrappers
                 .Returns(requestId);
 
             // Act
-            var message = await sut.WrapAsync(new Command(requestId), CancellationToken.None);
+            var message = await sut.WrapAsync(new Command(requestId), CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             Assert.Equal(requestId, message.Headers.GetCausationId());

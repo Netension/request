@@ -27,7 +27,7 @@ namespace Netension.Request.Receivers
 
         public async Task<object> ReceiveAsync(LoopbackMessage message, CancellationToken cancellationToken)
         {
-            var request = await _unwrapper.UnwrapAsync(message, cancellationToken);
+            var request = await _unwrapper.UnwrapAsync(message, cancellationToken).ConfigureAwait(false);
             _logger.LogDebug("Receive {requestType} request", request.GetType().Name);
 
             if (request is ICommand command)

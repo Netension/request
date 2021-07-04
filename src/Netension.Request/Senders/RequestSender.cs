@@ -34,10 +34,10 @@ namespace Netension.Request.Senders
             var querySenderFactory = (Func<string, IQuerySender>)_serviceProvider.GetService(typeof(Func<string, IQuerySender>));
             var querySender = querySenderFactory(key);
 
-            return await querySender.QueryAsync(query, cancellationToken);
+            return await querySender.QueryAsync(query, cancellationToken).ConfigureAwait(false);
         }
 
-        async Task ICommandSender.SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken) 
+        async Task ICommandSender.SendAsync<TCommand>(TCommand command, CancellationToken cancellationToken)
         {
             var key = _resolver.Resolve(command);
             if (string.IsNullOrEmpty(key))
@@ -50,7 +50,7 @@ namespace Netension.Request.Senders
 
             var commandSenderFactory = (Func<string, ICommandSender>)_serviceProvider.GetService(typeof(Func<string, ICommandSender>));
             var commandSender = commandSenderFactory(key);
-            await commandSender.SendAsync(command, cancellationToken);
+            await commandSender.SendAsync(command, cancellationToken).ConfigureAwait(false);
         }
     }
 }

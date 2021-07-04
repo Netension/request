@@ -40,7 +40,7 @@ namespace Netension.Request.Wrappers
         public async Task<LoopbackMessage> WrapAsync<TRequest>(TRequest request, CancellationToken cancellationToken)
             where TRequest : IRequest
         {
-            var message = await _next.WrapAsync(request, cancellationToken);
+            var message = await _next.WrapAsync(request, cancellationToken).ConfigureAwait(false);
 
             var correlationId = _correlationAccessor.CorrelationId;
             _logger.LogDebug("Set {header} header to {correlationId}", CorrelationDefaults.CorrelationId, correlationId);

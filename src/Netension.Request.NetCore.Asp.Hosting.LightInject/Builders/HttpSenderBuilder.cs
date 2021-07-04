@@ -1,6 +1,6 @@
 ﻿using LightInject;
 using Microsoft.Extensions.Hosting;
-using Netension.Request.NetCore.Asp.Wrappers;
+using Netension.Request.Http.Wrappers;
 using System;
 
 namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Builders
@@ -18,10 +18,7 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Builders
 
         public HttpSenderBuilder UseCorrelation()
         {
-            HostBuilder.ConfigureContainer<IServiceContainer>(container =>
-            {
-                container.Decorate(typeof(IHttpRequestWrapper), typeof(HttpCorrelationWrapper), (registration) => registration.ServiceName.Equals(Key, StringComparison.InvariantCultureIgnoreCase));
-            });
+            HostBuilder.ConfigureContainer<IServiceContainer>(container => container.Decorate(typeof(IHttpRequestWrapper), typeof(HttpCorrelationWrapper), (registration) => registration.ServiceName.Equals(Key, StringComparison.InvariantCultureIgnoreCase)));
 
             return this;
         }

@@ -11,7 +11,10 @@ namespace Netension.Request.Containers
     {
         private readonly Dictionary<string, Func<IRequest, bool>> _keys = new Dictionary<string, Func<IRequest, bool>>();
 
-        public void Registrate(string key, Func<IRequest, bool> predicate) => _keys.Add(key, predicate);
+        public void Registrate(string key, Func<IRequest, bool> predicate)
+        {
+            _keys.Add(key, predicate);
+        }
 
         public string Resolve(IRequest request)
         {

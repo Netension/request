@@ -42,7 +42,7 @@ namespace Netension.Request.Test.Senders
             var query = new Query<object>();
 
             // Act
-            await sut.QueryAsync(query, CancellationToken.None);
+            await sut.QueryAsync(query, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _wrapperMock.Verify(w => w.WrapAsync(It.Is<IRequest>(q => q.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -60,7 +60,7 @@ namespace Netension.Request.Test.Senders
                 .ReturnsAsync(message);
 
             // Act
-            await sut.QueryAsync(query, CancellationToken.None);
+            await sut.QueryAsync(query, CancellationToken.None).ConfigureAwait(false);
 
             // Assert
             _loopbackRequestReceiverMock.Verify(lrr => lrr.ReceiveAsync(It.Is<LoopbackMessage>(lm => lm.Request.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
@@ -74,7 +74,7 @@ namespace Netension.Request.Test.Senders
 
             // Act
             // Assert
-            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.QueryAsync<Query<object>>(null, CancellationToken.None));
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.QueryAsync<Query<object>>(null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
     }
 }
