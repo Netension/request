@@ -58,7 +58,8 @@ namespace Netension.Request.Test.Senders
             return new HttpCommandSender(httpClient, _options, _wrapperMock.Object, _logger);
         }
 
-        [Fact(DisplayName = "HttpCommandSender - SendAsync - Wrap message")]
+        [Fact(DisplayName = "[HCS0001]: Wrap message")]
+        [Trait("Feature", "SC - Send Command")]
         public async Task HttpCommandSender_SendAsync_WrapMessage()
         {
             // Arrange
@@ -72,7 +73,8 @@ namespace Netension.Request.Test.Senders
             _wrapperMock.Verify(w => w.WrapAsync(It.Is<IRequest>(r => r.Equals(command)), It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact(DisplayName = "HttpCommandSender - SendAsync - Post content")]
+        [Fact(DisplayName = "[HCS0002]: Send content")]
+        [Trait("Feature", "SC - Send Command")]
         public async Task HttpCommandSender_SendAsync_PostContent()
         {
             // Arrange
@@ -89,7 +91,8 @@ namespace Netension.Request.Test.Senders
             _httpMessageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(hrm => hrm.Verify(command)), ItExpr.IsAny<CancellationToken>());
         }
 
-        [Fact(DisplayName = "HttpCommandSender - SendAsync - Request null")]
+        [Fact(DisplayName = "[HCS0003]: Null request")]
+        [Trait("Feature", "SC - Send Command")]
         public async Task HttpCommandSender_SendAsync_RequestNull()
         {
             // Arrange
@@ -100,7 +103,8 @@ namespace Netension.Request.Test.Senders
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.SendAsync<ICommand>(null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
-        [Fact(DisplayName = "HttpCommandSender - SendAsync - VerificationException")]
+        [Fact(DisplayName = "[HCS0004]: Verification exception")]
+        [Trait("Feature", "SC - Send Command")]
         public async Task HttpCommandSender_SendAsync_VerificationException()
         {
             // Arrange
@@ -124,7 +128,8 @@ namespace Netension.Request.Test.Senders
             }).ConfigureAwait(false);
         }
 
-        [Fact(DisplayName = "HttpCommandSender - SendAsync - ValidationException")]
+        [Fact(DisplayName = "[HCS0005]: Validation exception")]
+        [Trait("Feature", "SC - Send Command")]
         public async Task HttpCommandSender_SendAsync_ValidationException()
         {
             // Arrange
@@ -148,7 +153,8 @@ namespace Netension.Request.Test.Senders
             await ExceptionAssert.ThrowsAsync<ValidationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false), exception => Assert.Collection(exception.Errors, failures.Validate, failures.Validate, failures.Validate)).ConfigureAwait(false);
         }
 
-        [Fact(DisplayName = "HttpCommandSender - SendAsync - Exception")]
+        [Fact(DisplayName = "[HCS0006]: Internal server error")]
+        [Trait("Feature", "SC - Send Command")]
         public async Task HttpCommandSender_SendAsync_Exception()
         {
             // Arrange
@@ -164,6 +170,74 @@ namespace Netension.Request.Test.Senders
             // Act
             //Assert
             await Assert.ThrowsAnyAsync<Exception>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Fact(DisplayName = "[HCS0007]: Resource not found")]
+        [Trait("Feature", "SC - Send Command")]
+        public async Task HttpCommandSender_SendAsync_NotFound()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.NotFound });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(exception.Code, ErrorCodeEnumeration.NotFound.Id);
+            Assert.Equal(exception.Message, ErrorCodeEnumeration.NotFound.Message);
+        }
+
+        [Fact(DisplayName = "[HCS0008]: Unathorized")]
+        [Trait("Feature", "SC - Send Command")]
+        public async Task HttpCommandSender_SendAsync_Unathorized()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.Unauthorized });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(exception.Code, ErrorCodeEnumeration.Unathorized.Id);
+            Assert.Equal(exception.Message, ErrorCodeEnumeration.Unathorized.Message);
+        }
+
+        [Fact(DisplayName = "[HCS0009]: Forbidden")]
+        [Trait("Feature", "SC - Send Command")]
+        public async Task HttpCommandSender_SendAsync_Forbidden()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.Forbidden });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(exception.Code, ErrorCodeEnumeration.Forbidden.Id);
+            Assert.Equal(exception.Message, ErrorCodeEnumeration.Forbidden.Message);
+        }
+
+        [Fact(DisplayName = "[HCS0010]: Conflict")]
+        [Trait("Feature", "SC - Send Command")]
+        public async Task HttpCommandSender_SendAsync_Conflict()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.Conflict });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.SendAsync(new Command(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(exception.Code, ErrorCodeEnumeration.Conflict.Id);
+            Assert.Equal(exception.Message, ErrorCodeEnumeration.Conflict.Message);
         }
     }
 

@@ -4,7 +4,10 @@ using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Blazor.Brokers;
+using Netension.Request.Http.Enumerations;
 using System;
+using System.Net;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 

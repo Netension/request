@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Requests;
 using Netension.Request.Abstraction.Senders;
+using Netension.Request.Http.Enumerations;
 using Netension.Request.Http.Extensions;
 using Netension.Request.Http.Options;
 using Netension.Request.Http.Wrappers;
@@ -45,6 +47,14 @@ namespace Netension.Request.Http.Senders
             {
                 case HttpStatusCode.BadRequest:
                     throw await response.Content.DeserializeBadRequestAsync(cancellationToken).ConfigureAwait(false);
+                case HttpStatusCode.NotFound:
+                    throw new VerificationException(ErrorCodeEnumeration.NotFound.Id, ErrorCodeEnumeration.NotFound.Message);
+                case HttpStatusCode.Unauthorized:
+                    throw new VerificationException(ErrorCodeEnumeration.Unathorized.Id, ErrorCodeEnumeration.Unathorized.Message);
+                case HttpStatusCode.Forbidden:
+                    throw new VerificationException(ErrorCodeEnumeration.Forbidden.Id, ErrorCodeEnumeration.Forbidden.Message);
+                case HttpStatusCode.Conflict:
+                    throw new VerificationException(ErrorCodeEnumeration.Conflict.Id, ErrorCodeEnumeration.Conflict.Message);
                 default:
                     response.EnsureSuccessStatusCode();
                     break;

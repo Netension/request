@@ -7,8 +7,10 @@ using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Blazor.Brokers;
 using Netension.Request.Blazor.Senders;
+using Netension.Request.Http.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -38,7 +40,7 @@ namespace Netension.Request.Test.Senders
 
         [Fact(DisplayName = "[BLAZOR-EHM001][Query]: Handle Server Error")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task Blazor_Query_HandleServerError()
         {
             // Arrange
@@ -54,9 +56,9 @@ namespace Netension.Request.Test.Senders
             _errorHandlerMock.Verify(eh => eh.PublishAsync(It.IsAny<CancellationToken>()), Times.Once());
         }
 
-        [Fact(DisplayName = "[BLAZOR-EHM001][Query]: Handle Verification error")]
+        [Fact(DisplayName = "[BLAZOR-EHM002][Query]: Handle Verification error")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task Blazor_Query_HandleVerificationError()
         {
             // Arrange
@@ -75,9 +77,9 @@ namespace Netension.Request.Test.Senders
             _errorHandlerMock.Verify(eh => eh.PublishAsync(It.Is<int>(ec => ec == errorCode), It.Is<string>(m => m.Equals(message)), It.IsAny<CancellationToken>()), Times.Once());
         }
 
-        [Fact(DisplayName = "[BLAZOR-EHM001][Query]: Handle Validation error")]
+        [Fact(DisplayName = "[BLAZOR-EHM003][Query]: Handle Validation error")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task Blazor_Query_HandleValidationError()
         {
             // Arrange

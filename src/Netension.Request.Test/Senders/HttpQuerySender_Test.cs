@@ -62,7 +62,8 @@ namespace Netension.Request.Test.Senders
             return new HttpQuerySender(httpClient, _options, _wrapperMock.Object, _logger);
         }
 
-        [Fact(DisplayName = "HttpQuerySender - QueryAsync - Wrap message")]
+        [Fact(DisplayName = "[HQS001]: Wrap message")]
+        [Trait("Feature", "SQ: Send Query")]
         public async Task HttpQuerySender_QueryAsync_WrapMessage()
         {
             // Arrange
@@ -76,7 +77,8 @@ namespace Netension.Request.Test.Senders
             _wrapperMock.Verify(w => w.WrapAsync(It.Is<IRequest>(r => r.Equals(query)), It.IsAny<CancellationToken>()), Times.Once);
         }
 
-        [Fact(DisplayName = "HttpQuerySender - QueryAsync - Post content")]
+        [Fact(DisplayName = "[HQS002]: Post content")]
+        [Trait("Feature", "SQ: Send Query")]
         public async Task HttpQuerySender_SendAsync_PostContent()
         {
             // Arrange
@@ -93,7 +95,8 @@ namespace Netension.Request.Test.Senders
             _httpMessageHandlerMock.Protected().Verify("SendAsync", Times.Exactly(1), ItExpr.Is<HttpRequestMessage>(hrm => hrm.Verify(query)), ItExpr.IsAny<CancellationToken>());
         }
 
-        [Fact(DisplayName = "HttpQuerySender - QueryAsync - Request null")]
+        [Fact(DisplayName = "[HQS003]: Null request")]
+        [Trait("Feature", "SQ: Send Query")]
         public async Task HttpQuerySender_QueryAsync_RequestNull()
         {
             // Arrange
@@ -104,7 +107,8 @@ namespace Netension.Request.Test.Senders
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await sut.QueryAsync<IQuery<object>>(null, CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
         }
 
-        [Fact(DisplayName = "HttpQuerySender - QueryAsync - VerificationException")]
+        [Fact(DisplayName = "[HQS004]: Verification exception")]
+        [Trait("Feature", "SQ: Send Query")]
         public async Task HttpQuerySender_QueryAsync_VerificationException()
         {
             // Arrange
@@ -128,7 +132,8 @@ namespace Netension.Request.Test.Senders
             }).ConfigureAwait(false);
         }
 
-        [Fact(DisplayName = "HttpQuerySender - QueryAsync - ValidationException")]
+        [Fact(DisplayName = "[HQS005]: Validation exception")]
+        [Trait("Feature", "SQ: Send Query")]
         public async Task HttpQuerySender_QueryAsync_ValidationException()
         {
             // Arrange
@@ -152,7 +157,8 @@ namespace Netension.Request.Test.Senders
             await ExceptionAssert.ThrowsAsync<ValidationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false), exception => Assert.Collection(exception.Errors, failures.Validate, failures.Validate, failures.Validate)).ConfigureAwait(false);
         }
 
-        [Fact(DisplayName = "HttpQuerySender - SendAsync - Exception")]
+        [Fact(DisplayName = "[HQS006]: Internal server error")]
+        [Trait("Feature", "SQ: Send Query")]
         public async Task HttpQuerySender_SendAsync_Exception()
         {
             // Arrange
@@ -168,6 +174,74 @@ namespace Netension.Request.Test.Senders
             // Act
             //Assert
             await Assert.ThrowsAnyAsync<Exception>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        [Fact(DisplayName = "[HQS007]: Resource not found")]
+        [Trait("Feature", "SQ: Send Query")]
+        public async Task HttpQuerySender_SendAsync_NotFound()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.NotFound });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(ErrorCodeEnumeration.NotFound.Id, exception.Code);
+            Assert.Equal(ErrorCodeEnumeration.NotFound.Message, exception.Message);
+        }
+
+        [Fact(DisplayName = "[HQS008]: Unathorized")]
+        [Trait("Feature", "SQ: Send Query")]
+        public async Task HttpQuerySender_SendAsync_Unathorized()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.Unauthorized });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(ErrorCodeEnumeration.Unathorized.Id, exception.Code);
+            Assert.Equal(ErrorCodeEnumeration.Unathorized.Message, exception.Message);
+        }
+
+        [Fact(DisplayName = "[HQS009]: Forbidden")]
+        [Trait("Feature", "SQ: Send Query")]
+        public async Task HttpQuerySender_SendAsync_Forbidden()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.Forbidden });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(ErrorCodeEnumeration.Forbidden.Id, exception.Code);
+            Assert.Equal(ErrorCodeEnumeration.Forbidden.Message, exception.Message);
+        }
+
+        [Fact(DisplayName = "[HQS010]: Conflict")]
+        [Trait("Feature", "SQ: Send Query")]
+        public async Task HttpQuerySender_SendAsync_Conflict()
+        {
+            // Arrange
+            var sut = CreateSUT();
+
+            _httpMessageHandlerMock.Protected().Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage { StatusCode = HttpStatusCode.Conflict });
+
+            // Act
+            //Assert
+            var exception = await Assert.ThrowsAnyAsync<VerificationException>(async () => await sut.QueryAsync(new Query<object>(), CancellationToken.None).ConfigureAwait(false)).ConfigureAwait(false);
+            Assert.Equal(ErrorCodeEnumeration.Conflict.Id, exception.Code);
+            Assert.Equal(ErrorCodeEnumeration.Conflict.Message, exception.Message);
         }
     }
 

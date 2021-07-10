@@ -2,13 +2,16 @@
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
 using Netension.Core.Exceptions;
 using Netension.Request.Abstraction.Senders;
 using Netension.Request.Blazor.Brokers;
 using Netension.Request.Blazor.Senders;
+using Netension.Request.Http.Enumerations;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -39,7 +42,7 @@ namespace Netension.Request.Test.Senders
 
         [Fact(DisplayName = "[BLAZOR-EHM001][Command]: Handle Server error")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task Blazor_Commmand_HandleException()
         {
             // Arrange
@@ -57,7 +60,7 @@ namespace Netension.Request.Test.Senders
 
         [Fact(DisplayName = "[BLAZOR-EHM002][Command]: Handle VerificationException")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task Blazor_Commmand_HandleVerificationException()
         {
             // Arrange
@@ -78,7 +81,7 @@ namespace Netension.Request.Test.Senders
 
         [Fact(DisplayName = "[BLAZOR-EHM003][Command]: Handle ValidationException")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task Blazor_Commmand_HandleValidationException()
         {
             // Arrange

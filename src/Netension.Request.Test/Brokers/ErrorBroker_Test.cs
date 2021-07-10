@@ -27,7 +27,7 @@ namespace Netension.Request.Test
 
         [Fact(DisplayName = "[BALZOR-ERB001]: Publish server error")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task PublishServerError()
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace Netension.Request.Test
 
         [Fact(DisplayName = "[BLAZOR-ERB002]: Publish verification error")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task PublishVerificationError()
         {
             // Arrange
@@ -69,7 +69,7 @@ namespace Netension.Request.Test
 
         [Fact(DisplayName = "[BLAZOR-ERB003]: Publish validation error")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task PublishValidationError()
         {
             // Arrange
@@ -92,7 +92,7 @@ namespace Netension.Request.Test
 
         [Fact(DisplayName = "[BLAZOR-ERB004]: Unsubscribe")]
         [Trait("Technology", "Blazor")]
-        [Trait("Feature", "Error Handling")]
+        [Trait("Feature", "EH - Error Handling")]
         public async Task Unsubscribe()
         {
             // Arrange
