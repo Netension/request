@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Collections;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Configurators;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Extensions;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Options;
@@ -29,6 +30,7 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
                     .ConfigureServices(services =>
                     {
                         services.AddApplicationInformation();
+                        services.AddSingleton<WellKnownEndpointsCollection>();
 
                         services.AddSwagger();
 

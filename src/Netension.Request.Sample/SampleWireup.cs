@@ -25,7 +25,10 @@ namespace Netension.Request.Sample
 
         public override void ConfigureReadinessProbe(ReadinessProbeBuilder builder)
         {
-            builder.AddUrlProbe("Google", new Uri("http://google.com"));
+            builder.AddUrlProbe("Microsoft", new Uri("https://www.microsoft.com"));
+            builder.AddUrlProbe(".NET", new Uri("https://dotnet.microsoft.com"));
+            builder.AddUrlProbe("Blazor", new Uri("https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor"));
+            builder.AddUrlProbe("Unhealthy", new Uri("https://unhealthy-readiness-probe.com"));
         }
 
         public override void RegisterRequestSenders(RequestSenderRegister register)

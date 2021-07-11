@@ -52,6 +52,8 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
         public virtual void ConfigureEndpoints(IEndpointRouteBuilder builder)
         {
             builder.MapControllers();
+            builder.MapWellKnown();
+            builder.MapVersion();
             ConfigureRequestReceiver(builder.MapRequestReceiver());
         }
 
