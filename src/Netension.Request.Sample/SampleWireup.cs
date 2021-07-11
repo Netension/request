@@ -5,12 +5,14 @@ using Netension.Request.Hosting.LightInject.Builders;
 using Netension.Request.Hosting.LightInject.Registers;
 using Netension.Request.Hosting.LightInject.Registrates;
 using Netension.Request.NetCore.Asp.Hosting.LightInject;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
 using Netension.Request.Sample.Contexts;
 using Netension.Request.Sample.Requests;
+using System;
 
 namespace Netension.Request.Sample
 {
-    public class SampleWireup : DefaultWireup
+    public class SampleWireup : Wireup
     {
         public override void ConfigureContainer(IServiceRegistry registry)
         {
@@ -19,7 +21,11 @@ namespace Netension.Request.Sample
 
         public override void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
+        }
 
+        public override void ConfigureReadinessProbe(ReadinessProbeBuilder builder)
+        {
+            builder.AddUrlProbe("Google", new Uri("http://google.com"));
         }
 
         public override void RegisterRequestSenders(RequestSenderRegister register)
@@ -27,7 +33,7 @@ namespace Netension.Request.Sample
             register.RegistrateLoopbackSender(builder => builder.UseCorrelation(), _ => true);
         }
 
-        public override void RegistrateHandlers(HandlerRegister register)
+        public override void RegistrateValidators(ValidatorRegister register)
         {
             register.RegistrateHandlerFromAssemblyOf<GetQuery>();
         }
@@ -37,7 +43,7 @@ namespace Netension.Request.Sample
             register.RegistrateLoopbackRequestReceiver(builder => builder.UseCorrelation());
         }
 
-        public override void RegistrateValidators(ValidatorRegister register)
+        public override void RegistrateHandlers(HandlerRegister register)
         {
             register.RegistrateHandlerFromAssemblyOf<GetQuery>();
         }

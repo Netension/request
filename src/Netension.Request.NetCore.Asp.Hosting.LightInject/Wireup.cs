@@ -3,14 +3,20 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Netension.Request.Hosting.LightInject.Builders;
 using Netension.Request.Hosting.LightInject.Registers;
 using Netension.Request.Hosting.LightInject.Registrates;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Defaults;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Extensions;
+using System;
+using System.Threading.Tasks;
 
 namespace Netension.Request.NetCore.Asp.Hosting.LightInject
 {
-    public abstract class DefaultWireup
+    public abstract class Wireup
     {
         public virtual void ConfigureRequesting(RequestingBuilder builder)
         {
@@ -34,6 +40,9 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
 
             builder.UseRouting();
 
+            builder.UseLivenessProbe();
+            builder.UseReadinessProbe();
+
             builder.UseAuthentication();
             builder.UseAuthorization();
 
@@ -48,9 +57,14 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
 
         public virtual void ConfigureRequestReceiver(IEndpointConventionBuilder builder)
         {
-
         }
 
+        public virtual void ConfigureLivenessProbe(LivenessProbeBuilder builder)
+        {
+            builder.AddSelfCheck();
+        }
+
+        public abstract void ConfigureReadinessProbe(ReadinessProbeBuilder builder);
         public abstract void RegistrateHandlers(HandlerRegister register);
         public abstract void RegistrateValidators(ValidatorRegister register);
         public abstract void ConfigureServices(HostBuilderContext context, IServiceCollection services);

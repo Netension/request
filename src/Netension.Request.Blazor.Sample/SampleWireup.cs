@@ -11,12 +11,10 @@ namespace Netension.Request.Blazor.Sample
     {
         protected override void ConfigureContainer(HostContext context, IServiceRegistry registry)
         {
-
         }
 
         protected override void ConfigureServices(HostContext context, IServiceCollection services)
         {
-            
         }
     }
 }

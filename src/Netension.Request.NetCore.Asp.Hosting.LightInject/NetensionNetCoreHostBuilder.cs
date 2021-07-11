@@ -4,7 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Configurators;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Extensions;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Options;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -17,7 +19,7 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
     public static class NetensionNetCoreHostBuilder
     {
         public static IHostBuilder CreateDefaultHostBuilder<TWireup>(string[] args)
-            where TWireup : DefaultWireup
+            where TWireup : Wireup
         {
             var wireup = Activator.CreateInstance<TWireup>();
 
@@ -26,26 +28,20 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
                     .UseLightInject()
                     .ConfigureServices(services =>
                     {
-                        services.AddOptions<ApplicationOptions>()
-                            .BindConfiguration("Application")
-                            .ValidateDataAnnotations();
+                        services.AddApplicationInformation();
 
-                        services.AddSwaggerGen();
-                        services.AddTransient<IConfigureOptions<SwaggerGeneratorOptions>, SwaggerConfigurator>();
-                    services.AddOptions<SwaggerUIOptions>()
-                        .Configure<IServiceProvider>((options, provider) =>
-                        {
-                            var applicationOptions = provider.GetRequiredService<IOptions<ApplicationOptions>>();
-                            options.ConfigObject.Urls = new[] { new UrlDescriptor { Name = $"{applicationOptions.Value.Name} v{ApplicationOptions.Version.Major}", Url = "/swagger/v1/swagger.json", } };                            
-                        });
+                        services.AddSwagger();
 
                         services.AddAuthentication();
                         services.AddAuthorization();
 
                         services.AddMvcCore()
-                            .AddApiExplorer()
                             .AddApplicationPart(Assembly.GetEntryAssembly());
                         services.AddControllers();
+
+                        var healthChecksBuilder = services.AddHealthChecks();
+                        wireup.ConfigureLivenessProbe(new LivenessProbeBuilder(healthChecksBuilder));
+                        wireup.ConfigureReadinessProbe(new ReadinessProbeBuilder(healthChecksBuilder));
                     })
                     .ConfigureServices(wireup.ConfigureServices)
                     .ConfigureContainer<IServiceRegistry>(wireup.ConfigureContainer)
