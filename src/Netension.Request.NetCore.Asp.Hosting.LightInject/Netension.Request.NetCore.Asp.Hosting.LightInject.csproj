@@ -6,6 +6,7 @@
   
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.Uris" Version="5.0.1" />
+    <PackageReference Include="DotBadge" Version="1.2.0" />
     <PackageReference Include="LightInject" Version="6.4.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="5.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />

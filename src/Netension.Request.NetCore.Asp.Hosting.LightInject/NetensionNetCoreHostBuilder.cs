@@ -48,10 +48,8 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
                     .ConfigureServices(wireup.ConfigureServices)
                     .ConfigureContainer<IServiceRegistry>(wireup.ConfigureContainer)
                     .UseRequesting(wireup.ConfigureRequesting)
-                    .ConfigureWebHostDefaults(builder =>
-                    {
-                        builder.Configure(wireup.ConfigureRequestPipeline);
-                    });
+                    .UseBadges(wireup.RegistrateBadges)
+                    .ConfigureWebHostDefaults(builder => builder.Configure(wireup.ConfigureRequestPipeline));
         }
     }
 }

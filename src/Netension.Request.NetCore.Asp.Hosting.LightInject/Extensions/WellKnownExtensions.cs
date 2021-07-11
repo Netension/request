@@ -39,6 +39,7 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Extensions
                 var applicationOptions = context.RequestServices.GetRequiredService<IOptions<ApplicationOptions>>().Value;
                 var wellKnownCollection = context.RequestServices.GetRequiredService<WellKnownEndpointsCollection>();
                 var healthCheckService = context.RequestServices.GetRequiredService<HealthCheckService>();
+                var badgeCollection = context.RequestServices.GetRequiredService<BadgeCollection>();
 
                 context.Response.StatusCode = StatusCodes.Status200OK;
                 context.Response.ContentType = MediaTypeNames.Text.Html;
@@ -52,6 +53,8 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Extensions
                 builder.AppendLine(healthCheckService.CheckLivenessAsync(context.RequestAborted).GetAwaiter().GetResult().AsHtml());
                 builder.AppendLine("<strong style=\"margin: 16px\">Readiness probe:</strong></br>");
                 builder.AppendLine(healthCheckService.CheckReadinessAsync(context.RequestAborted).GetAwaiter().GetResult().AsHtml());
+                builder.AppendLine("<strong>Badges:</strong></br>");
+                builder.AppendLine(badgeCollection.AsHtml());
                 builder.AppendLine("</body>");
                 builder.AppendLine("</html>");
 
@@ -91,6 +94,17 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Extensions
             var builder = new StringBuilder();
             foreach (var entry in report.Entries)
                 builder.Append("<span style=\"margin: 32px\">").Append(entry.Key).Append(": ").Append(entry.Value.Status).AppendLine("</span></br>");
+
+            return builder.ToString();
+        }
+
+        public static string AsHtml(this BadgeCollection badges)
+        {
+            var builder = new StringBuilder();
+            foreach (var badge in badges.Get())
+            {
+                builder.Append("<span style=\"margin: 16px\">- <a target=\"_blank\" href=\"/.badge/").Append(badge.Path).Append("\">").Append(badge.Name).AppendLine("</a></span></br>");
+            }
 
             return builder.ToString();
         }

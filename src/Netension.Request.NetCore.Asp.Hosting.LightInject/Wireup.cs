@@ -3,16 +3,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Netension.Request.Hosting.LightInject.Builders;
 using Netension.Request.Hosting.LightInject.Registers;
 using Netension.Request.Hosting.LightInject.Registrates;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Builders;
-using Netension.Request.NetCore.Asp.Hosting.LightInject.Defaults;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Enumerations;
 using Netension.Request.NetCore.Asp.Hosting.LightInject.Extensions;
-using System;
-using System.Threading.Tasks;
+using Netension.Request.NetCore.Asp.Hosting.LightInject.Registries;
 
 namespace Netension.Request.NetCore.Asp.Hosting.LightInject
 {
@@ -54,6 +52,7 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
             builder.MapControllers();
             builder.MapWellKnown();
             builder.MapVersion();
+            builder.MapBadges();
             ConfigureRequestReceiver(builder.MapRequestReceiver());
         }
 
@@ -65,6 +64,8 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject
         {
             builder.AddSelfCheck();
         }
+
+        public virtual void RegistrateBadges(BadgeRegistry registry) => registry.RegistrateFrom<BadgeEnumeration>();
 
         public abstract void ConfigureReadinessProbe(ReadinessProbeBuilder builder);
         public abstract void RegistrateHandlers(HandlerRegister register);

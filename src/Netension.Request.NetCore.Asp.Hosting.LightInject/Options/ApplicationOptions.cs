@@ -14,7 +14,7 @@ namespace Netension.Request.NetCore.Asp.Hosting.LightInject.Options
         [Required]
         public ContactInformation Contact { get; set; }
 
-        public static Version Version => new Version(Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
+        public static Version Version => new(Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion);
 
         public class ContactInformation
         {
