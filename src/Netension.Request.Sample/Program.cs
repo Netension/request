@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using Netension.Request.Hosting.LightInject.Builders;
-using Netension.Request.Sample.Enumerations;
-using Serilog;
+using Netension.Request.NetCore.Asp.Hosting.LightInject;
 
 namespace Netension.Request.Sample
 {
@@ -15,35 +13,7 @@ namespace Netension.Request.Sample
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return Host.CreateDefaultBuilder(args)
-.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
-.UseLightInject()
-.UseRequesting(builder =>
-{
-    builder.RegistrateCorrelation();
-
-    builder.RegistrateHandlers<Startup>();
-    builder.RegistrateValidators<Startup>();
-    //builder.RegistrateTransactionHandlers();
-
-    builder.RegistrateRequestSenders(builder =>
-{
-    builder.RegistrateSender(SampleSenders.Loopback);
-    builder.RegistrateSender(SampleSenders.Http);
-});
-
-    builder.RegistrateRequestReceivers(builder =>
-    {
-        builder.UseCorrelationLogger();
-
-        builder.RegistrateLoopbackRequestReceiver(builder => builder.UseCorrelation());
-        builder.RegistrateHttpRequestReceiver(builder => { builder.UseCorrelation(); });
-    });
-})
-.ConfigureWebHostDefaults(webBuilder =>
-{
-    webBuilder.UseStartup<Startup>();
-});
+            return NetensionNetCoreHostBuilder.CreateDefaultHostBuilder<SampleWireup>(args);
         }
     }
 }
